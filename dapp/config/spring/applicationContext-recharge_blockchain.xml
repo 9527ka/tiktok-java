@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="rechargeBlockchainService"
+		class="project.blockchain.internal.RechargeBlockchainServiceImpl">
+		<property name="userDataService" ref="userDataService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="exchangeRateService" ref="exchangeRateService" />
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="rechargeBonusService" ref="rechargeBonusService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="channelBlockchainService" ref="channelBlockchainService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	
+	
+	<dubbo:service
+		interface="project.blockchain.RechargeBlockchainService" ref="rechargeBlockchainService" />
+		
+	<bean id="channelBlockchainService"
+		class="project.blockchain.internal.ChannelBlockchainServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+	
+	
+	<dubbo:service
+		interface="project.blockchain.ChannelBlockchainService"
+		ref="channelBlockchainService" />
+			<bean id="qRProducerService"
+		class="project.blockchain.internal.QRProducerServiceImpl">
+
+		
+	</bean>
+	
+	<dubbo:service
+		interface="project.blockchain.QRProducerService"
+		ref="qRProducerService" />
+
+			<bean id="rechargeBonusService"
+		class="project.bonus.internal.RechargeBonusServiceImpl">
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="rechargeBlockchainService" ref="rechargeBlockchainService" />
+				<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+		
+	</bean>
+	<dubbo:service
+		interface="project.bonus.RechargeBonusService"
+		ref="rechargeBonusService" />
+	
+
+
+</beans>

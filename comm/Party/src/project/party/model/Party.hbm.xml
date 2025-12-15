@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.party.model.Party" table="PAT_PARTY">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="rolename"  type="java.lang.String">
+			<column name="ROLENAME" />
+		</property>
+		<property name="username"  type="java.lang.String">
+			<column name="USERNAME" />
+		</property>
+		<property name="usercode"  type="java.lang.String">
+			<column name="USERCODE" />
+		</property>
+		<property name="avatar"  type="java.lang.String">
+			<column name="AVATAR" />
+		</property>
+		<property name="safeword"  type="java.lang.String">
+			<column name="SAFEWORD" />
+		</property>
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="last_loginTime"  type="timestamp">
+			<column name="LAST_LOGIN_TIME" />
+		</property>
+		<property name="firstRechargeTime"  type="timestamp">
+			<column name="FIRST_RECHARGE_TIME" />
+		</property>
+		<property name="firstWithdrawTime"  type="timestamp">
+			<column name="FIRST_WITHDRAW_TIME" />
+		</property>
+		<property generated="never"  name="enabled" type="yes_no">
+			<column name="ENABLED" />
+		</property>
+		<property generated="never"  name="withdraw_authority"
+			type="yes_no">
+			<column name="WITHDRAWAUTHORITY" />
+		</property>
+		<property generated="never"  name="login_authority"
+			type="yes_no">
+			<column name="LOGINAUTHORITY" />
+		</property>
+
+		<property generated="never"  name="recharge_authority"
+			type="yes_no">
+			<column name="RECHARGE_AUTHORITY" />
+		</property>
+		<property name="email"  type="java.lang.String">
+			<column name="EMAIL" />
+		</property>
+		<property generated="never"  name="email_authority" type="yes_no">
+            <column name="EMAIL_AUTHORITY" />
+        </property>
+		<property name="phone"  type="java.lang.String">
+			<column name="PHONE" />
+		</property>
+		<property generated="never"  name="phone_authority" type="yes_no">
+            <column name="PHONE_AUTHORITY" />
+        </property>
+		<property generated="never"  name="active"
+			type="yes_no">
+			<column name="ACTIVE" />
+		</property>
+		<property generated="never"  name="kyc_authority"
+			type="yes_no">
+			<column name="KYC_AUTHORITY" />
+		</property>
+		<property generated="never"  name="kyc_highlevel_authority"
+			type="yes_no">
+			<column name="KYC_HIGHLEVEL_AUTHORITY" />
+		</property>
+		<property generated="never"  name="gift_user"
+			type="yes_no">
+			<column name="GIFT_USER" />
+		</property>
+		<property generated="never"  name="gift_money_flag"
+			type="yes_no">
+			<column name="GIFT_MONEY_FLAG" />
+		</property>
+		<property name="remarks"  type="java.lang.String">
+			<column name="REMARKS" />
+		</property>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		
+		<property name="withdraw_limit_amount" type="double">
+			<column name="WITHDRAW_LIMIT_AMOUNT" />
+		</property>
+		<property name="login_ip" type="java.lang.String">
+			<column name="LOGIN_IP" />
+		</property>
+		
+		<property name="withdraw_limit_now_amount" type="double">
+			<column name="WITHDRAW_LIMIT_NOW_AMOUNT" />
+		</property>
+		
+		<property name="user_level" type="java.lang.Integer">
+			<column name="USER_LEVEL" />
+		</property>
+		
+		<property generated="never"  name="register_usercode"
+			type="yes_no">
+			<column name="REGSITER_USERCODE" />
+		</property>
+
+		<property name="vip_level" type="java.lang.Integer">
+			<column name="VIP_LEVEL" />
+		</property>
+
+		<property name="roleType" type="java.lang.Integer">
+			<column name="ROLE_TYPE" />
+		</property>
+
+		<property generated="never"  name="autoComment" type="yes_no">
+			<column name="AUTO_COMMENT" />
+		</property>
+
+		<property name="withdrawAddress" type="java.lang.String">
+			<column name="WITHDRAW_ADDRESS" />
+		</property>
+		<property name="withdrawCoinType" type="java.lang.String">
+			<column name="WITHDRAW_COIN_TYPE" />
+		</property>
+		<property name="withdrawChainName" type="java.lang.String">
+			<column name="WITHDRAW_CHAIN_NAME" />
+		</property>
+		<property name="chatAudit" type="java.lang.Integer">
+			<column name="CHAT_AUDIT" />
+		</property>
+		<property name="whatsApp" type="java.lang.String">
+			<column name="WHAT_APP" />
+		</property>
+	</class>
+</hibernate-mapping>

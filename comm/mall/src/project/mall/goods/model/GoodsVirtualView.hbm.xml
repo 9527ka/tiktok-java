@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.goods.model.GoodsVirtualView" table="T_MALL_GOODS_VIRTUAL_VIEW">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="sellGoodsId" type="java.lang.String">
+			<column name="SELL_GOODS_ID" />
+		</property>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="comboId" type="java.lang.String">
+			<column name="COMBO_ID" />
+		</property>
+		<property name="comboRid" type="java.lang.String">
+			<column name="COMBO_RID" />
+		</property>
+		<property name="virtualNum" type="java.lang.Integer">
+			<column name="VIRTUAL_NUM" />
+		</property>
+		<property name="incrTime" type="java.lang.Long">
+			<column name="INCR_TIME" />
+		</property>
+
+	</class>
+</hibernate-mapping>

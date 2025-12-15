@@ -1,0 +1,30 @@
+
+admin
+	<action name="adminFuturesOrderAction"
+			class="project.futures.web.AdminFuturesOrderAction">
+			<result name="list">/futures_order_list.jsp</result>
+			<result name="result_make" type="json">
+				<param name="root">result_make</param>
+			</result>
+			<result name="holdings">/futures_holdings_list.jsp</result>
+		</action>
+		<action name="adminContractManageAction"
+			class="project.futures.web.AdminContractManageAction">
+			<result name="list">/contract_manage_list.jsp</result>
+			<result name="add">/contract_manage_add.jsp</result>
+			<result name="toAddInstall">/contract_install_add.jsp</result>
+			<result name="listPara">/contract_para_list.jsp</result>
+		</action>
+		<action name="adminProfitAndLossConfigAction"
+			class="project.futures.web.AdminProfitAndLossConfigAction">
+			<result name="list">/profit_loss_config_list.jsp</result>
+			<result name="add">/profit_loss_config_add.jsp</result>
+			<result name="update">/profit_loss_config_update.jsp</result>
+		</action>
+
+
+api
+
+<action name="futuresorder"
+			class="project.futures.web.FuturesOrderAction">
+		</action>

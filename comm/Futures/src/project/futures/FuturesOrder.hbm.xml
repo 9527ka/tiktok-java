@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.futures.FuturesOrder" table="T_FUTURES_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+		
+		<property name="direction" type="java.lang.String">
+			<column name="DIRECTION" />
+		</property>	
+		
+		
+		
+		<property name="timeNum" type="java.lang.Integer">
+			<column name="TIMENUM" />
+		</property>
+		<property name="timeUnit" type="java.lang.String">
+			<column name="TIMEUNIT" />
+		</property>	
+		
+			<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>	
+		<property name="fee" type="double">
+			<column name="FEE" />
+		</property>	
+		<property name="profit_ratio" type="double">
+			<column name="PROFIT_RATIO" />
+		</property>	
+		<property name="profit" type="double">
+			<column name="PROFIT" />
+		</property>	
+		<property name="trade_avg_price" type="double">
+			<column name="TRADE_AVG_PRICE" />
+		</property>	
+			<property name="close_avg_price" type="double">
+			<column name="CLOSE_AVG_PRICE" />
+		</property>	
+		
+		
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>	
+		<property name="profit_loss" type="java.lang.String">
+			<column name="PROFIT_LOSS" />
+		</property>	
+			<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		<property name="close_time" type="timestamp">
+			<column name="CLOSE_TIME" />
+		</property>	
+		<property name="settlement_time" type="timestamp">
+			<column name="SETTLEMENT_TIME" />
+		</property>	
+	
+		
+	
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.user.UserData" table="T_USERDATA">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>	
+		<property name="recharge_dapp" type="double">
+			<column name="RECHARGE_DAPP" />
+		</property>
+		<property name="withdraw_dapp" type="double">
+			<column name="WITHDRAW_DAPP" />
+		</property>
+		<property name="recharge" type="double">
+			<column name="RECHARGE" />
+		</property>
+		<property name="recharge_usdt" type="double">
+			<column name="RECHARGE_USDT" />
+		</property>
+		<property name="recharge_eth" type="double">
+			<column name="RECHARGE_ETH" />
+		</property>	
+		<property name="recharge_btc" type="double">
+			<column name="RECHARGE_BTC" />
+		</property>	
+		<property name="recharge_usdc" type="double">
+			<column name="RECHARGE_USDC" />
+		</property>
+		<property name="recharge_ltc" type="double">
+			<column name="RECHARGE_LTC" />
+		</property>	
+		<property name="rechargeRecom" type="double">
+			<column name="RECHARGE_RECOM" />
+		</property>	
+		<property name="withdraw_all" type="double">
+			<column name="WITHDRAW_ALL" />
+		</property>	
+		<property name="withdraw" type="double">
+			<column name="WITHDRAW" />
+		</property>	
+		<property name="withdraw_eth" type="double">
+			<column name="WITHDRAW_ETH" />
+		</property>	
+		<property name="withdraw_btc" type="double">
+			<column name="WITHDRAW_BTC" />
+		</property>	
+		<property name="withdraw_usdt" type="double">
+			<column name="WITHDRAW_USDT" />
+		</property>
+		<property name="withdraw_usdc" type="double">
+			<column name="WITHDRAW_USDC" />
+		</property>
+			<property name="fee" type="double">
+			<column name="FEE" />
+		</property>	
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+	
+		<property name="order_income" type="double">
+			<column name="ORDER_INCOME" />
+		</property>	
+		<property name="furtures_amount" type="double">
+			<column name="FURTURES_AMOUNT" />
+		</property>	
+		<property name="furtures_fee" type="double">
+			<column name="FURTURES_FEE" />
+		</property>	
+		<property name="furtures_income" type="double">
+			<column name="FURTURES_INCOME" />
+		</property>	
+		<property name="exchange_amount" type="double">
+			<column name="EXCHANGE_AMOUNT" />
+		</property>	
+		<property name="exchange_fee" type="double">
+			<column name="EXCHANGE_FEE" />
+		</property>	
+		<property name="exchange_income" type="double">
+			<column name="EXCHANGE_INCOME" />
+		</property>	
+		<property name="coin_income" type="double">
+			<column name="COIN_INCOME" />
+		</property>	
+		
+		<property name="finance_amount" type="double">
+			<column name="FINANCE_AMOUNT" />
+		</property>
+		<property name="finance_income" type="double">
+			<column name="FINANCE_INCOME" />
+		</property>	
+		<property name="reco_num" type="int">
+			<column name="RECO_NUM" />
+		</property>	
+		
+		<property name="gift_money" type="double">
+			<column name="GIFT_MONEY" />
+		</property>	
+		
+		<property name="recharge_withdrawal_fee" type="double">
+			<column name="RECHARGE_WITHDRAWAL_FEE" />
+		</property>	
+		<property name="miner_amount" type="double">
+			<column name="MINER_AMOUNT" />
+		</property>	
+		<property name="miner_income" type="double">
+			<column name="MINER_INCOME" />
+		</property>	
+		
+	    <property name="galaxy_amount" type="double">
+			<column name="GALAXY_AMOUNT" />
+		</property>	
+		<property name="galaxy_income" type="double">
+			<column name="GALAXY_INCOME" />
+		</property>	
+		
+		<property name="third_recharge_amount" type="double">
+			<column name="THIRD_RECHARGE_AMOUNT" />
+		</property>	
+		<property name="transfer_in_money" type="double">
+			<column name="TRANSFER_IN_MONEY" />
+		</property>	
+		<property name="transfer_out_money" type="double">
+			<column name="TRANSFER_OUT_MONEY" />
+		</property>	
+		
+		
+		<property name="rolename" type="java.lang.String">
+			<column name="ROLENAME" />
+		</property>
+		<property name="holding_money" type="double">
+			<column name="HOLDING_MONEY" />
+		</property>	
+		<property name="exchange_lever_amount" type="double">
+			<column name="EXCHANGE_LEVER_AMOUNT" />
+		</property>	
+		<property name="exchange_lever_fee" type="double">
+			<column name="EXCHANGE_LEVER_FEE" />
+		</property>	
+		<property name="exchange_lever_order_income" type="double">
+			<column name="EXCHANGE_LEVER_ORDER_INCOME" />
+		</property>
+		<property name="rebate1" type="double">
+			<column name="REBATE_1" />
+		</property>
+		<property name="rebate2" type="double">
+			<column name="REBATE_2" />
+		</property>
+		<property name="rebate3" type="double">
+			<column name="REBATE_3" />
+		</property>
+		<property name="translate" type="double">
+			<column name="TRANSLATE" />
+		</property>
+		<property name="sellerTotalSales" type="double">
+			<column name="SELLER_TOTAL_SALES" />
+		</property>
+		<property name="sellerCommission" type="double">
+			<column name="SELLER_COMMISSION" />
+		</property>
+		<property name="promoteAmount" type="double">
+			<column name="PROMOTE_AMOUNT" />
+		</property>
+		<property name="rechargeCommission" type="double">
+			<column name="RECHARGE_COMMISSION" />
+		</property>
+
+		<property name="withdrawCommission" type="double">
+			<column name="WITHDRAW_COMMISSION" />
+		</property>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.finance.Finance" table="T_FINANCE">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+				<property name="name_en" type="java.lang.String">
+			<column name="NAME_EN" />
+		</property>
+		<property name="name_cn" type="java.lang.String">
+			<column name="NAME_CN" />
+		</property>
+		<property name="name_kn" type="java.lang.String">
+			<column name="NAME_KN" />
+		</property>
+		<property name="name_jn" type="java.lang.String">
+			<column name="NAME_JN" />
+		</property>
+		
+		
+		<property name="img" type="java.lang.String">
+			<column name="IMG" />
+		</property>
+		
+		<property name="cycle" type="java.lang.Integer">
+			<column name="CYCLE" />
+		</property>
+		<property name="daily_rate" type="double">
+			<column name="DAILY_RATE" />
+		</property>
+		<property name="daily_rate_max" type="double">
+			<column name="DAILY_RATE_MAX" />
+		</property>
+		
+
+		<property name="today_rate" type="double">
+			<column name="TODAY_RATE" />
+		</property>	
+
+		<property name="default_ratio" type="double">
+			<column name="DEFAULT_RATIO" />
+		</property>	
+		<property name="investment_min" type="double">
+			<column name="INVESTMENT_MIN" />
+		</property>	
+		<property name="investment_max" type="double">
+			<column name="INVESTMENT_MAX" />
+		</property>	
+		
+		
+			
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>
+	
+	</class>
+</hibernate-mapping>

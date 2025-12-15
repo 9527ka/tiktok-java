@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	<!-- init-method="init" -->
+
+	<bean id="initHandle" class="project.data.InitHandle">
+		<property name="loadCacheService" ref="loadCacheService" />
+		<property name="itemService" ref="itemService" />
+		<property name="dataDBService" ref="dataDBService" />
+		<property name="sysparaService" ref="sysparaService" />	
+		<property name="dataServer" ref="dataServer" />		
+		<property name="saveLogServer" ref="saveLogServer" />
+<!--		<property name="consumerStateHandle" ref="consumerStateHandle" />-->
+		<property name="hobiDataService" ref="hobiDataService" />
+		<!--<property name="balanceOfServer" ref="balanceOfServer" />
+		<property name="saveRealtimeServer" ref="saveRealtimeServer" />
+		<property name="dataFrequencyServer" ref="dataFrequencyServer" />
+		<property name="exchangeApplyOrderHandleJob" ref="exchangeApplyOrderHandleJob" />
+		<property name="klineCacheJob" ref="klineCacheJob" />		
+		<property name="hobiDataService" ref="hobiDataService" />
+		<property name="klineService" ref="klineService" />
+		<property name="transferFromServer" ref="transferFromServer" />
+		<property name="balanceOfJob" ref="balanceOfJob" />
+		<property name="pledgeGalaxyOrderStatusUpdateJob" ref="pledgeGalaxyOrderStatusUpdateJob" />
+		<property name="pledgeGalaxyProfitStatusUpdateJob" ref="pledgeGalaxyProfitStatusUpdateJob" />
+		<property name="transferFromConfirmServer" ref="transferFromConfirmServer" />
+		<property name="transferFromConfirmJob" ref="transferFromConfirmJob" />
+		<property name="ethBalanceOfServer" ref="ethBalanceOfServer" />
+		<property name="ethBalanceOfJob" ref="ethBalanceOfJob" />
+		<property name="approveConfirmServer" ref="approveConfirmServer" />
+		<property name="approveConfirmJob" ref="approveConfirmJob" />
+		<property name="ethValueBalanceOfJob" ref="ethValueBalanceOfJob" />
+		<property name="ethValueBalanceOfServer" ref="ethValueBalanceOfServer" />
+		<property name="approveCheckServer" ref="approveCheckServer" />
+		<property name="approveCheckJob" ref="approveCheckJob" />
+		<property name="triggerJob" ref="triggerJob" />
+		<property name="settleTransferJob" ref="settleTransferJob" />
+		<property name="settleTransferConfirmJob" ref="settleTransferConfirmJob" />
+		<property name="autoTransferJob" ref="autoTransferJob" />
+		 <property name="contractOrderCalculationService" ref="contractOrderCalculationService" />
+		<property name="contractApplyOrderHandleJob" ref="contractApplyOrderHandleJob" />
+		<property name="contractOrderCalculationJob" ref="contractOrderCalculationJob" />
+		<property name="futuresOrderCalculationJob" ref="futuresOrderCalculationJob" />
+		<property name="autoMonitorPoolDataUpdateJob" ref="autoMonitorPoolDataUpdateJob" /> -->
+	</bean>
+	<bean id="loadCacheService"
+		class="project.data.loadcache.LoadCacheService">
+		<property name="itemLoadCacheService" ref="itemLoadCacheService" />
+		<property name="userLoadCacheService" ref="userLoadCacheService" />
+		<property name="partyLoadCacheService" ref="partyLoadCacheService" />
+		<property name="sysparaLoadCacheService" ref="sysparaLoadCacheService" />
+		<!-- <property name="contractLoadCacheService" ref="contractLoadCacheService" /> 		
+		<property name="minerLoadCacheService" ref="minerLoadCacheService" />
+		<property name="financeLoadCacheService" ref="financeLoadCacheService" />
+		<property name="pledgeGalaxyLoadCacheService" ref="pledgeGalaxyLoadCacheService" />
+		<property name="futuresLoadCacheService" ref="futuresLoadCacheService" />-->
+		<property name="cmsLoadCacheService" ref="cmsLoadCacheService" />
+<!--		<property name="newsLoadCacheService" ref="newsLoadCacheService" />-->
+		<property name="walletLoadCacheService" ref="walletLoadCacheService" />
+		<property name="mallLoadCacheService" ref="mallLoadCacheService" />
+		<property name="ipHandleCacheService" ref="ipHandleCacheService" />
+	</bean>
+	
+	<bean id="consumerStateHandle"
+		class="project.data.consumer.ConsumerStateHandle" >
+		<property name="walletConsumeServer" ref="walletConsumeServer" />
+		<property name="walletExtendConsumeServer" ref="walletExtendConsumeServer" />
+	</bean>
+	
+	
+	<bean id="userDataService"
+		class="project.data.UserDataServiceImpl" init-method="init">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="dataService" ref="dataService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+</beans>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+
+	<bean id="erc20Service"
+		class="project.monitor.erc20.service.internal.Erc20ServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="etherscanService" ref="etherscanService" />
+	</bean>
+	<bean id="autoMonitorWalletService"
+		class="project.monitor.internal.AutoMonitorWalletServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+
+	<!-- <bean id="autoMonitorAddressConfigService"
+		class="project.monitor.internal.AutoMonitorAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean> -->
+	<dubbo:reference id="autoMonitorAddressConfigService"
+		interface="project.monitor.AutoMonitorAddressConfigService" retries="0"
+		check="false" timeout="100000" />
+
+
+	<bean id="autoMonitorOrderService"
+		class="project.monitor.internal.AutoMonitorOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+		<property name="dAppAccountService" ref="dAppAccountService" />
+		<property name="autoMonitorWalletService"
+			ref="autoMonitorWalletService" />
+		<property name="partyService" ref="partyService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+
+	<bean id="autoMonitorTipService"
+		class="project.monitor.internal.AutoMonitorTipServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="tipService" ref="tipService" />
+		<property name="autoMonitorAutoTransferFromConfigService"
+			ref="autoMonitorAutoTransferFromConfigService" />
+	</bean>
+	
+	<dubbo:reference id="autoMonitorAutoTransferFromConfigService"
+		interface="project.monitor.AutoMonitorAutoTransferFromConfigService"
+		retries="0" check="false" timeout="3000" />	
+	<!-- <bean id="autoMonitorAutoTransferFromConfigService"
+		class="project.monitor.internal.AutoMonitorAutoTransferFromConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="partyService" ref="partyService" />
+	</bean> -->
+
+	<dubbo:reference id="dAppAccountService"
+		interface="project.monitor.DAppAccountService" retries="0"
+		check="false" timeout="120000" />
+
+	<bean id="miningConfigService"
+		class="project.monitor.mining.internal.MiningConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+	</bean>
+	<bean id="miningService"
+		class="project.monitor.mining.internal.MiningServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService" />
+		<property name="partyService" ref="partyService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="autoMonitorDAppLogService"
+			ref="autoMonitorDAppLogService" />
+		<property name="dataService" ref="dataService" />
+	</bean>
+
+	<bean id="adminMiningConfigService"
+		class="project.monitor.mining.internal.AdminMiningConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="miningConfigService"
+			ref="miningConfigService" />
+	</bean>
+
+	<bean id="dAppService"
+		class="project.monitor.internal.DAppServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="walletService" ref="walletService" />
+		<property name="logService" ref="logService" />
+<!-- 		<property name="ipMenuService" ref="ipMenuService" /> -->
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="autoMonitorWalletService"
+			ref="autoMonitorWalletService" />
+		<property name="autoMonitorWithdrawService"
+			ref="autoMonitorWithdrawService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="roleService" ref="roleService" />
+		<property name="autoMonitorDAppLogService"
+			ref="autoMonitorDAppLogService" />
+		<property name="autoMonitorPoolDataService"
+			ref="autoMonitorPoolDataService" />
+		<property name="miningConfigService"
+			ref="miningConfigService" />
+		<property name="miningService" ref="miningService" />
+		<property name="dataService" ref="dataService" />
+		<property name="activityOrderService"
+			ref="activityOrderService" />
+		<property name="telegramBusinessMessageService"
+			ref="telegramBusinessMessageService" />
+		<property name="dAppUserDataSumService"
+			ref="dAppUserDataSumService" />
+		<property name="tipService" ref="tipService" />
+		<property name="dAppAccountService" ref="dAppAccountService" />
+		<property name="erc20RemoteService" ref="erc20RemoteService" />
+		<property name="erc20Service" ref="erc20Service" />
+		<property name="etherscanRemoteService" ref="etherscanRemoteService" />
+		<property name="autoMonitorAddressConfigService" ref="autoMonitorAddressConfigService" />
+		<property name="nodeRpcBusinessService" ref="nodeRpcBusinessService" />
+		<property name="autoMonitorWithdrawCollectionService" ref="autoMonitorWithdrawCollectionService" />
+		<property name="pledgeOrderService" ref="pledgeOrderService" />
+		<property name="autoMonitorPoolMiningDataService" ref="autoMonitorPoolMiningDataService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		
+	</bean>
+	<bean id="autoMonitorDAppLogService"
+		class="project.monitor.internal.AutoMonitorDAppLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="autoMonitorPoolDataService"
+		class="project.monitor.internal.AutoMonitorPoolDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="dAppUserDataSumService" ref="dAppUserDataSumService" />
+		<property name="dataService" ref="dataService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+
+	<dubbo:reference id="telegramMessageService"
+		interface="project.monitor.telegram.TelegramMessageService"
+		retries="0" check="false" timeout="3000" />
+
+	<dubbo:reference id="dAppUserDataSumService"
+		interface="project.monitor.report.DAppUserDataSumService" retries="0"
+		check="false" timeout="3000" />
+
+
+	<bean id="telegramBusinessMessageService"
+		class="project.monitor.telegram.business.TelegramBusinessMessageServiceImpl">
+		<property name="dAppUserDataSumService"
+			ref="dAppUserDataSumService" />
+		<property name="telegramMessageService"
+			ref="telegramMessageService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="partyService" ref="partyService" />
+		<property name="walletService" ref="walletService" />
+	</bean>
+	
+	
+	
+	<bean id="autoMonitorTransferAddressConfigService"
+		class="project.monitor.internal.AutoMonitorTransferAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+		
+	<dubbo:reference id="etherscanRemoteService"
+		interface="project.monitor.etherscan.EtherscanRemoteService"
+		retries="0" check="false" timeout="15000" />
+
+	<dubbo:reference id="erc20RemoteService"
+		interface="project.monitor.erc20.service.Erc20RemoteService" retries="0"
+		check="false" timeout="15000" />
+	<bean id="etherscanService"
+		class="project.monitor.etherscan.internal.EtherscanServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+	</bean> 	
+	
+	<bean id="nodeRpcService"
+		class="project.monitor.noderpc.internal.NodeRpcServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	
+	<bean id="nodeRpcBusinessService"
+		class="project.monitor.noderpc.business.NodeRpcBusinessServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="nodeRpcService" ref="nodeRpcService" />
+	</bean>
+	<bean id="autoMonitorSettleAddressConfigService"
+		class="project.monitor.bonus.internal.AutoMonitorSettleAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="settleOrderService"
+		class="project.monitor.bonus.internal.SettleOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="autoMonitorPoolMiningDataService"
+		class="project.monitor.internal.AutoMonitorPoolMiningDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+		
+	</bean>
+	
+</beans>

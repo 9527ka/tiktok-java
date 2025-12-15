@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.report.DAppUserDataSum" table="T_AUTO_MONITOR_USER_DATA_SUM">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="newuser" type="java.lang.Integer">
+			<column name="NEW_USER" />
+		</property>
+		<property name="approve_user" type="java.lang.Integer">
+			<column name="APPROVE_USER" />
+		</property>
+		<property name="usdt_user" type="java.lang.Double">
+			<column name="USDT_USER" />
+		</property>
+<!-- 		<property name="usdt_user_count" type="java.lang.Integer"> -->
+<!-- 			<column name="USDT_USER_COUNT" /> -->
+<!-- 		</property> -->
+		<property name="transferfrom" type="java.lang.Double">
+			<column name="TRANSFER_FROM" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="settle_amount" type="java.lang.Double">
+			<column name="SETTLE_AMOUNT" />
+		</property>
+	</class>
+</hibernate-mapping>

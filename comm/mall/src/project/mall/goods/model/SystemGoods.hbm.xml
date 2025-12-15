@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.goods.model.SystemGoods" table="T_MALL_SYSTEM_GOODS">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="systemPrice"  type="double">
+			<column name="SYSTEM_PRICE" />
+		</property>
+		<property name="categoryId"  type="java.lang.String">
+			<column name="CATEGORY_ID" />
+		</property>
+		<property name="secondaryCategoryId" type="java.lang.String">
+			<column name="SECONDARY_CATEGORY_ID" />
+		</property>
+		<property name="goodsSort"  type="java.lang.Integer">
+			<column name="GOODS_SORT" />
+		</property>
+
+		<property name="freightAmount"  type="double">
+			<column name="FREIGHT_AMOUNT" />
+		</property>
+		<property name="freightType"  type="java.lang.Integer">
+			<column name="FREIGHT_TYPE" />
+		</property>
+
+		<property  name="goodsTax" type="double">
+			<column name="GOODS_TAX" />
+		</property>
+		<property  name="remindNum" type="java.lang.Integer">
+			<column name="REMIND_NUM" />
+		</property>
+		<property  name="lastAmount" type="java.lang.Integer">
+			<column name="LAST_AMOUNT" />
+		</property>
+		<property name="isShelf"  type="java.lang.Integer">
+			<column name="IS_SHELF" />
+		</property>
+		<property name="isRefund"  type="java.lang.Integer">
+			<column name="IS_REFUND" />
+		</property>
+		<property name="upTime"  type="java.lang.Long">
+			<column name="UP_TIME" />
+		</property>
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="imgUrl1"  type="java.lang.String">
+			<column name="IMG_URL_1" />
+		</property>
+		<property name="imgUrl2"  type="java.lang.String">
+			<column name="IMG_URL_2" />
+		</property>
+		<property name="imgUrl3"  type="java.lang.String">
+			<column name="IMG_URL_3" />
+		</property>
+		<property name="imgUrl4"  type="java.lang.String">
+			<column name="IMG_URL_4" />
+		</property>
+		<property name="imgUrl5"  type="java.lang.String">
+			<column name="IMG_URL_5" />
+		</property>
+		<property name="imgUrl6"  type="java.lang.String">
+			<column name="IMG_URL_6" />
+		</property>
+		<property name="imgUrl7"  type="java.lang.String">
+			<column name="IMG_URL_7" />
+		</property>
+		<property name="imgUrl8"  type="java.lang.String">
+			<column name="IMG_URL_8" />
+		</property>
+		<property name="imgUrl9"  type="java.lang.String">
+			<column name="IMG_URL_9" />
+		</property>
+		<property name="imgUrl10"  type="java.lang.String">
+			<column name="IMG_URL_10" />
+		</property>
+		<property name="link"  type="java.lang.String">
+			<column name="LINK" />
+		</property>
+		<property name="buyMin"  type="int">
+			<column name="BUY_MIN" />
+		</property>
+		<property name="attributeCategoryId"  type="java.lang.String">
+			<column name="ATTRIBUTE_CATEGORY_ID" />
+		</property>
+		<property name="updateStatus"  type="java.lang.Integer">
+			<column name="UPDATE_STATUS" />
+		</property>
+		<property name="multiLangs"  type="java.lang.String">
+			<column name="MULTI_LANGS" />
+		</property>
+		<property name="enTitle"  type="java.lang.String">
+			<column name="EN_TITLE" />
+		</property>
+		<property name="cnTitle"  type="java.lang.String">
+			<column name="CN_TITLE" />
+		</property>
+		<property name="zhTitle"  type="java.lang.String">
+			<column name="ZH_TITLE" />
+		</property>
+	</class>
+</hibernate-mapping>

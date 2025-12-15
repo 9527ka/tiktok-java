@@ -1,0 +1,111 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="activityLibraryService" class="project.mall.activity.service.impl.ActivityLibraryServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+    <bean id="activityConfigLogService" class="project.mall.activity.service.impl.ActivityConfigLogServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="activityPrizeLogService" ref="activityPrizeLogService"/>
+    </bean>
+
+    <bean id="activityPrizePoolService" class="project.mall.activity.service.impl.ActivityPrizePoolServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+
+    <bean id="activityPrizeService" class="project.mall.activity.service.impl.ActivityPrizeServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+        <property name="activityPrizePoolService" ref="activityPrizePoolService"/>
+        <property name="lotteryRecordService" ref="lotteryRecordService"/>
+        <property name="activityLibraryService" ref="activityLibraryService"/>
+        <property name="redisHandler" ref="redisHandler"/>
+    </bean>
+    <bean id="activityPrizeLogService" class="project.mall.activity.service.impl.ActivityPrizeLogServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+
+    <bean id="activityTemplateService" class="project.mall.activity.service.impl.ActivityTemplateServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+
+    <bean id="activityUserJoinLogService" class="project.mall.activity.service.impl.ActivityUserJoinLogServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+    <bean id="activityUserService" class="project.mall.activity.service.impl.ActivityUserServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+        <property name="partyService" ref="partyService"/>
+    </bean>
+
+    <bean id="firstRechargeFruitDialActivityHandler" class="project.mall.activity.handler.FirstRechargeFruitDialActivityHandler">
+        <property name="activityTemplateService" ref="activityTemplateService"/>
+        <property name="activityLibraryService" ref="activityLibraryService"/>
+        <property name="activityUserJoinLogService" ref="activityUserJoinLogService"/>
+        <property name="activityUserService" ref="activityUserService"/>
+        <property name="activityPrizePoolService" ref="activityPrizePoolService"/>
+        <property name="activityPrizeService" ref="activityPrizeService"/>
+
+        <property name="walletLogService" ref="walletLogService"/>
+        <property name="userRecomService" ref="userRecomService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="activityRechargeAndLotteryHelper" ref="activityRechargeAndLotteryHelper"/>
+        <property name="activityUserPointsService" ref="activityUserPointsService"/>
+    </bean>
+    <bean id="simpleLotteryActivityHandler" class="project.mall.activity.handler.SimpleLotteryActivityHandler">
+        <property name="activityTemplateService" ref="activityTemplateService"/>
+        <property name="activityLibraryService" ref="activityLibraryService"/>
+        <property name="activityUserJoinLogService" ref="activityUserJoinLogService"/>
+        <property name="activityUserService" ref="activityUserService"/>
+        <property name="activityPrizePoolService" ref="activityPrizePoolService"/>
+        <property name="activityPrizeService" ref="activityPrizeService"/>
+
+        <property name="walletLogService" ref="walletLogService"/>
+        <property name="userRecomService" ref="userRecomService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="activitySimpleLotteryHelper" ref="activitySimpleLotteryHelper"/>
+        <property name="activityUserPointsService" ref="activityUserPointsService"/>
+    </bean>
+
+    <bean id="activityEventDispatcher" class="project.mall.activity.core.ActivityEventDispatcher">
+        <property name="activityLibraryService" ref="activityLibraryService"/>
+        <property name="transactionMethodFragmentFun" ref="transactionMethodFragmentFun"/>
+    </bean>
+    <bean id="activityHelper" class="project.mall.activity.core.ActivityHelper">
+        <property name="activityLibraryService" ref="activityLibraryService"/>
+        <property name="activityTriggerEventService" ref="activityUserJoinLogService"/>
+        <property name="activityUserService" ref="activityUserService"/>
+    </bean>
+
+    <bean id="activityRechargeAndLotteryHelper" class="project.mall.activity.helper.ActivityRechargeAndLotteryHelper">
+        <property name="activityPrizeService" ref="activityPrizeService"/>
+        <property name="lotteryRecordService" ref="lotteryRecordService"/>
+        <property name="activityLibraryService" ref="activityLibraryService"/>
+        <property name="sellerService" ref="sellerService"/>
+        <property name="userRecomService" ref="userRecomService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="activityUserPointsService" ref="activityUserPointsService"/>
+        <property name="activityUserService" ref="activityUserService"/>
+    </bean>
+    <bean id="activitySimpleLotteryHelper" class="project.mall.activity.helper.ActivitySimpleLotteryHelper">
+        <property name="activityPrizeService" ref="activityPrizeService"/>
+        <property name="lotteryRecordService" ref="lotteryRecordService"/>
+        <property name="activityLibraryService" ref="activityLibraryService"/>
+        <property name="sellerService" ref="sellerService"/>
+        <property name="userRecomService" ref="userRecomService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="activityUserPointsService" ref="activityUserPointsService"/>
+        <property name="activityUserService" ref="activityUserService"/>
+        <property name="activityUserPointsLogService" ref="activityUserPointsLogService"/>
+    </bean>
+
+    <bean id="activityUserRechargeListener" class="project.mall.activity.event.ActivityUserRechargeListener">
+        <property name="activityEventDispatcher" ref="activityEventDispatcher"/>
+        <property name="sellerService" ref="sellerService"/>
+        <property name="walletLogService" ref="walletLogService"/>
+    </bean>
+
+
+</beans>

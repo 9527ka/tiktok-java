@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<bean id="dataTask" class="project.data.task.DataTask">
+		<property name="taskJobHandle" ref="taskJobHandle" />
+		<property name="backupTask_60_minute" ref="backupTask_60_minute" />
+<!--        <property name="klineTask_1_minute" ref="klineTask_1_minute" />-->
+<!--		<property name="klineTask_5_minute" ref="klineTask_5_minute" />-->
+<!--        <property name="klineTask_15_minute" ref="klineTask_15_minute" />-->
+<!--		<property name="klineTask_30_minute" ref="klineTask_30_minute" />-->
+<!--		<property name="klineTask_60_minute" ref="klineTask_60_minute" />-->
+<!--		<property name="klineTask_4_hour" ref="klineTask_4_hour" />-->
+<!--		<property name="klineTask_1_day" ref="klineTask_1_day" />-->
+<!--		<property name="klineTask_1_week" ref="klineTask_1_week" />-->
+<!--		<property name="klineTask_1_month" ref="klineTask_1_month" />-->
+		<property name="mallOrdersJob" ref="mallOrdersJob" />
+	</bean>
+
+    <bean id="taskJobHandle" class="project.data.task.TaskJobHandle">
+        <property name="cleanDataJob" ref="cleanDataJob"/>
+        <!--		<property name="financeOrder1DayJob" ref="financeOrder1DayJob" />-->
+        <property name="walletService" ref="walletService"/>
+        <property name="walletDayService" ref="walletDayService"/>
+        <property name="minerOrderProfitJob" ref="minerOrderProfitJob"/>
+        <property name="sysLogService" ref="sysLogService"/>
+        <property name="sysparaService" ref="sysparaService"/>
+        <!--		<property name="financeOrderCreateRecomJob" ref="financeOrderCreateRecomJob" />-->
+        <!--		<property name="futuresOrderCreateRecomJob" ref="futuresOrderCreateRecomJob" />-->
+        <property name="recharegeBonus1DayJob" ref="recharegeBonus1DayJob"/>
+    </bean>
+
+    <bean id="backupTask_60_minute" class="db.job.BackupJob">
+        <property name="sysLogService" ref="sysLogService"/>
+        <property name="sysparaService" ref="sysparaService"/>
+    </bean>
+
+    <bean id="klineTask_1_minute"
+          class="project.data.klinejob.Kline1MinuteJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_5_minute"
+          class="project.data.klinejob.Kline5MinuteJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_15_minute"
+          class="project.data.klinejob.Kline15MinuteJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_30_minute"
+          class="project.data.klinejob.Kline30MinuteJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_60_minute"
+          class="project.data.klinejob.Kline60MinuteJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_4_hour"
+          class="project.data.klinejob.Kline4HourJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_1_day"
+          class="project.data.klinejob.Kline1DayJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_1_week"
+          class="project.data.klinejob.Kline1WeekJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="klineTask_1_month"
+          class="project.data.klinejob.Kline1MonJob">
+        <property name="itemService" ref="itemService"/>
+        <property name="klineService" ref="klineService"/>
+    </bean>
+
+    <bean id="recharegeBonus1DayJob" class="project.bonus.job.RecharegeBonus1DayJob">
+        <property name="rechargeBonusService" ref="rechargeBonusService"/>
+    </bean>
+
+	<bean id="mallOrdersJob"
+		  class="project.mall.task.MallOrdersJob">
+		<property name="goodsOrdersService" ref="goodsOrdersService" />
+		<property name="moneyFreezeService" ref="moneyFreezeService" />
+		<property name="notificationHelper" ref="notificationHelper" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="onlineChatUserMessageService" ref="onlineChatUserMessageService" />
+		<property name="goodsStatisticsService" ref="goodsStatisticsService" />
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
+		<property name="sysparaService" ref="sysparaService" />
+        <property name="sellerService" ref="sellerService" />
+	</bean>
+    <task:scheduler id="dataTaskScheduler" pool-size="50"/>
+
+    <task:scheduled-tasks scheduler="dataTaskScheduler">
+        <!-- 每天凌晨0时分启动 -->
+        <task:scheduled ref="dataTask" method="jobHandle" cron="0 0 0 * * ?"/>
+        <!-- 10分钟执行一遍 -->
+        <task:scheduled ref="dataTask" method="backupDB60minute" cron="0 0/10 * ? * *"/>
+        <!-- 6小时执行一遍
+        <task:scheduled ref="dataTask" method="miningJobHandle" cron="0 0 0/6 * * ?"/>-->
+        <!-- 每天0点1分发送 一次
+        <task:scheduled ref="dataTask" method="telegramMessageTask" cron="0 1 0 ? * *"/>-->
+        <!-- 每6小时启动一次 -->
+        <!--		<task:scheduled ref="dataTask" method="pledgeTask" cron="0 0 0/6 * * ?"/>-->
+        <!-- 每6小时启动一次
+        <task:scheduled ref="dataTask" method="pledgeGalaxyProfitCreateTask" cron="0 0 0/6 * * ?"/>
+        <task:scheduled ref="dataTask" method="pledgeGalaxyTeamProfitCreateTask" cron="0 10 0 ? * *"/>-->
+        <!--
+        <task:scheduled ref="dataTask" method="klineTask1minute" cron="0 * * ? * *"/>
+        <task:scheduled ref="dataTask" method="klineTask5minute" cron="0 0/5 * ? * *"/>
+        <task:scheduled ref="dataTask" method="klineTask15minute" cron="0 0/15 * ? * *"/>
+        <task:scheduled ref="dataTask" method="klineTask30minute" cron="0 0/30 * ? * *"/>
+        <task:scheduled ref="dataTask" method="klineTask60minute" cron="0 0 * ? * *"/>
+        <task:scheduled ref="dataTask" method="klineTask4hour" cron="0 0 0-4 ? * *"/>
+        <task:scheduled ref="dataTask" method="klineTask1day" cron="0 0 0 * * ?"/>
+        <task:scheduled ref="dataTask" method="klineTask1week" cron="0 0 0 ? * 1"/>
+        <task:scheduled ref="dataTask" method="klineTask1month" cron="0 0 0 1 * ?"/>-->
+
+
+        <task:scheduled ref="dataTask" method="autoCancel" cron="*/60 * * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoVirtualOrderdelivery" cron="*/60 * * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoReceipt" cron="*/50 * * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoSellerInfo" cron="25 35 * * * ?"/>
+
+        <!--自动释放佣金-->
+        <!--		<task:scheduled ref="dataTask" method="autoProfit" cron="0 0/2 * * * ?"/>-->
+
+        <task:scheduled ref="dataTask" method="autoComment" cron="0 0/5 * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoPurchTimeOutJob" cron="0 0/5 * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoSellerRecTimeOutJob" cron="0 0/5 * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoSellerGoodsOutJob" cron="0 0/5 * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoConfirm" cron="0 0/10 * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoStopComboJob" cron="0 0/5 * * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoIncreaseViewCount" cron="0 0 0/1 * * ?"/>
+
+<!--        <task:scheduled ref="dataTask" method="autoUnFreezeMoney" cron="0/5 * * * * ?"/>-->
+
+        <!--每天早上8点执行定时任务清除消息记录-->
+        <task:scheduled ref="dataTask" method="autoClearChatHistory" cron="50 0 8 * * ?"/>
+
+        <task:scheduled ref="dataTask" method="autoNotifySellerReplyIm" cron="25/10 * * * * ?"/>
+
+        <!-- 定时更新商品折扣活动状态变更情况 -->
+        <task:scheduled ref="dataTask" method="refreshGoodsDiscount" cron="15 0/10 * * * ?"/>
+
+        <!-- 定时更新商品展示权重 -->
+        <task:scheduled ref="dataTask" method="timerRefreshGoodsShowWeight" cron="35 0/10 * * * ?"/>
+
+        <!-- 定时更新商品新品标记 -->
+        <task:scheduled ref="dataTask" method="refreshGoodsNewFlag" cron="10 0/10 * * * ?"/>
+
+        <!-- 定时清理过期消息通知记录  -->
+        <task:scheduled ref="dataTask" method="clearOldNotification" cron="30 30 0/1 * * ?"/>
+
+        <!-- 定时清理过期浏览量记录  -->
+        <task:scheduled ref="dataTask" method="clearOldView" cron="20 30 6 * * ?"/>
+
+        <!-- 定时任务，修复早期记录没有 flag 值的订单  -->
+        <task:scheduled ref="dataTask" method="fillOrderFlag" cron="30 30 0/1 * * ?"/>
+
+    </task:scheduled-tasks>
+
+    <task:executor id="executorWithPoolSizeRange"
+                   pool-size="2-50" queue-capacity="1000" rejection-policy="ABORT"/>
+    <task:annotation-driven/>
+
+</beans>

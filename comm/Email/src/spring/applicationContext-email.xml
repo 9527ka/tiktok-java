@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="emailSendService" class="email.internal.EmailSendServiceImpl">
+	</bean>
+
+	<context:property-placeholder location="classpath:config.properties" />
+
+	<bean id="internalEmailSenderService" class="email.internal.InternalEmailSenderServiceImpl" init-method="init">
+		<property name="hosts" value="${email.host}"/>
+		<property name="ports" value="${email.port}"/>
+		<property name="usernames" value="${email.username}"/>
+		<property name="froms" value="${email.from}"/>
+		<property name="passwords" value="${email.password}"/>
+		<property name="mailSender" ref="mailSender" />
+		<property name="mailMessage" ref="mailMessage" />
+		<property name="freeMarkerConfigurer" ref="freeMarkerConfigurer" />
+	</bean>
+
+
+
+	<bean id="emailServer" class="email.sender.EmailServer">
+		<property name="taskExecutor" ref="emailSendThreadPool" />
+		<property name="internalEmailSenderService" ref="internalEmailSenderService" />
+	</bean>
+
+
+	<bean id="emailSendThreadPool" class="kernel.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="2" />
+		<property name="keepAliveSeconds" value="60" />
+		<property name="maxPoolSize" value="4" />
+		<property name="queueCapacity" value="3000" />
+		<property name="rejectedExecutionHandler" ref="emailSendThreadRejectExecutingHandler" />
+	</bean>
+
+	<bean id="emailSendThreadRejectExecutingHandler" class="kernel.util.RejectExecutionHandlerDelegator">
+		<property name="rejectExecutionHandlers">
+			<list>
+				<bean class="email.sender.OffLineEventRejectExecutingHandler" />
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 邮件发送方配置bean -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${email.host}" />
+<!--		<property name="port" value="${email.port}" />-->
+		<!-- mail account -->
+		<property name="username" value="${email.username}" />
+		<property name="password" value="${email.password}" />
+		<property name="javaMailProperties">
+			<props>
+				<!--  gmail
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.port">465</prop>
+                <prop key="mail.smtp.ssl.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+                <prop key="mail.smtp.host">smtp.gmail.com</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+                <prop key="mail.smtp.socketFactory.port">465</prop>-->
+
+				<!--  outlook-->
+<!--				<prop key="mail.smtp.port">${email.port}</prop>-->
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<!--
+                <prop key="mail.smtp.port">465</prop>
+                <prop key="mail.smtp.socketFactory.port">465</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop> -->
+			</props>
+		</property>
+	</bean>
+	<!-- 邮件发送模板 -->
+	<bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from" value="${email.username}" />
+	</bean>
+	<!-- 配置发送模板bean -->
+	<bean id="freeMarkerConfigurer"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPaths" value="classpath:email/ftl" /><!-- 
+			模板路径位置 -->
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">1800</prop><!-- 模板更新延时 -->
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="locale">zh_CN</prop>
+			</props>
+		</property>
+	</bean>
+
+
+</beans>

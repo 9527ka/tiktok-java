@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.ddos.model.IpMenu" table="T_IP_MENU">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="ip" type="java.lang.String">
+			<column name="IP" />
+		</property>
+		
+		<property name="type" type="java.lang.String">
+			<column name="TYPE" />
+		</property>
+		<property name="delete_status" type="int">
+			<column name="DELETE_STATUS" />
+		</property>
+		
+		<property name="last_opera_time" type="timestamp">
+			<column name="LAST_OPERA_TIME" />
+		</property>	
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="createName" type="java.lang.String">
+			<column name="CREATE_NAME" />
+		</property>
+
+		<property name="remark" type="java.lang.String">
+			<column name="REMARK" />
+		</property>
+
+	</class>
+</hibernate-mapping>

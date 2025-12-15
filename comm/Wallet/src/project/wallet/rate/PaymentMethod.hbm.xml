@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.wallet.rate.PaymentMethod" table="T_PAYMENT_METHOD">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="partyId"  type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property  name="payType" type="java.lang.Integer">
+			<column name="PAY_TYPE" />
+		</property>
+
+		<property name="realName"  type="java.lang.String">
+			<column name="REAL_NAME" />
+		</property>
+
+		<property name="bankName"  type="java.lang.String">
+			<column name="BANK_NAME" />
+		</property>
+
+		<property name="bankAccount"  type="java.lang.String">
+			<column name="BANK_ACCOUNT" />
+		</property>
+
+		<property  name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+	</class>
+</hibernate-mapping>

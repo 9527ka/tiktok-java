@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.data.model.Symbols" table="T_SYMBOLS">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="base_currency" type="java.lang.String">
+			<column name="BASE_CURRENCY" />
+		</property>
+		<property name="quote_currency" type="java.lang.String">
+			<column name="QUOTE_CURRENCY" />
+		</property>	
+		<property name="price_precision" type="int">
+			<column name="PRICE_PRECISION" />
+		</property>	
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>	
+		<property name="leverage_ratio" type="double">
+			<column name="LEVERAGE_RATIO" />
+		</property>	
+	</class>
+</hibernate-mapping>

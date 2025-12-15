@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.orders.model.MallAddress" table="T_MALL_USERADDRESS">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="partyId"  type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="phone"  type="java.lang.String">
+			<column name="PHONE" />
+		</property>
+
+		<property name="email"  type="java.lang.String">
+			<column name="EMAIL" />
+		</property>
+
+		<property name="contacts"  type="java.lang.String">
+			<column name="CONTACTS" />
+		</property>
+
+		<property name="postcode"  type="java.lang.String">
+			<column name="POSTCODE" />
+		</property>
+
+		<property name="country"  type="java.lang.String">
+			<column name="COUNTRY" />
+		</property>
+
+		<property name="province"  type="java.lang.String">
+			<column name="PROVINCE" />
+		</property>
+
+		<property name="city"  type="java.lang.String">
+			<column name="CITY" />
+		</property>
+
+		<property name="address"  type="java.lang.String">
+			<column name="ADDRESS" />
+		</property>
+
+		<property  name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="countryId"  type="java.lang.Integer">
+			<column name="COUNTRY_ID" />
+		</property>
+
+		<property name="provinceId"  type="java.lang.Integer">
+			<column name="PROVINCE_ID" />
+		</property>
+
+		<property name="cityId"  type="java.lang.Integer">
+			<column name="CITY_ID" />
+		</property>
+
+	</class>
+</hibernate-mapping>

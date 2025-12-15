@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.2.xsd">
+
+	<description>SpringSecurity</description>
+
+	<!-- If you enable single sign-on,To security:http plus entry-point-ref="casProcessingFilterEntryPoint" -->
+	<security:http entry-point-ref="authenticationProcessingFilterEntryPoint">
+	
+		<security:intercept-url pattern="/public/**" 
+			filters="none" />
+		<security:intercept-url pattern="/api/**" 
+			filters="none" />
+		<security:logout invalidate-session="true"
+			logout-success-url="/" />
+		<security:concurrent-session-control
+			max-sessions="9999" expired-url="/default.jsp" />
+	</security:http>
+	<security:authentication-provider
+		user-service-ref="userDetailsService">
+		<security:password-encoder
+			ref="passwordEncoder">
+			<security:salt-source user-property="username" />
+		</security:password-encoder>
+	</security:authentication-provider>
+	
+	
+	<bean id="authenticationProcessingFilterEntryPoint" class="security.filter.AuthenticationProcessingFilterEntryPoint">
+		<property name="loginFormUrl" value="/public/login.action"></property>
+	</bean>
+
+	<bean id="passwordEncoder"
+		class="org.springframework.security.providers.encoding.Md5PasswordEncoder" />
+
+
+	<bean id="secUserService" class="security.internal.SecUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+		
+	 <bean id="authenticationProcessingFilter"  
+        class="security.filter.LocalAjaxableAuthenticationProcessingFilter">  
+        <security:custom-filter position="AUTHENTICATION_PROCESSING_FILTER" />  
+        <property name="defaultTargetUrl" value="/user_login_success.jsp" />  
+        <property name="alwaysUseDefaultTargetUrl" value="true" />  
+        <property name="authenticationFailureUrl" value="/public/login.action"/>
+        <property name="authenticationManager" ref="authenticationManager" />  
+    </bean>  
+    
+     <security:authentication-manager alias="authenticationManager"/>  
+
+	<!-- 角色管理 -->
+	<bean id="roleService" class="security.internal.RoleServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="securityAuthoritiesHolder" ref="securityAuthoritiesHolder" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+	</bean>
+
+	<bean id="securityAuthoritiesHolder"
+		class="security.internal.SecurityAuthoritiesHolderImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="filterSecurityInterceptor"
+		class="org.springframework.security.intercept.web.FilterSecurityInterceptor"
+		autowire="byType">
+		<security:custom-filter before="FILTER_SECURITY_INTERCEPTOR" />
+		<property name="objectDefinitionSource" ref="filterInvocationDefinitionSource" />
+	</bean>
+	<bean id="filterInvocationDefinitionSource"
+		class="security.filter.UrlResourceFilterInvocationDefinitionSource">
+		<property name="securityAuthoritiesHolder" ref="securityAuthoritiesHolder" />
+	</bean>
+
+	<bean id="securityResourceProcessor"
+		class="security.internal.SecurityResourceProcessorImpl">
+		<property name="securityAuthoritiesHolder" ref="securityAuthoritiesHolder" />
+		<property name="accessDecisionManager" ref="_accessManager" />
+	</bean>
+	
+	<bean id="resourceService"
+		class="security.internal.ResourceServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+</beans>

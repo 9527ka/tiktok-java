@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<dubbo:reference id="identifyingCodeService"
+		interface="project.user.idcode.IdentifyingCodeService" check="false"  retries="0"  timeout="10000" />
+		
+<!-- 	<dubbo:reference id="identifyingCodeTimeWindow" -->
+<!-- 		interface="project.user.idcode.IdentifyingCodeTimeWindow" check="false" /> -->
+	<dubbo:reference id="identifyingCodeTimeWindowService"
+		interface="project.user.idcode.IdentifyingCodeTimeWindowService" check="false"  retries="0"  timeout="10000" />
+
+
+	<bean id="userService"
+		  class="project.user.internal.UserServiceImpl">
+		<property name="partyService" ref="partyService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="onlineUserService" ref="onlineUserService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="tokenService" ref="tokenService" />
+		<!-- 		<property name="identifyingCodeTimeWindowService"
+                    ref="identifyingCodeTimeWindowService" /> -->
+		<property name="secUserService" ref="secUserService" />
+		<!-- 		<property name="onlineUserService"
+                    ref="onlineUserService" /> -->
+	</bean>
+	
+ 	<bean id="onlineUserService"
+		class="project.user.internal.OnlineUserService">
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<!--<bean id="onlineUserTimeWindow"
+		class="project.user.internal.OnlineUserTimeWindow">
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>-->
+	
+	<bean id="adminKycService"
+		class=" project.user.kyc.internal.AdminKycServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="kycService" ref="kycService" />
+		<property name="tipService" ref="tipService" />
+		<property name="walletService" ref="walletService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="notificationHelperClient" ref="notificationHelperClient" />
+	</bean>
+
+	<!--<bean id="onlineChatUserMessageService"
+		  class="project.onlinechat.internal.OnlineChatUserMessageServiceImpl" init-method="init" >
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>-->
+	<bean id="adminKycHighLevelService"
+		class=" project.user.kyc.internal.AdminKycHighLevelServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="kycHighLevelService" ref="kycHighLevelService" />
+		<property name="tipService" ref="tipService" />
+	</bean>
+	
+<!-- 	<bean id="paymentMethodService"
+		class="project.user.payment.internal.PaymentMethodServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean> -->
+
+	<bean id="kycService"
+		class="project.user.kyc.internal.KycServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="kycHighLevelService"
+		class="project.user.kyc.internal.KycHighLevelServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="tipService" ref="tipService" />
+	</bean>
+	
+	<bean id="tokenService"
+		class="project.user.token.internal.TokenServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	
+    <bean id="userSafewordApplyService"
+		class="project.user.internal.UserSafewordApplyServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="kycService" ref="kycService" />
+		<property name="tipService" ref="tipService" />
+	</bean>
+	
+	<bean id="adminUserSafewordApplyService"
+		class="project.user.internal.AdminUserSafewordApplyServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="kycService" ref="kycService" />
+		<property name="userSafewordApplyService" ref="userSafewordApplyService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="tipService" ref="tipService" />
+	</bean>
+	
+	<bean id="googleAuthService"
+		class="project.user.googleauth.internal.GoogleAuthServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="qRGenerateService" ref="qRGenerateService" />
+		<property name="logService" ref="logService" />
+
+	</bean>
+
+
+</beans>

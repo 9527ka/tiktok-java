@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.model.AutoMonitorOrder" table="T_AUTO_MONITOR_ORDER">
+	   <id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="monitor_address" type="java.lang.String">
+			<column name="MONITOR_ADDRESS" />
+		</property>
+		<property name="created" type="timestamp">
+			<column name="CREATED" />
+		</property>
+		<property name="succeeded" type="java.lang.Integer">
+			<column name="SUCCEEDED" />
+		</property>
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>
+		<property name="address" type="java.lang.String">
+			<column name="ADDRESS" />
+		</property>
+			<property name="channel_address" type="java.lang.String">
+			<column name="CHANNEL_ADDRESS" />
+		</property>
+		
+		<property name="txn_hash" type="java.lang.String">
+			<column name="TXN_HASH" />
+		</property>
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+		<property name="error" type="java.lang.String">
+			<column name="ERROR" />
+		</property>
+		<property name="settle_state" type="java.lang.Integer">
+			<column name="SETTLE_STATE" />
+		</property>
+		<property name="settle_amount" type="double">
+			<column name="SETTLE_AMOUNT" />
+		</property>
+		<property name="settle_order_no" type="java.lang.String">
+			<column name="SETTLE_ORDER_NO" />
+		</property>
+		<property name="settle_time" type="timestamp">
+			<column name="SETTLE_TIME" />
+		</property>
+		<property name="relationOrderNo"  type="java.lang.String">
+			<column name="RELATION_ORDER_NO" />
+		</property>
+	</class>
+</hibernate-mapping>

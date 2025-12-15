@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="security.SecUser" table="SCT_USER" dynamic-update="true">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="createTime" type="timestamp">
+			<column name="CREATETIME" />
+		</property>
+		<property name="username" lazy="false" type="java.lang.String">
+			<column name="USERNAME" />
+		</property>
+		<property name="last_loginTime"  type="timestamp">
+			<column name="LAST_LOGIN_TIME" />
+		</property>
+		<property name="login_ip" type="java.lang.String">
+			<column name="LOGIN_IP" />
+		</property>
+		<property name="email" type="java.lang.String">
+			<column name="EMAIL" />
+		</property>
+			<!-- <property name="name" type="java.lang.String"> <column name="NAME" 
+				/> </property> <property generated="never" lazy="false" name="email" type="java.lang.String"> 
+				<column length="32" name="EMAIL" /> </property> -->
+		<property name="password" type="java.lang.String">
+				<column length="256" name="PASSWORD" />
+		</property>
+		<property name="safeword" type="java.lang.String">
+				<column  name="SAFEWORD" />
+		</property>	
+			
+			<property lazy="false" name="partyId"
+				type="java.lang.String">
+				<column length="32" name="PARTY_UUID" />
+			</property>
+			<property name="enabled" type="yes_no">
+				<column name="ENABLED" />
+			</property>
+			<property name="remarks" type="java.lang.String">
+				<column name="REMARKS" />
+			</property>
+			<!-- <property generated="never" lazy="false" name="isdel" type="yes_no"> 
+				<column name="ISDEL" /> </property> -->
+			<set lazy="false" cascade="none" name="roles" outer-join="false"
+				sort="unsorted" table="SCT_USER_ROLE">
+				<key column="USER_UUID" />
+				<many-to-many class="security.Role" column="ROLE_UUID"
+					unique="false" />
+			</set>
+			
+			<property generated="never"  name="google_auth_bind"
+				type="yes_no">
+				<column name="GOOGLE_AUTH_BIND" />
+			</property>
+			<property name="google_auth_secret"  type="java.lang.String">
+				<column name="GOOGLE_AUTH_SECRET" />
+			</property>
+		<property name="linecode" type="java.lang.String">
+			<column length="255" name="LINECODE" />
+		</property>
+		<property name="tiktokcode" type="java.lang.String">
+			<column length="255" name="TIKTOKCODE" />
+		</property>
+		<property name="facebookcode" type="java.lang.String">
+			<column length="255" name="	FACEBOOKCODE" />
+		</property>
+
+	</class>
+</hibernate-mapping>

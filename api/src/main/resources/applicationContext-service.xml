@@ -1,0 +1,96 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+
+
+	<bean id="initHandleJob" class="project.web.api.job.InitHandleJob">
+		<property name="realtimePushJob" ref="realtimePushJob" />
+		<property name="tradePushJob" ref="tradePushJob" />
+		<property name="depthPushJob" ref="depthPushJob" />
+	</bean>
+	
+	<bean id="realtimePushJob" class="project.web.api.job.RealtimePushJob">
+		<property name="dataService" ref="dataService" />
+		<property name="itemService" ref="itemService" />
+		<property name="webSocketServer" ref="webSocketServer" />
+	</bean>
+	
+	<bean id="tradePushJob" class="project.web.api.job.TradePushJob">
+		<property name="dataService" ref="dataService" />
+		<property name="itemService" ref="itemService" />
+		<property name="webSocketServer" ref="webSocketServer" />
+	</bean>
+	
+	<bean id="depthPushJob" class="project.web.api.job.DepthPushJob">
+		<property name="dataService" ref="dataService" />
+		<property name="itemService" ref="itemService" />
+		<property name="webSocketServer" ref="webSocketServer" />
+	</bean>
+	
+	<bean id="webSocketServer" class="project.web.api.websocket.WebSocketServer">
+	</bean>
+
+	<bean id="passwordEncoder"
+		class="org.springframework.security.providers.encoding.Md5PasswordEncoder" />
+
+
+	<bean id="secUserService" class="security.internal.SecUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+	<!-- 角色管理 -->
+	<bean id="roleService" class="security.internal.RoleServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="securityAuthoritiesHolder" ref="securityAuthoritiesHolder" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="logService" ref="logService" />	
+	</bean>
+
+	<bean id="securityAuthoritiesHolder"
+		class="security.internal.SecurityAuthoritiesHolderImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="resourceService"
+		class="security.internal.ResourceServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="qRGenerateService"
+		class="project.user.internal.QRGenerateServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+
+	<bean id="sessionTokenService"
+		class="kernel.sessiontoken.internal.SessionTokenServiceImpl">
+	</bean>
+	
+	<bean id="localSysparaService" class="project.web.api.impl.LocalSysparaServiceImpl">
+		<property name="exchangeRateService" ref="exchangeRateService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	
+	<bean id="localUserService"
+		class="project.user.internal.LocalUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService" />
+		<property name="partyService" ref="partyService" />
+		<property name="identifyingCodeTimeWindowService" ref="identifyingCodeTimeWindowService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="roleService" ref="roleService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="qRGenerateService" ref="qRGenerateService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+</beans>

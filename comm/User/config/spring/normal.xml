@@ -1,0 +1,26 @@
+
+admin
+		<action name="adminKycAction"
+			class="project.user.kyc.web.AdminKycAction">
+			<result name="list">/kyc_list.jsp</result>
+		</action>
+		<action name="adminKycHighLevelAction"
+			class="project.user.kyc.web.AdminKycHighLevelAction">
+			<result name="list">/kyc_highlevel_list.jsp</result>
+			<result name="detail">/kyc_highlevel_detail.jsp</result>
+		</action>
+		
+api
+
+<action name="paymentmethod"
+	class="project.user.payment.web.PaymentMethodAction">
+</action>
+
+<action name="kyc" class="project.user.kyc.web.KycAction">
+</action>
+
+<action name="user" class="project.user.web.UserAction">
+</action>
+
+<action name="kychighlevel" class="project.user.kyc.web.KycHighLevelAction">
+</action>

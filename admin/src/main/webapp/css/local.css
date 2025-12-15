@@ -1,0 +1,149 @@
+
+body {
+    background: #f5f7f8;
+}
+
+.sidebar {
+    background: #FFF;
+}
+
+.sidetitle {
+    color: #000000;
+}
+
+.sidebar-panel li a {
+    color: #000000;
+}
+.mar-b30 {
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.car-panel {
+    display: flex;
+    box-shadow: none;
+    border: 8px solid #e5e5e5;
+    background: #fff;
+    padding: 20px 20px 0 20px;
+    min-height: 100px;
+    margin-right: 0%;
+    position: relative;
+    width: 20%;
+    float: left;
+    /*border-radius: -27px;*/
+}
+
+.car-panels {
+    display: flex;
+    box-shadow: none;
+    border: 12px solid #e5e5e5;
+    background: #fff;
+    padding: 20px 20px 0 20px;
+    min-height: 100px;
+    margin-right: 0%;
+    position: relative;
+    width: 25%;
+    float: left;
+    border-radius: 5px;
+    background:#EDF3FF;
+}
+.car-one{background-color: #2DA563;}
+.car-two{background-color: #CD4946;}
+.car-three{background-color: #77AFF1;}
+.car-for{background-color: #6BCEA2;}
+.car-five{background-color: #F76E97 ;}
+.car-six{background-color: #709FBA;}
+.car-seven{background-color: #818BFB;}
+.car-eight{background-color:  #8ED78B;}
+.car-long{background-color:  #F8997C;}
+.car-ten{background-color: #C375F4;}
+.car-all{background-color: #ffffff	;}
+
+.car-two .car-t4{color: #ffffff;font-size:20px;}
+.car-three .car-t4{color: #ffffff;font-size:20px;}
+.car-for .car-t4{color: #ffffff;font-size:20px;}
+.car-five .car-t4{color: #ffffff;font-size:20px;}
+.car-all .car-t4{color: #000000;font-size:20px;}
+.car-six .car-t4{color: #ffffff;font-size:20px;}
+.car-seven .car-t4{color: #ffffff;font-size:20px;}
+.car-eight .car-t4{color: #ffffff;font-size:20px;}
+.car-long .car-t4{color: #ffffff;font-size:20px;}
+.car-ten .car-t4{color: #ffffff;font-size:20px;}
+.topmenu {
+    padding-left: 20px;
+}
+
+.sidebar-panel li .icon {
+    color: #000000;
+}
+.car-t3 {
+    line-height: 2;
+    font-size:20px;
+    color: #ffffff;
+}
+.car-t3s {
+    line-height: 2;
+    font-size:20px;
+    color: #000000;
+}
+.content {
+    background: #fff;
+}
+
+.container-default {
+    min-height: 1024px;
+}
+.container-defaults {
+    min-height: 420px;
+}
+.car-ico {
+    font-size: 70px;
+    color: #bdbdbd;
+    margin-right: 20px;
+}
+
+#top {
+    height: 40px;
+    color: #fff;
+    position: fixed;
+    z-index: 900;
+    top: 0;
+    right:0;
+    width:auto;
+    background-image: linear-gradient(135deg, #3c7df1 0%, #2a5fd1 100%),
+                      repeating-linear-gradient(transparent, transparent 4px, rgba(255,255,255,0.05) 4px, rgba(255,255,255,0.05) 5px);
+}
+.car-one .car-t4{color: #ffffff;font-size:20px;}
+.applogo {
+    width: 250px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0);
+    color: #fff;
+    position: relative;
+    padding: 8px 0 0 0px;
+    float: left;
+    text-align: center;
+}
+
+.mailbox-menu .menu li {
+    display: inline;
+    color: #76747A;
+    font-size: 13px;
+    padding: 16px 10px;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+
+ .color1 {
+    background: #B9F98E;
+    color: #0A451D;
+}
+.ballon {
+    display: inline-table;
+    padding: 14px 20px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+}
+
+
+

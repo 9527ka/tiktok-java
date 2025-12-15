@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true">
+    <!-- 应用名称 -->
+    <property name="appName" value="data"/>
+    <!-- 日志路径,在Linux下需要修改路径 -->
+    <property name="logPath" value="/tmp/logs/${appName}"/>
+    <!-- 日志格式,显示方法名与日志所在行号 -->
+    <property name="logPattern" value="%d{HH:mm:ss.SSS} %-5level %logger{200}.%M:%L - %msg%n"/>
+
+    <!-- 输出所有日志到标准设备 -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 输出error级别以上日志 -->
+    <appender name="errorLevelFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <File>${logPath}/error.log</File>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logPath}/error.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <maxHistory>90</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 输出其它级别的日志 -->
+    <appender name="otherLevelFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>error</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+
+        <File>${logPath}/${appName}.log</File>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logPath}/${appName}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 根日志 -->
+    <root level="info">
+        <!-- 输出错误日志到文件 -->
+        <appender-ref ref="errorLevelFile"/>
+        <!-- 输出非错误日志到文件,生产环境应将其关闭 -->
+        <appender-ref ref="otherLevelFile"/>
+        <!-- 输出所有日志到标准设备,生产环境应将其关闭 -->
+        <!-- <appender-ref ref="stdout"/> -->
+    </root>
+</configuration>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="adminExchangeApplyOrderService"
+		class="project.exchange.internal.AdminExchangeApplyOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	
+	<bean id="exchangeApplyOrderService"
+		class="project.exchange.internal.ExchangeApplyOrderServiceImpl" >
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="partyService" ref="partyService" />
+		<property name="itemService" ref="itemService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="walletService" ref="walletService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="dataService" ref="dataService" />
+	</bean>
+	<dubbo:reference id="exchangeApplyOrderHandleJobService"
+		interface="project.exchange.job.ExchangeApplyOrderHandleJobService" check="false" retries="0"  timeout="10000" />
+	
+</beans>

@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.goods.model.SellerGoods" table="T_MALL_SELLER_GOODS">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+		</id>
+		<many-to-one name="systemGoods" column="GOODS_ID" not-found="ignore" update="false" insert="false"  class="project.mall.goods.model.SystemGoods" lazy="false" cascade="none"/>
+		<property name="sellerId" type="java.lang.String">
+			<column name="SELLER_ID" />
+		</property>
+		<property name="goodsId" type="java.lang.String">
+			<column name="GOODS_ID" />
+		</property>
+		<property name="categoryId" type="java.lang.String">
+			<column name="CATEGORY_ID" />
+		</property>
+		<property name="secondaryCategoryId" type="java.lang.String">
+			<column name="SECONDARY_CATEGORY_ID" />
+		</property>
+		<property name="soldNum" type="java.lang.Integer">
+			<column name="SOLD_NUM" />
+		</property>
+		<property name="viewsNum" type="java.lang.Integer">
+			<column name="VIEWS_NUM" />
+		</property>
+		<property name="systemPrice" type="double">
+			<column name="SYSTEM_PRICE" />
+		</property>
+		<property name="sellingPrice" type="double">
+			<column name="SELLING_PRICE" />
+		</property>
+		<property name="profitRatio" type="double">
+			<column name="PROFIT_RATIO" />
+		</property>
+		<property name="upTime" type="java.lang.Long">
+			<column name="UP_TIME" />
+		</property>
+		<property name="createTime" type="java.util.Date">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="newTime"  type="java.lang.Long">
+			<column name="NEW_TIME" />
+		</property>
+		<property name="recTime"  type="java.lang.Long">
+			<column name="REC_TIME" />
+		</property>
+		<property name="isShelf"  type="java.lang.Integer">
+			<column name="IS_SHELF" />
+		</property>
+		<property name="systemNewTime"  type="java.lang.Long">
+			<column name="SYSTEM_NEW_TIME" />
+		</property>
+		<property name="systemRecTime"  type="java.lang.Long">
+			<column name="SYSTEM_REC_TIME" />
+		</property>
+		<property name="stopTime"  type="java.lang.Long">
+			<column name="STOP_TIME" />
+		</property>
+		<property name="buyMin"  type="int">
+			<column name="BUY_MIN" />
+		</property>
+
+		<property name="discountStartTime" type="java.util.Date">
+			<column name="DISCOUNT_START_TIME" />
+		</property>
+
+		<property name="discountEndTime" type="java.util.Date">
+			<column name="DISCOUNT_END_TIME" />
+		</property>
+
+		<property name="discountPrice" type="double">
+			<column name="DISCOUNT_PRICE" />
+		</property>
+		<property name="orderPrice" type="double">
+			<column name="ORDER_PRICE" />
+		</property>
+		<property name="discountRatio" type="double">
+			<column name="DISCOUNT_RATIO" />
+		</property>
+		<property name="isCombo"  type="java.lang.Integer">
+			<column name="IS_COMBO" />
+		</property>
+		<property name="isValid"  type="java.lang.Integer">
+			<column name="IS_VALID" />
+		</property>
+		<property name="sellWellTime"  type="java.lang.Long">
+			<column name="SELL_WELL_TIME" />
+		</property>
+
+		<property name="showWeight1"  type="java.lang.Long">
+			<column name="SHOW_WEIGHT1" />
+		</property>
+		<property name="showWeight2"  type="java.lang.Long">
+			<column name="SHOW_WEIGHT2" />
+		</property>
+		<property name="firstShelfTime"  type="java.lang.Long">
+			<column name="FIRST_SHELF_TIME" />
+		</property>
+		<property name="sysNewDuration"  type="java.lang.Integer">
+			<column name="SYS_NEW_DURATION" />
+		</property>
+		<property name="sysRecDuration"  type="java.lang.Integer">
+			<column name="SYS_REC_DURATION" />
+		</property>
+		<property name="sellWellDuration"  type="java.lang.Integer">
+			<column name="SELL_WELL_DURATION" />
+		</property>
+		<property name="checkFlag"  type="java.lang.String">
+			<column name="CHECK_FLAG" />
+		</property>
+		<!--
+		<property name="skuInfo"  type="java.lang.String">
+			<column name="SKU_INFO" />
+		</property>-->
+	</class>
+</hibernate-mapping>

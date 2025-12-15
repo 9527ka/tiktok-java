@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.log.model.OrderLog" table="T_MALL_ORDER_LOG">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property name="username" type="java.lang.String">
+			<column name="USERNAME" />
+		</property>
+		<property name="log" type="java.lang.String">
+			<column name="LOG" />
+		</property>
+
+		<property name="category" type="java.lang.String">
+			<column name="CATEGORY" />
+		</property>
+
+		<property name="orderId" type="java.lang.String">
+			<column name="ORDER_ID" />
+		</property>
+
+		<property name="state" type="java.lang.Integer">
+			<column name="STATE" />
+		</property>
+
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="updateTime" type="timestamp">
+			<column name="UPDATE_TIME" />
+		</property>
+
+	</class>
+</hibernate-mapping>

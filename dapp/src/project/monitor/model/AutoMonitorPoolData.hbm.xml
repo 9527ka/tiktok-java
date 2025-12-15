@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.model.AutoMonitorPoolData" table="T_AUTO_MONITOR_POOL_DATA">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="total_output" type="java.lang.Double" update="true">
+			<column name="TOTAL_OUTPUT" />
+		</property>
+		<property name="verifier" type="java.lang.Double" update="true">
+			<column name="VERIFIER" />
+		</property>
+		<property name="user_revenue" type="java.lang.Double" update="true">
+			<column name="USER_REVENUE" />
+		</property>
+		<property name="rate" type="java.lang.Double" update="true">
+			<column name="RATE" />
+		</property>
+		<property name="notice_logs" type="java.lang.String" update="true">
+			<column name="NOTICE_LOGS" />
+		</property>
+		<property name="dayRateMin" type="java.lang.Double" update="true">
+			<column name="DAY_RATE_MIN" />
+		</property>
+		<property name="dayRateMax" type="java.lang.Double" update="true">
+			<column name="DAY_RATE_MAX" />
+		</property>
+		<property name="miningAmountMin" type="java.lang.Double" update="true">
+			<column name="MINING_AMOUNT_MIN" />
+		</property>
+		<property name="miningAmountMax" type="java.lang.Double" update="true">
+			<column name="MINING_AMOUNT_MAX" />
+		</property>
+		<property name="node_num" type="java.lang.Double" update="true">
+			<column name="NODE_NUM" />
+		</property>
+		<property name="mining_total" type="java.lang.Double" update="true">
+			<column name="MINING_TOTAL" />
+		</property>
+		<property name="tradingSum" type="java.lang.Double" update="true">
+			<column name="TRADING_SUM" />
+		</property>
+		<property name="miningName" type="java.lang.String" update="true">
+			<column name="MINING_NAME" />
+		</property>
+	</class>
+</hibernate-mapping>

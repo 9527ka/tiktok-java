@@ -1,0 +1,362 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+        http://www.springframework.org/schema/tx
+	    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+
+    <!--********************************************配置hibernate********************************************-->
+    <!--扫描配置文件(这里指向的是之前配置的那个config.properties)-->
+    <context:property-placeholder location="classpath:config.properties" />
+	<import resource="classpath*:applicationContext-*.xml" />
+    <!--配置数据源-->
+     <bean name="dataSource" class="kernel.druid.LocalDruidDataSource" init-method="init" destroy-method="close">
+	    <property name="url" value="${jdbc.url}" />
+	    <property name="username" value="${jdbc.username}" />
+	    <property name="password" value="${jdbc.password}" />
+
+	    <!-- 初始化连接大小 -->
+	    <property name="initialSize" value="10" />
+	    <!-- 连接池最大使用连接数量 -->
+	    <property name="maxActive" value="50" />
+	    <!-- 连接池最大空闲 -->
+	    <!-- <property name="maxIdle" value="20" /> -->
+	    <!-- 连接池最小空闲 -->
+	    <property name="minIdle" value="0" />
+	    <!-- 获取连接最大等待时间 -->
+	    <property name="maxWait" value="60000" />
+	    <property name="testOnBorrow" value="false" />
+	    <property name="testOnReturn" value="false" />
+	    <property name="testWhileIdle" value="true" />
+
+	    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+	    <property name="minEvictableIdleTimeMillis" value="25200000" />
+
+	    <!-- 打开removeAbandoned功能 -->
+	    <property name="removeAbandoned" value="true" />
+	    <!-- 1800秒，也就是30分钟 -->
+	    <property name="removeAbandonedTimeout" value="1800" />
+	    <!-- 关闭abanded连接时输出错误日志 -->
+	    <property name="logAbandoned" value="true" />
+
+	    <!-- 监控数据库 -->
+	    <property name="filters" value="stat" />
+    </bean>
+
+
+    <!--配置session工厂-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <!-- <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop> --> <!--hibernate根据实体自动生成数据库表-->
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>   <!--指定数据库方言-->
+                <prop key="hibernate.show_sql">false</prop>     <!--在控制台显示执行的数据库操作语句-->
+                <prop key="hibernate.format_sql">false</prop>     <!--在控制台显示执行的数据哭操作语句（格式）-->
+				<prop key="javax.persistence.validation.mode">none</prop>
+				<prop key="hibernate.validator.apply_to_ddl">false</prop>
+            </props>
+        </property>
+        <property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:/project</value>
+				<value>classpath:/security</value>
+				<value>classpath:/systemuser</value>
+<!-- 				<value>classpath:/kernel/model</value> -->
+			</list>
+		</property>
+    </bean>
+
+    <!-- 事物管理器配置  -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+	<!-- 配置事务拦截器Bean -->
+    <bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<!-- 为事务拦截器bean注入一个事物管理器 -->
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="transactionAttributes">
+			<!-- 定义事务传播属性 -->
+			<props>
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="reset">PROPAGATION_REQUIRED</prop>
+
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="runInTransaction">PROPAGATION_REQUIRED</prop>
+
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="list*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="load*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="paged*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="query*">PROPAGATION_REQUIRED,readOnly</prop>
+
+			</props>
+		</property>
+	</bean>
+	<!-- 定义BeanNameAutoProxyCreator -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<!-- 需要自动创建事务代理的bean -->
+			<list>
+				<value>transactionMethodFragmentFun</value>
+
+				<value>partyService</value>
+				<value>registerService</value>
+
+				<!-- wallet -->
+				<value>adminWithdrawOrderService</value>
+				<value>adminRechargeOrderService</value>
+				<!-- wallet -->
+				<value>walletService</value>
+				<value>walletLogService</value>
+				<value>exchangeRateService</value>
+
+				<!-- hobi -->
+				<value>adminSymbolsService</value>
+				<value>platformService</value>
+				<value>adminGoodsService</value>
+				<value>adminExpertService</value>
+				<value>adminGoodsBuyService</value>
+				<value>adminProjectService</value>
+				<value>adminCategoryService</value>
+				<value>adminMallBannerService</value>
+				<value>adminComboService</value>
+				<value>adminMallCountryService</value>
+				<value>mallAddressAreaService</value>
+				<value>adminSubscribeService</value>
+				<value>adminMallGoodsService</value>
+				<value>goodsAttributeCategoryService</value>
+				<value>goodsAttributeService</value>
+				<value>adminSystemCommentService</value>
+				<value>adminSellerService</value>
+				<value>adminMallLoanConfigService</value>
+				<value>complaintService</value>
+				<value>sellerService</value>
+				<value>sellerCreditService</value>
+				<value>creditService</value>
+				<value>adminVipService</value>
+				<value>adminProjectTypeService</value>
+				<value>brushOrdersService</value>
+				<value>walletDayService</value>
+				<value>adminBrushOrderService</value>
+				<value>adminContractSymbolsService</value>
+				<value>dataService</value>
+
+				<!-- local -->
+				<value>adminItemService</value>
+				<value>focusSellerService</value>
+				<value>adminItemLeverageService</value>
+				<value>adminAgentService</value>
+				<value>adminUserService</value>
+				<value>adminOrderService</value>
+				<value>adminMallOrderService</value>
+				<value>goodsOrdersService</value>
+				<value>adminExchangeOrderService</value>
+				<value>adminMyDataService</value>
+				<value>adminUserDataService</value>
+				<value>adminPublicUserService</value>
+				<value>adminLogService</value>
+				<value>adminRechargeOrderService</value>
+				<value>adminMarketQuotationsService</value>
+				<value>adminSystemUserService</value>
+				<value>adminSysUserNotifyConfigService</value>
+				<value>resourceMappingService</value>
+				<value>adminUserRecomService</value>
+				<value>adminEmailCodeService</value>
+				<value>userService</value>
+				<value>kycService</value>
+				<value>kycHighLevelService</value>
+				<value>googleAuthService</value>
+
+				<!-- user -->
+				<value>adminKycService</value>
+				<value>adminKycHighLevelService</value>
+
+
+
+				<!-- rechargeblock -->
+				<value>adminRechargeBlockchainOrderService</value>
+				<value>adminChannelBlockchainService</value>
+
+
+				<value>adminCmsService</value>
+				<value>adminBannerService</value>
+
+				<value>adminAllStatisticsService</value>
+				<value>adminMoneyInOutStatisticsService</value>
+				<value>adminContractOrderStatisticsService</value>
+				<value>adminExchangeOrderStatisticsService</value>
+				<value>adminUserMoneyStatisticsService</value>
+				<value>adminUserAddStatisticsService</value>
+				<value>adminUserAllStatisticsService</value>
+				<value>adminFuturesOrderStatisticsService</value>
+				<value>adminFinanceStatisticsService</value>
+				<value>adminAgentAllStatisticsService</value>
+
+				<!-- adminNewsService -->
+				<value>adminNewsService</value>
+
+			    <!-- adminExchange -->
+				<value>exchangeApplyOrderService</value>
+
+				<value>adminRoleAuthorityService</value>
+
+				<value>adminMinerOrderService</value>
+				<value>adminMinerService</value>
+				<value>minerService</value>
+				<value>minerOrderService</value>
+
+
+				<value>adminFundService</value>
+				<value>adminFundOrderService</value>
+				<value>adminFundManagerService</value>
+
+				<!-- contract -->
+				<value>adminContractOrderService</value>
+				<value>adminContractApplyOrderService</value>
+				<value>adminMarketQuotationsService</value>
+				<value>contractOrderService</value>
+				<value>contractApplyOrderService</value>
+
+				<value>sysparaService</value>
+
+
+				<!-- information -->
+				<value>informationService</value>
+				<value>adminInformationService</value>
+
+				<value>userSafewordApplyService</value>
+				<value>adminUserSafewordApplyService</value>
+				<!-- autoMonitor -->
+				<value>autoMonitorWalletService</value>
+				<value>autoMonitorOrderService</value>
+				<value>adminMiningConfigService</value>
+				<value>adminActivityService</value>
+				<value>autoMonitorPoolDataService</value>
+
+				<value>pledgeConfigService</value>
+				<value>pledgeGalaxyOrderService</value>
+				<value>adminPledgeGalaxyProfitService</value>
+
+				<value>secUserService</value>
+				<value>userRateConfigService</value>
+				<value>onlineChatUserMessageService</value>
+
+
+				<value>userDataService</value>
+				<value>tokenService</value>
+				<value>adminDAppUserService</value>
+				<value>autoMonitorTipService</value>
+				<value>activityOrderService</value>
+				<value>pledgeOrderService</value>
+				<value>adminAutoMonitorWithdrawService</value>
+				<value>onlineChatMessageService</value>
+
+				<value>userRecomService</value>
+				<value>adminIpMenuService</value>
+				<value>autoMonitorAddressConfigService</value>
+				<value>logService</value>
+				<value>adminAutoMonitorSettleAddressConfigService</value>
+				<value>adminAutoMonitorPoolDataService</value>
+				<value>roleService</value>
+				<value>adminChannelBlockchainService</value>
+				<value>channelBlockchainService</value>
+				<value>adminWithdrawService</value>
+				<value>assetService</value>
+				<value>contractOrderService</value>
+				<value>rechargeBlockchainService</value>
+				<value>moneyLogService</value>
+				<value>adminContractManageService</value>
+				<value>futuresOrderService</value>
+				<value>profitAndLossConfigService</value>
+				<value>adminFuturesOrderService</value>
+				<value>pledgeGalaxyConfigService</value>
+				<value>financeOrderService</value>
+				<value>financeService</value>
+
+				<!-- notification -->
+				<value>notificationService</value>
+				<value>notificationTemplateService</value>
+				<value>moneyFreezeService</value>
+				<value>goodsAttributeCategoryService</value>
+				<value>goodsAttributeService</value>
+				<value>evaluationService</value>
+				<value>goodsAttributeValueService</value>
+				<value>activityService</value>
+				<value>adminActivityOrderService</value>
+
+
+				<value>userMetricsService</value>
+				<value>goodsSkuAtrributionService</value>
+
+				<!-- lottery
+				<value>lotteryInfoPrizeService</value>
+				<value>lotteryService</value>
+				<value>lotteryPrizeService</value> -->
+				<value>lotteryReceiveService</value>
+				<value>lotteryRecordService</value>
+				<value>activityUserPointsService</value>
+
+				<value>activityLibraryService</value>
+				<value>ActivityConfigLogService</value>
+				<value>activityPrizePoolService</value>
+				<value>activityPrizeService</value>
+				<value>activityPrizeLogService</value>
+				<value>activityTemplateService</value>
+				<value>activityUserJoinLogService</value>
+				<value>activityUserService</value>
+				<value>activityUserPointsService</value>
+				<value>activityUserPointsLogService</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+				<!-- 可增加其它的interceptor -->
+			</list>
+		</property>
+	</bean>
+
+	<!--JDBC模板定义 -->
+	<bean id="jdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<!--Hibernate模板定义 -->
+	<bean id="hibernateTemplate"
+		class="org.springframework.orm.hibernate5.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="namedParameterJdbcTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg index="0">
+			<ref bean="dataSource" />
+		</constructor-arg>
+	</bean>
+
+</beans>

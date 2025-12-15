@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.model.AutoMonitorPoolMiningData" table="T_AUTO_MONITOR_POOL_MINING_DATA">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="total_output" type="java.lang.Double" update="true">
+			<column name="TOTAL_OUTPUT" />
+		</property>
+		<property name="verifier" type="java.lang.Double" update="true">
+			<column name="VERIFIER" />
+		</property>
+		<property name="rate" type="java.lang.Double" update="true">
+			<column name="RATE" />
+		</property>
+	
+		<property name="rate_node" type="java.lang.String" update="true">
+			<column name="RATE_NODE" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.onlinechat.OnlineChatMessage" table="T_ONLINECHAT_MESSAGE">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			  <generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="send_receive" type="java.lang.String">
+			<column name="SEND_RECEIVE" />
+		</property>
+		
+		<property name="type" type="java.lang.String">
+			<column name="CONTENT_TYPE" />
+		</property>
+		<property name="content" type="java.lang.String">
+			<column name="CONTENT" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="username" type="java.lang.String">
+			<column name="USERNAME" />
+		</property>
+		<property name="ip" type="java.lang.String">
+			<column name="IP" />
+		</property>
+		<property name="delete_status" type="int">
+			<column name="DELETE_STATUS" />
+		</property>
+	</class>
+</hibernate-mapping>

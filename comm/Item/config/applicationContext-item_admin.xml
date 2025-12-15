@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="adminItemService"
+		class="project.item.internal.AdminItemServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="itemService" ref="itemService" />
+		<property name="klineService" ref="klineService" />
+	</bean>
+
+	<bean id="adminItemLeverageService"
+		class="project.item.internal.AdminItemLeverageServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+	
+	<bean id="itemService"
+		class="project.item.internal.ItemServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+</beans>

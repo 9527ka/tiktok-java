@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<!-- init-method="init" -->
+
+	<bean id="userLoadCacheService"
+		class="project.data.loadcache.UserLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+	<bean id="identifyingCodeService"
+		class="project.user.idcode.internal.IdentifyingCodeServiceImpl">
+		<property name="smsSendService" ref="smsSendService" />
+		<property name="emailSendService" ref="emailSendService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="identifyingCodeTimeWindow"
+			ref="identifyingCodeTimeWindow" />
+		<property name="blacklistIpTimeWindow"
+			ref="blacklistIpTimeWindow" />
+		<property name="sendCountTimeWindow"
+			ref="sendCountTimeWindow" />
+	</bean>
+
+	<dubbo:service
+		interface="project.user.idcode.IdentifyingCodeService"
+		ref="identifyingCodeService" />
+
+	<bean id="identifyingCodeTimeWindow"
+		class="project.user.idcode.IdentifyingCodeTimeWindow">
+	</bean>
+	<bean id="blacklistIpTimeWindow"
+		class="project.user.idcode.BlacklistIpTimeWindow">
+	</bean>
+	<bean id="sendCountTimeWindow"
+		class="project.user.idcode.SendCountTimeWindow">
+	</bean>
+
+	<dubbo:service
+		interface="project.user.idcode.IdentifyingCodeTimeWindow"
+		ref="identifyingCodeTimeWindow" />
+		
+		
+	<bean id="onlineUserTimeoutTask"
+		class="project.user.internal.OnlineUserTimeoutTask">
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+</beans>

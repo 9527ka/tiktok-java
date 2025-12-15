@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+<bean id="cmsService"
+	class="project.cms.internal.CmsServiceImpl" >
+	<property name="hibernateTemplate" ref="hibernateTemplate" />
+	<property name="redisHandler" ref="redisHandler" />
+<!-- 	<property name="pagedDao" ref="pagedDao" /> -->
+</bean>
+<bean id="adminCmsService"
+		class="project.cms.internal.AdminCmsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+		<property name="cmsService" ref="cmsService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<!-- <bean id="bannerService"
+	class="project.cms.internal.BannerServiceImpl" >
+	<property name="hibernateTemplate" ref="hibernateTemplate" />
+	<property name="redisHandler" ref="redisHandler" />
+</bean> -->
+<bean id="adminBannerService"
+		class="project.cms.internal.AdminBannerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+	</bean>
+	
+	<dubbo:reference id="bannerService"
+		interface="project.cms.BannerService" check="false"  retries="0"  timeout="10000" />
+
+</beans>

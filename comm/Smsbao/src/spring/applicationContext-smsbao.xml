@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="smsSendService"
+		class="smsbao.internal.SmsSendServiceImpl">
+	</bean>
+	
+	<bean id="internalSmsSenderService"
+		class="smsbao.internal.InternalSmsSenderServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="sysLogService" ref="sysLogService" />
+	</bean>
+
+	<bean id="smsbaoServer" class="smsbao.sender.SmsServer">
+		<property name="taskExecutor" ref="smsbaoSendThreadPool" />
+		<property name="internalSmsSenderService" ref="internalSmsSenderService" />
+	</bean>
+
+
+	<bean id="smsbaoSendThreadPool"
+		class="kernel.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="1" />
+		<property name="keepAliveSeconds" value="60" />
+		<property name="maxPoolSize" value="2" />
+		<property name="queueCapacity" value="100" />
+		<property name="rejectedExecutionHandler"
+			ref="smsbaoSendThreadRejectExecutingHandler" />
+	</bean>
+
+	<bean id="smsbaoSendThreadRejectExecutingHandler"
+		class="kernel.util.RejectExecutionHandlerDelegator">
+		<property name="rejectExecutionHandlers">
+			<list>
+				<bean class="smsbao.sender.OffLineEventRejectExecutingHandler" />
+			</list>
+		</property>
+	</bean>
+
+
+</beans>

@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.invest.project.model.Project" table="T_INVEST_PROJECT">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="bonusRate"  type="double">
+			<column name="BONUS_RATE" />
+		</property>
+		<property name="bonus" type="java.lang.Integer">
+			<column name="BONUS" />
+		</property>
+		<property name="ending" type="java.lang.Integer">
+			<column name="ENDING" />
+		</property>
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+		<property name="type" type="java.lang.Integer">
+			<column name="TYPE" />
+		</property>
+		<property name="baseId"  type="java.lang.String">
+			<column name="BASE_ID" />
+		</property>
+		<property name="iconImg"  type="java.lang.String">
+			<column name="ICON_IMG" />
+		</property>
+		<property name="sort" type="int">
+			<column name="SORT" />
+		</property>
+		<property name="investSize" type="double">
+			<column name="INVEST_SIZE" />
+		</property>
+		<property name="investProgress" type="double">
+			<column name="INVEST_PROGRESS" />
+		</property>
+		<property name="investProgressMan" type="double">
+			<column name="INVEST_PROGRESS_MAN" />
+		</property>
+		<property name="investSellAdd" type="double">
+			<column name="INVEST_SELL_ADD" />
+		</property>
+		<property name="investMin" type="double">
+			<column name="INVEST_MIN" />
+		</property>
+		<property name="investMax" type="double">
+			<column name="INVEST_MAX" />
+		</property>
+		<property name="pointRate" type="double">
+			<column name="POINT_RATE" />
+		</property>
+		<property name="recTime"  type="java.lang.Long">
+			<column name="REC_TIME" />
+		</property>
+		<property generated="never"  name="repeating" type="yes_no">
+			<column name="REPEATING" />
+		</property>
+		<property name="upTime"  type="java.lang.Long">
+			<column name="UP_TIME" />
+		</property>
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+	</class>
+</hibernate-mapping>

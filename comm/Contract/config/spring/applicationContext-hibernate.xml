@@ -1,0 +1,15 @@
+
+admin
+
+<!-- contract -->
+<value>adminContractOrderService</value>
+<value>adminContractApplyOrderService</value>
+<value>adminMarketQuotationsService</value>
+<value>contractOrderService</value>
+<value>contractApplyOrderService</value>
+
+api
+<!-- contract -->
+<value>contractOrderService</value>
+<value>contractApplyOrderService</value>
+<value>contractOrderCalculationService</value>

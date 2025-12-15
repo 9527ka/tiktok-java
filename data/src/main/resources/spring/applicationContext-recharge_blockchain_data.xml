@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="rechargeBlockchainService"
+		class="project.blockchain.internal.RechargeBlockchainServiceImpl">
+		<property name="userDataService" ref="userDataService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="exchangeRateService" ref="exchangeRateService" />
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="rechargeBonusService" ref="rechargeBonusService" />
+		<property name="dataService" ref="dataService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="channelBlockchainService" ref="channelBlockchainService" />
+		<property name="tipService" ref="tipService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="channelBlockchainService"
+		class="project.blockchain.internal.ChannelBlockchainServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+	
+	<bean id="qRProducerService"
+		class="project.blockchain.internal.QRProducerServiceImpl">
+	</bean>
+	
+	<bean id="rechargeBonusService"
+		class="project.bonus.internal.RechargeBonusServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="rechargeBlockchainService" ref="rechargeBlockchainService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+	</bean>
+
+</beans>

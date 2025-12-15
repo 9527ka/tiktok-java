@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+
+	<bean id="logService" class="project.log.internal.LogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="moneyLogService" class="project.log.internal.MoneyLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="sysLogService" class="project.log.internal.SysLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="saveLogServer" class="project.log.internal.SaveLogServer">
+		<property name="logService" ref="logService" />
+		<property name="sysLogService" ref="sysLogService" />
+	</bean>
+	
+	<bean id="codeLogService" class="project.log.internal.CodeLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+</beans>

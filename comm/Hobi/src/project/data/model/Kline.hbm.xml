@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.data.model.Kline" table="T_KLINE">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="ts" type="long">
+			<column name="TS" />
+		</property>
+		<property name="open" type="double">
+			<column name="OPEN" />
+		</property>	
+		<property name="high" type="double">
+			<column name="HIGH" />
+		</property>	
+		<property name="low" type="double">
+			<column name="LOW" />
+		</property>	
+		<property name="close" type="double">
+			<column name="CLOSE" />
+		</property>	
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>	
+		<property name="period" type="java.lang.String">
+			<column name="PERIOD" />
+		</property>
+	</class>
+</hibernate-mapping>

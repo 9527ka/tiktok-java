@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.area.model.MallCountry" table="T_MALL_COUNTRIES">
+
+		<id name="id" type="java.lang.Long">
+			<column name="ID" />
+			<generator class="increment" />
+		</id>
+
+		<property name="countryNameCn" type="java.lang.String">
+			<column name="COUNTRY_NAME_CN" />
+		</property>
+
+		<property name="countryNameEn" type="java.lang.String">
+			<column name="COUNTRY_NAME_EN" />
+		</property>
+		<property name="countryNameTw" type="java.lang.String">
+			<column name="COUNTRY_NAME_TW" />
+		</property>
+
+
+		<property name="flag" type="java.lang.Integer">
+			<column name="FLAG" />
+		</property>
+
+		<property name="updatedAt" type="java.util.Date">
+			<column name="UPDATED_AT" />
+		</property>
+	</class>
+</hibernate-mapping>

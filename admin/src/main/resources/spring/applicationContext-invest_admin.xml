@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="platformService"
+		class="project.invest.platform.impl.PlatformServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="adminExpertService"
+		class="project.invest.expert.impl.AdminExpertServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="adminGoodsService"
+		class="project.invest.goods.impl.AdminGoodsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+	<bean id="adminGoodsBuyService"
+		class="project.invest.goods.impl.AdminGoodsBuyServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="adminOrderService"
+		class="project.invest.order.impl.AdminOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+	</bean>
+
+	<bean id="adminExchangeOrderService"
+		class="project.invest.order.impl.AdminExchangeOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="tipService" ref="tipService" />
+		<property name="logService" ref="logService" />
+	</bean>
+
+
+
+	<bean id="adminProjectService"
+		class="project.invest.project.impl.AdminProjectServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+
+
+<!--	<bean id="adminBrushOrderService"-->
+<!--		class="project.invest.orders.impl.AdminBrushOrderServiceImpl">-->
+<!--		<property name="hibernateTemplate" ref="hibernateTemplate" />-->
+<!--		<property name="pagedQueryDao" ref="pagedDao" />-->
+<!--		<property name="tipService" ref="tipService" />-->
+<!--	</bean>-->
+
+<!--	<bean id="brushOrdersService" class="project.invest.orders.internal.BrushOrdersServiceImpl">-->
+<!--		<property name="hibernateTemplate" ref="hibernateTemplate" />-->
+<!--		<property name="redisHandler" ref="redisHandler" />-->
+<!--		<property name="sysparaService" ref="sysparaService" />-->
+<!--		<property name="walletService" ref="walletService" />-->
+<!--		<property name="moneyLogService" ref="moneyLogService" />-->
+<!--		<property name="partyService" ref="partyService" />-->
+<!--	</bean>-->
+
+	<bean id="adminVipService"
+		class="project.invest.vip.impl.AdminVipServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="walletDayService"
+		  class="project.invest.walletday.impl.WalletDayServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="vipService" class="project.invest.vip.internal.VipServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="walletService" ref="walletService"/>
+		<property name="moneyLogService" ref="moneyLogService"/>
+		<property name="partyService" ref="partyService"/>
+		<property name="userDataService" ref="userDataService" />
+	</bean>
+
+</beans>

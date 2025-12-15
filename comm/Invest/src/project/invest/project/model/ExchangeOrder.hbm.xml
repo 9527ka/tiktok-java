@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.invest.project.model.ExchangeOrder" table="T_EXCHANGE_ORDER">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId"  type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property name="symbol"  type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+
+		<property name="symbolValue" type="double">
+			<column name="SYMBOL_VALUE" />
+		</property>
+
+		<property name="symbolPrice" type="double">
+			<column name="SYMBOL_PRICE" />
+		</property>
+
+		<property name="rata"  type="double">
+			<column name="RATA" />
+		</property>
+
+		<property name="orderPriceType"  type="java.lang.String">
+			<column name="ORDER_PRICE_TYPE" />
+		</property>
+
+		<property name="orderPriceAmount"  type="double">
+			<column name="ORDER_PRICE_AMOUNT" />
+		</property>
+
+		<property name="currency_symbol" type="java.lang.String" update="false">
+			<column name="CURRENCY_SYMBOL" />
+		</property>
+
+		<property name="payType" type="java.lang.Integer">
+			<column name="PAY_TYPE" />
+		</property>
+
+		<property name="bankName"  type="java.lang.String">
+			<column name="BANK_NAME" />
+		</property>
+
+		<property name="bankAccount"  type="java.lang.String">
+			<column name="BANK_ACCOUNT" />
+		</property>
+
+		<property name="remark"  type="java.lang.String">
+			<column name="REMARK" />
+		</property>
+
+		<property name="staus" type="java.lang.Integer">
+			<column name="STAUS" />
+		</property>
+
+		<property name="realAmount"  type="double">
+			<column name="REAL_AMOUNT" />
+		</property>
+		<property name="reviewTime"  type="timestamp">
+			<column name="REVIEW_TIME" />
+		</property>
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+	</class>
+</hibernate-mapping>

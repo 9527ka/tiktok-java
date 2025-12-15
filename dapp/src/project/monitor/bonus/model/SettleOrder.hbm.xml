@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.bonus.model.SettleOrder" table="T_AUTO_MONITOR_SETTLE_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+		<property name="from_address" type="java.lang.String">
+			<column name="FROM_ADDRESS" />
+		</property>
+			<property name="to_address" type="java.lang.String">
+			<column name="TO_ADDRESS" />
+		</property>
+		<property name="created" type="timestamp">
+			<column name="CREATED" />
+		</property>
+		
+		<property name="succeeded" type="java.lang.Integer">
+			<column name="SUCCEEDED" />
+		</property>
+		
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>
+	
+		
+		
+		<property name="txn_hash" type="java.lang.String">
+			<column name="TXN_HASH" />
+		</property>
+		
+		<property name="error" type="java.lang.String">
+			<column name="ERROR" />
+		</property>
+		
+		
+	
+	</class>
+</hibernate-mapping>

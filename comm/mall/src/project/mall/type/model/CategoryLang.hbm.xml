@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.type.model.CategoryLang" table="T_MALL_CATEGORY_LANG">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="lang"  type="java.lang.String">
+			<column name="LANG" />
+		</property>
+		<property name="name"  type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		<property name="categoryId"  type="java.lang.String">
+			<column name="CATEGORY_ID" />
+		</property>
+		<property name="des"  type="java.lang.String">
+			<column name="DES" />
+		</property>
+	</class>
+</hibernate-mapping>

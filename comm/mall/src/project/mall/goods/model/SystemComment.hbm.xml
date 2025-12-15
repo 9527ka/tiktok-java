@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.goods.model.SystemComment" table="T_SYSTEM_COMMENT">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="score"  type="int">
+			<column name="SCORE" />
+		</property>
+		<property name="imgUrl1"  type="java.lang.String">
+			<column name="IMG_URL_1" />
+		</property>
+		<property name="imgUrl2"  type="java.lang.String">
+			<column name="IMG_URL_2" />
+		</property>
+		<property name="imgUrl3"  type="java.lang.String">
+			<column name="IMG_URL_3" />
+		</property>
+		<property name="imgUrl4"  type="java.lang.String">
+			<column name="IMG_URL_4" />
+		</property>
+		<property name="imgUrl5"  type="java.lang.String">
+			<column name="IMG_URL_5" />
+		</property>
+		<property name="imgUrl6"  type="java.lang.String">
+			<column name="IMG_URL_6" />
+		</property>
+		<property name="imgUrl7"  type="java.lang.String">
+			<column name="IMG_URL_7" />
+		</property>
+		<property name="imgUrl8"  type="java.lang.String">
+			<column name="IMG_URL_8" />
+		</property>
+		<property name="imgUrl9"  type="java.lang.String">
+			<column name="IMG_URL_9" />
+		</property>
+		<property name="content"  type="java.lang.String">
+			<column name="CONTENT" />
+		</property>
+		<property name="status"  type="int">
+			<column name="STATUS" />
+		</property>
+		<property name="createTime" type="java.util.Date">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="systemGoodId"  type="java.lang.String">
+			<column name="SYSTEM_GOODS_ID" />
+		</property>
+
+	</class>
+</hibernate-mapping>

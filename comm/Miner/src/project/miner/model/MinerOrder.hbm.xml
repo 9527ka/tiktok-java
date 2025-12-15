@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.miner.model.MinerOrder" table="T_MINER_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+			<property name="minerId" type="java.lang.String">
+			<column name="MINER_ID" />
+		</property>
+
+		<property name="earn_time" type="timestamp">
+			<column name="EARN_TIME" />
+		</property>	
+		<property name="stop_time" type="timestamp">
+			<column name="STOP_TIME" />
+		</property>	
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		<property name="profit" type="double">
+			<column name="PROFIT" />
+		</property>	
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>	
+		<property name="compute_day" type="timestamp">
+			<column name="COMPUTE_DAY" />
+		</property>	
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>
+		<property name="close_time" type="timestamp">
+			<column name="CLOSE_TIME" />
+		</property>	
+		<property name="first_buy" type="java.lang.String">
+			<column name="FIRST_BUY" />
+		</property>
+		<property name="base_compute_amount" type="double">
+			<column name="BASE_COMPUTE_AMOUNT" />
+		</property>	
+	
+	</class>
+</hibernate-mapping>

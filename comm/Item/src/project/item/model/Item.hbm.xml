@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.item.model.Item" table="T_ITEM">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		<property name="symbol" type="java.lang.String" update="false">
+			<column name="SYMBOL" />
+		</property>
+		<property name="symbol_data" type="java.lang.String" update="false">
+			<column name="SYMBOL_DATA" />
+		</property>
+		<property name="pips" type="double">
+			<column name="PIPS" />
+		</property>	
+		<property name="pips_amount" type="double">
+			<column name="PIPS_AMOUNT" />
+		</property>	
+		<property name="adjustment_value" type="double">
+			<column name="ADJUSTMENT_VALUE" />
+		</property>	
+		<property name="unit_amount" type="double">
+			<column name="UNIT_AMOUNT" />
+		</property>	
+		<property name="unit_fee" type="double">
+			<column name="UNIT_FEE" />
+		</property>	
+		<property name="market" type="java.lang.String" update="false">
+			<column name="MARKET" />
+		</property>
+		<property name="decimals" type="java.lang.Integer">
+			<column name="DECIMALS" />
+		</property>
+		<property name="multiple" type="double">
+			<column name="MULTIPLE" />
+		</property>	
+		<property name="borrowing_rate" type="double">
+			<column name="BORROWING_RATE" />
+		</property>	
+		<property name="symbolFullName" type="java.lang.String">
+			<column name="SYMBOL_FULL_NAME" />
+		</property>	
+		
+	</class>
+</hibernate-mapping>

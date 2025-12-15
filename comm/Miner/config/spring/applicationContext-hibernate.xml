@@ -1,0 +1,15 @@
+admin
+
+	<!-- miner -->
+				<value>minerService</value>
+				<value>minerOrderService</value>
+				<value>adminMinerService</value>
+				<value>adminMinerOrderService</value>
+
+
+
+api
+
+<!-- miner -->
+				<value>minerService</value>
+				<value>minerOrderService</value>

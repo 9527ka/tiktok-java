@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.exchange.ExchangeApplyOrder" table="T_EXCHANGE_APPLY_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		
+		<property name="relation_order_no" type="java.lang.String">
+			<column name="RELATION_ORDER_NO" />
+		</property>
+		
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+			<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="symbol_value" type="double">
+			<column name="SYMBOL_VALUE" />
+		</property>	
+		
+			<property name="offset" type="java.lang.String">
+			<column name="OFFSET" />
+		</property>	
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>	
+		
+			<property name="price" type="double">
+			<column name="PRICE" />
+		</property>	
+		
+		
+		<property name="order_price_type" type="java.lang.String">
+			<column name="ORDER_PRICE_TYPE" />
+		</property>
+		
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>	
+		
+			<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+	
+		<property name="fee" type="double">
+			<column name="FEE" />
+		</property>	
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>	
+		
+		<property name="wallet_fee" type="double">
+			<column name="WALLET_FEE" />
+		</property>	
+
+		<property name="close_price" type="double">
+			<column name="CLOSE_PRICE" />
+		</property>	
+		<property name="close_time" type="timestamp">
+			<column name="CLOSE_TIME" />
+		</property>	
+        <property generated="never"  name="is_trigger_order"
+			type="yes_no">
+			<column name="IS_TRIGGER_ORDER" />
+		</property>
+		<property name="trigger_price" type="double">
+			<column name="TRIGGER_PRICE" />
+		</property>	
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,10 @@
+
+admin
+
+	<!-- trader -->
+	<value>adminTraderService</value>
+
+
+api
+<!-- trader -->
+<value>traderService</value>

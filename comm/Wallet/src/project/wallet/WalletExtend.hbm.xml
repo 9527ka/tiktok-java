@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.wallet.WalletExtend" table="T_WALLET_EXTEND">
+		<id name="id" type="java.lang.String" >
+			<column name="UUID" />
+		</id>
+		<property name="partyId" type="java.lang.String" update="false">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="wallettype" type="java.lang.String" update="false">
+			<column name="WALLETTYPE" />
+		</property>
+		<property name="amount" type="java.lang.Double">
+			<column name="AMOUNT" />
+		</property>
+
+	</class>
+</hibernate-mapping>

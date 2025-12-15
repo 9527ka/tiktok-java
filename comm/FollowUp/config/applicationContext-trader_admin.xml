@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+
+	<bean id="adminTraderService"
+		class="project.follow.internal.AdminTraderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		
+	</bean>
+	
+	<bean id="adminTraderUserService"
+		class="project.follow.internal.AdminTraderUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+	
+	<bean id="adminTraderFollowUserService"
+		class="project.follow.internal.AdminTraderFollowUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="traderFollowUserService" ref="traderFollowUserService" />
+		
+	</bean>
+	
+	<bean id="adminTraderFollowUserOrderService"
+		class="project.follow.internal.AdminTraderFollowUserOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		
+	</bean>
+	
+	
+	
+		
+
+		
+
+	
+
+	
+</beans>

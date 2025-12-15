@@ -1,0 +1,23 @@
+
+admin
+		<action name="LoginSuccessAction"
+			class="security.web.LocalLoginSuccessAction">
+			<!-- <result type="chain" name="admin_index">
+				<param name="actionName">adminContractOrderAction</param>
+				<param name="method">list</param>
+			</result>
+			<result type="chain" name="user_index">
+				<param name="actionName">adminMyDataAction</param>
+				<param name="method">list</param>
+			</result> -->
+			<result type="chain" name="user_index">
+				<param name="actionName">userIndexAction</param>
+				<param name="method">view</param>
+			</result>
+			<result type="chain" name="admin_index">
+				<param name="actionName">adminIndexAction</param>
+				<param name="method">view</param>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+			</result>
+		</action>
+
+

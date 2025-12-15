@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.cms.Banner" table="T_BANNER">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			  <generator class="uuid.hex" />
+		</id>
+		<property name="language" type="java.lang.String">
+			<column name="LANGUAGE" />
+		</property>
+		<property name="content_code" type="java.lang.String">
+			<column name="CONTENT_CODE" />
+		</property>
+		<property name="image" type="java.lang.String">
+			<column name="IMAGE" />
+		</property>
+		<property name="url" type="java.lang.String">
+			<column name="URL" />
+		</property>
+		<property name="model" type="java.lang.String">
+			<column name="MODEL" />
+		</property>
+		<property name="on_show" type="int">
+			<column name="ON_SHOW" />
+		</property>
+		<property name="sort_index" type="int">
+			<column name="SORT_INDEX" />
+		</property>
+		<property name="click" type="int">
+			<column name="CLICK" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+	</class>
+</hibernate-mapping>

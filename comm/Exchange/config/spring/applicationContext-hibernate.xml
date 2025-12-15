@@ -1,0 +1,13 @@
+
+admin
+
+<!-- exchange -->
+<value>adminExchangeApplyOrderService</value>
+<value>exchangeApplyOrderService</value>
+
+
+api
+<!-- exchange -->
+
+<value>exchangeApplyOrderService</value>
+<value>walletExtendCostUSDTService</value>

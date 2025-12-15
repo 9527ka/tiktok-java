@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.seller.model.SellerCredit" table="T_MALL_SELLER_CREDIT">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="sellerId" type="java.lang.String">
+			<column name="SELLER_ID" />
+		</property>
+		<property name="accScore" type="int">
+			<column name="ACC_SCORE" />
+		</property>
+		<property name="operationTime" type="timestamp">
+			<column name="OPERATION_TIME" />
+		</property>
+		<property name="reason" type="java.lang.String">
+			<column name="REASON" />
+		</property>
+		<property name="timeRegion" type="java.lang.String">
+			<column name="TIME_REGION" />
+		</property>
+		<property name="eventType" type="int">
+			<column name="EVENT_TYPE" />
+		</property>
+		<property name="eventKey" type="java.lang.String">
+			<column name="EVENT_KEY" />
+		</property>
+	</class>
+</hibernate-mapping>

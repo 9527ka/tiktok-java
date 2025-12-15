@@ -1,0 +1,22 @@
+
+admin
+
+		<action name="adminMinerOrderAction"
+			class="project.miner.web.AdminMinerOrderAction">
+			<result name="list">/miner_order_list.jsp</result>
+			<result name="addOrder">/miner_order_add.jsp</result>
+		</action>
+		<action name="adminMinerAction"
+			class="project.miner.web.AdminMinerAction">
+			<result name="list">/miner_list.jsp</result>
+			<result name="add">/miner_add.jsp</result>
+			<result name="update">/miner_update.jsp</result>
+		</action>
+
+api
+		<action name="miner"
+			class="project.miner.web.MinerAction">
+		</action>
+		<action name="minerorder"
+			class="project.miner.web.MinerOrderAction">
+		</action>

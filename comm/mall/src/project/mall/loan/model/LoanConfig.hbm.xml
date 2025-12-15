@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="project.mall.loan.model.LoanConfig" table="T_MALL_LOAN_CONFIG">
+
+        <id name="id" type="java.lang.String">
+            <column name="UUID" />
+            <generator class="uuid.hex"/>
+        </id>
+        <property name="amountMin" type="double">
+            <column name="AMOUNT_MIN"/>
+        </property>
+        <property name="amountMax" type="double">
+            <column name="AMOUNT_MAX"/>
+        </property>
+        <property name="rate" type="double">
+            <column name="RATE"/>
+        </property>
+        <property name="defaultRate" type="double">
+            <column name="DEFAULT_RATE"/>
+        </property>
+        <property name="lendableDays" type="java.lang.String">
+            <column name="LENDABLE_DAYS"/>
+        </property>
+        <property name="allLendableDays" type="java.lang.String">
+            <column name="ALL_LENDABLE_DAYS"/>
+        </property>
+    </class>
+</hibernate-mapping>

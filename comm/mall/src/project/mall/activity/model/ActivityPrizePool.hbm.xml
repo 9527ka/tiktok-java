@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.activity.model.ActivityPrizePool" table="ACTIVITY_PRIZE_POOL">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="prizeNameCn" type="java.lang.String">
+			<column name="PRIZE_NAME_CN" />
+		</property>
+
+		<property name="prizeNameEn" type="java.lang.String">
+			<column name="PRIZE_NAME_EN" />
+		</property>
+
+		<property name="prizeType" type="java.lang.Integer">
+			<column name="PRIZE_TYPE" />
+		</property>
+
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+
+		<property name="prizeAmount" type="java.math.BigDecimal">
+			<column name="PRIZE_AMOUNT" />
+		</property>
+
+		<property name="image" type="java.lang.String">
+			<column name="IMAGE" />
+		</property>
+
+		<property name="remark" type="java.lang.String">
+			<column name="REMARK" />
+		</property>
+
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="updateTime" type="timestamp">
+			<column name="UPDATE_TIME" />
+		</property>
+		<property name="createBy" type="java.lang.String">
+			<column name="CREATE_BY" />
+		</property>
+		<property name="deleted" type="java.lang.Integer">
+			<column name="DELETED" />
+		</property>
+	</class>
+</hibernate-mapping>

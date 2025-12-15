@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.model.AutoMonitorTip" table="T_AUTO_MONITOR_TIP">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="tiptype" type="java.lang.Integer">
+			<column name="TIP_TYPE" />
+		</property>
+
+		<property name="tipinfo" type="java.lang.String">
+			<column name="TIP_INFO" />
+		</property>
+
+
+	<property name="is_confirmed" type="java.lang.Integer">
+			<column name="IS_CONFIRMED" />
+		</property>
+
+			<property name="dispose_method" type="java.lang.String">
+			<column name="DISPOSED_METHOD" />
+		</property>
+
+		
+	
+		
+		<property name="created" type="timestamp">
+			<column name="CREATED" />
+		</property>
+		
+	
+		
+	
+	</class>
+</hibernate-mapping>

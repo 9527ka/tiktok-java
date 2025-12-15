@@ -1,0 +1,12 @@
+admin
+<action name="adminOnlineChatAction"
+			class="project.onlinechat.web.AdminOnlineChatAction">
+			<result name="result_make" type="json">
+				<param name="root">result_make</param>
+			</result>
+		</action>
+		
+api
+<action name="onlinechat"
+			class="project.onlinechat.web.OnlineChatAction">
+		</action>

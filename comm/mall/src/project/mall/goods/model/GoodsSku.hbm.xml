@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.goods.model.GoodsSku" table="T_MALL_GOODS_SKU">
+
+		<id name="id" type="java.lang.String">
+			<column name="ID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="price" type="java.math.BigDecimal">
+			<column name="PRICE" />
+		</property>
+		<property name="goodId" type="java.lang.String">
+			<column name="GOOD_ID" />
+		</property>
+
+		<property name="pic" type="java.lang.String">
+			<column name="PIC" />
+		</property>
+
+		<property name="coverImg" type="java.lang.String">
+			<column name="COVER_IMG" />
+		</property>
+
+		<property name="spData" type="java.lang.String">
+			<column name="SP_DATA" />
+		</property>
+
+		<property name="deleted" type="java.lang.Integer">
+			<column name="DELETED" />
+		</property>
+	</class>
+</hibernate-mapping>

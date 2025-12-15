@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.type.model.Category" table="T_MALL_CATEGORY">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="parentId" type="java.lang.String">
+			<column name="PARENT_ID" />
+		</property>
+		<property name="sort" type="java.lang.Integer">
+			<column name="SORT" />
+		</property>
+		<property name="rank" type="java.lang.Integer">
+			<column name="RANK" />
+		</property>
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="iconImg"  type="java.lang.String">
+			<column name="ICON_IMG" />
+		</property>
+		<property name="recTime"  type="java.lang.Long">
+			<column name="REC_TIME" />
+		</property>
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+		<property name="level" type="java.lang.Integer">
+			<column name="LEVEL" />
+		</property>
+		<property name="type" type="int">
+			<column name="TYPE" />
+		</property>
+	</class>
+</hibernate-mapping>

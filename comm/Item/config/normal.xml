@@ -1,0 +1,21 @@
+
+admin
+<action name="adminItemAction"
+	class="project.item.web.AdminItemAction">
+	<result name="list">/item_list.jsp</result>
+	<result name="update">/item_update.jsp</result>
+	<result name="add">/item_add.jsp</result>
+</action>
+
+<action name="adminItemLeverageAction"
+	class="project.item.web.AdminItemLeverageAction">
+	<result name="list">/item_leverage_list.jsp</result>
+	<result name="add">/item_leverage_add.jsp</result>
+</action>
+
+
+api
+
+<action name="withdraw"
+	class="project.withdraw.web.WithdrawAction">
+</action>

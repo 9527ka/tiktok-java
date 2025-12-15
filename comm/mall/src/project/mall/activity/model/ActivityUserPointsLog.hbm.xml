@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.activity.model.ActivityUserPointsLog" table="ACTIVITY_USER_POINTS_LOG">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="refType" type="java.lang.String">
+			<column name="REF_TYPE" />
+		</property>
+		<property name="refId" type="java.lang.String">
+			<column name="REF_ID" />
+		</property>
+
+		<property name="points" type="java.lang.Integer">
+			<column name="POINTS" />
+		</property>
+
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="createBy" type="java.lang.String">
+			<column name="CREATE_BY" />
+		</property>
+		<property name="deleted" type="java.lang.Integer">
+			<column name="DELETED" />
+		</property>
+	</class>
+</hibernate-mapping>

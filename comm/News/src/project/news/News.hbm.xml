@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.news.News" table="T_NEWS">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			  <generator class="uuid.hex" />
+		</id>
+		<property name="title" type="java.lang.String">
+			<column name="TITLE" />
+		</property>
+		<property name="content" type="java.lang.String">
+			<column name="CONTENT" />
+		</property>
+		<property name="lang" type="java.lang.String">
+			<column name="LANG" />
+		</property>
+		<property name="sort" type="int">
+			<column name="SORT" />
+		</property>
+		<property name="iconImg" type="java.lang.String">
+			<column name="ICON_IMG" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="releaseTime" type="java.lang.String">
+			<column name="RELEASE_TIME" />
+		</property>
+		<property name="status" type="int">
+			<column name="STATUS" />
+		</property>
+	</class>
+</hibernate-mapping>

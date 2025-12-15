@@ -1,0 +1,199 @@
+<%@ page language="java" pageEncoding="utf-8" isELIgnored="false"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%@ include file="include/pagetop.jsp"%>
+<!DOCTYPE html>
+<html>
+
+<head>
+<%@ include file="include/head.jsp"%>
+</head>
+
+<body>
+
+	<%@ include file="include/loading.jsp"%>
+
+	<!-- //////////////////////////////////////////////////////////////////////////// -->
+	<!-- START CONTENT -->
+	<div class="ifr-dody">
+
+		<!-- //////////////////////////////////////////////////////////////////////////// -->
+		<!-- START CONTAINER -->
+		<div class="ifr-con">
+			<h3>质押2.0订单 </h3>
+			
+			<%@ include file="include/alert.jsp"%>
+			
+			<!-- //////////////////////////////////////////////////////////////////////////// -->
+			<!-- START queryForm -->
+			<form action="<%=basePath%>normal/adminPledgeGalaxyOrderAction!list.action" method="post" id="queryForm">
+			
+				<input type="hidden" name="pageNo" id="pageNo"/>
+				<input type="hidden" name="name_para" id="name_para"/>
+				
+			</form>
+			<!-- END queryForm -->
+			<!-- //////////////////////////////////////////////////////////////////////////// -->
+			
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<div class="panel panel-default">
+
+						<div class="panel-title">
+							新增质押2.0订单
+							<ul class="panel-tools">
+								<li><a class="icon minimise-tool"><i class="fa fa-minus"></i></a></li>
+								<li><a class="icon expand-tool"><i class="fa fa-expand"></i></a></li>
+							</ul>
+						</div>
+
+						<div class="panel-body">
+						
+							<form class="form-horizontal" action="<%=basePath%>normal/adminPledgeGalaxyOrderAction!add.action"
+								method="post" name="mainForm" id="mainForm">
+
+								<input type="hidden" name="id" id="id" value = "${id}"/>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">用户UID(*)</label>
+									<div class="col-sm-3">
+										<input id="usercode" name="usercode" value="${usercode}" class="form-control"/>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">质押金额(*)</label>
+									<div class="col-sm-3">
+										<input id="pledge_amount" name="pledge_amount" class="form-control " value="${pledge_amount}" />
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">质押天数(*)</label>
+									<div class="col-sm-3">
+										<select id="pledge_days" name="pledge_days" class="form-control " >
+											<c:forEach items="${valid_days}" var="item">
+												<option value="${item.key}" <c:if test="${pledge_days == item.key}">selected="true"</c:if> >${item.value}</option>
+											</c:forEach>
+										</select>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">开始日期(*)</label>
+									<div class="col-sm-3">
+										<input id="start_time" name="start_time"
+											class="form-control " placeholder="开始日期" value="${start_time}" />
+									</div>
+								</div>
+								
+								<div class="col-sm-1">
+									<!-- 模态框（Modal） -->
+									<div class="modal fade" id="modal_succeeded" tabindex="-1"
+										role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content" style="width: 350px;">
+											
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+													<h4 class="modal-title" id="myModalLabel">登录人资金密码</h4>
+												</div>
+												
+												<div class="modal-body">
+													<div class="" >
+														<input id="login_safeword" type="password" name="login_safeword"
+															class="login_safeword" placeholder="请输入登录人资金密码" style="width: 250px;">
+													</div>
+												</div>
+												
+												<div class="modal-footer" style="margin-top: 0;">
+													<button type="button" class="btn " data-dismiss="modal">关闭</button>
+													<button id="sub" type="submit" class="btn btn-default" >确认</button>
+												</div>
+												
+											</div>
+											<!-- /.modal-content -->
+										</div>
+										<!-- /.modal -->
+									</div>
+								</div>								
+								
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<a href="javascript:goUrl(${pageNo})" class="btn">取消</a> 
+										<a href="javascript:submit()" class="btn btn-default">保存</a>
+									</div>
+								</div>
+
+							</form>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- END CONTAINER -->
+		<!-- //////////////////////////////////////////////////////////////////////////// -->
+
+		<%@ include file="include/footer.jsp"%>
+
+	</div>
+	<!-- End Content -->
+	<!-- //////////////////////////////////////////////////////////////////////////// -->
+
+	<%@ include file="include/js.jsp"%>
+
+	<script type="text/javascript">
+		
+		$.fn.datetimepicker.dates['zh'] = {
+			days : [ "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日" ],
+			daysShort : [ "日", "一", "二", "三", "四", "五", "六", "日" ],
+			daysMin : [ "日", "一", "二", "三", "四", "五", "六", "日" ],
+			months : [ "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月",
+					"十月", "十一月", "十二月" ],
+			monthsShort : [ "一", "二", "三", "四", "五", "六", "七", "八", "九", "十",
+					"十一", "十二" ],
+			meridiem : [ "上午", "下午" ],
+			//suffix:      ["st", "nd", "rd", "th"],  
+			today : "今天",
+			clear : "清空"
+		};
+		$(function() {
+			$('#start_time').datetimepicker({
+				format : 'yyyy-mm-dd hh:ii:00',
+				minuteStep:1,
+				language : 'zh',
+				weekStart : 1,
+				todayBtn : 1,
+				autoclose : 1,
+				todayHighlight : 1,
+				startView : 2,
+				clearBtn : true
+			});
+		});
+		$(function() {
+			$('#end_time').datetimepicker({
+				format : 'yyyy-mm-dd hh:ii:00',
+				minuteStep:1,
+				language : 'zh',
+				weekStart : 1,
+				todayBtn : 1,
+				autoclose : 1,
+				todayHighlight : 1,
+				startView : 2,
+				clearBtn : true
+			});
+		});
+	
+		function submit() {
+			$('#modal_succeeded').modal("show");
+		}		
+		
+	</script>
+	
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="financeService"
+		class="project.finance.internal.FinanceServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		
+	</bean>
+	
+	<bean id="financeOrderService"
+		class="project.finance.internal.FinanceOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="financeService" ref="financeService" />
+		<property name="pagedDao" ref="pagedDao" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="userRecomService" ref="userRecomService" />
+		
+	</bean>
+	
+	<bean id="adminFinanceService"
+		class="project.finance.internal.AdminFinanceServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+	
+	
+	<bean id="adminFinanceOrderService"
+		class="project.finance.internal.AdminFinanceOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+
+	
+	<bean id="financeOrder1DayJob" class="project.finance.job.FinanceOrder1DayJob">
+		<property name="financeOrderService" ref="financeOrderService" />
+		<property name="sysLogService" ref="sysLogService" />
+	</bean>	
+
+	
+
+	
+</beans>

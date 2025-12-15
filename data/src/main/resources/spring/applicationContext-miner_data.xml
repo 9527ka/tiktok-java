@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<!-- init-method="init" -->
+	
+	<bean id="minerService"
+		class="project.miner.internal.MinerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="dataService" ref="dataService" />
+	</bean>
+	
+	
+	 <bean id="minerOrderService"
+		class="project.miner.internal.MinerOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="minerService" ref="minerService" />
+		<property name="pagedDao" ref="pagedDao" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="partyService" ref="partyService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="dataService" ref="dataService" />
+	</bean>
+	
+	
+	<bean id="minerOrderProfitService"
+		class="project.miner.job.MinerOrderProfitServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+		<property name="minerService" ref="minerService" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="minerOrderService" ref="minerOrderService" />
+		<property name="walletService" ref="walletService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />	
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="dataService" ref="dataService" />
+	</bean>
+	
+	<bean id="minerOrderProfitJob" class="project.miner.job.MinerOrderProfitJob">
+		<property name="minerOrderProfitService" ref="minerOrderProfitService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="dataService" ref="dataService" />
+		<property name="sysLogService" ref="sysLogService" />
+	</bean>
+	<bean id="minerLoadCacheService"
+		class="project.miner.data.loadcache.MinerLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+</beans>

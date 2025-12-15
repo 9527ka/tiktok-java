@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	
+	
+		<dubbo:reference id="traderService"
+		interface="project.follow.TraderService" check="false" retries="0"  timeout="10000"/>
+		
+	<dubbo:reference id="traderOrderService"
+		interface="project.follow.TraderOrderService" check="false" retries="0"  timeout="10000"/>
+	<dubbo:reference id="traderUserService"
+		interface="project.follow.TraderUserService" check="false" retries="0"  timeout="10000"/>
+		
+	<dubbo:reference id="traderFollowUserService"
+		interface="project.follow.TraderFollowUserService" check="false" retries="0"  timeout="10000"/>
+	<dubbo:reference id="traderFollowUserOrderService"
+		interface="project.follow.TraderFollowUserOrderService" check="false" retries="0"  timeout="10000"/>
+		
+	
+	<!--  
+	
+	<dubbo:service
+		interface="project.follow.TraderOrderService" ref="traderOrderService" />
+			<bean id="traderOrderService"
+		class="project.follow.internal.TraderOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		
+	</bean>
+		
+	<dubbo:service
+		interface="project.follow.TraderUserService" ref="traderUserService" />
+			<bean id="traderUserService"
+		class="project.follow.internal.TraderUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		
+	</bean>
+	
+	<dubbo:service
+		interface="project.follow.TraderService" ref="traderService" />
+		
+		<bean id="traderService"
+		class="project.follow.internal.TraderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="contractOrderService" ref="contractOrderService" />
+		
+		
+		
+	</bean>
+	
+		
+	<dubbo:service
+		interface="project.follow.TraderFollowUserService" ref="traderFollowUserService" />
+			
+	<bean id="traderFollowUserService"
+		class="project.follow.internal.TraderFollowUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="traderService" ref="traderService" />
+		<property name="traderUserService" ref="traderUserService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		
+	</bean>
+		
+	<dubbo:service
+		interface="project.follow.TraderFollowUserOrderService" ref="traderFollowUserOrderService" />
+ 	
+ 		<bean id="traderFollowUserOrderService"
+		class="project.follow.internal.TraderFollowUserOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="traderService" ref="traderService" />
+		<property name="contractApplyOrderService" ref="contractApplyOrderService" />
+		<property name="traderFollowUserService" ref="traderFollowUserService" />
+		<property name="contractOrderService" ref="contractOrderService" />
+		<property name="traderUserService" ref="traderUserService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="traderOrderService" ref="traderOrderService" />
+		
+		
+	</bean>
+-->
+
+</beans>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.syspara.Syspara" table="T_SYSPARA">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="value" type="java.lang.String">
+			<column name="SVALUE" />
+		</property>
+		<property name="code" type="java.lang.String">
+			<column name="CODE" />
+		</property>		
+		<property name="type" type="int">
+			<column name="STYPE" />
+		</property>
+		<property name="modify" type="int">
+			<column name="MODIFY" />
+		</property>
+		<property name="order" type="int">
+			<column name="SORDER" />
+		</property>
+		<property name="notes" type="java.lang.String">
+			<column name="NOTES" />
+		</property>
+		<property name="bagType" type="int">
+			<column name="BAG_TYPE" />
+		</property>
+	</class>
+</hibernate-mapping>

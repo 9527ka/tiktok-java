@@ -1,0 +1,25 @@
+	<action name="adminTraderAction"
+			class="project.follow.web.AdminTraderAction">
+			<result name="list">/trader_list.jsp</result>
+			<result name="add">/trader_add.jsp</result>
+			<result name="update">/trader_update.jsp</result>
+		</action>
+		
+		<action name="adminTraderFollowUserAction"
+			class="project.follow.web.AdminTraderFollowUserAction">
+			<result name="list">/trader_follow_user_list.jsp</result>
+			<result name="add">/trader_follow_user_add.jsp</result>
+			<result name="update">/trader_follow_user_update.jsp</result>
+		</action>
+		
+		<action name="adminTraderFollowUserOrderAction"
+			class="project.follow.web.AdminTraderFollowUserOrderAction">
+			<result name="list">/trader_follow_user_order_list.jsp</result>
+		</action>
+		
+		<action name="adminTraderUserAction"
+			class="project.follow.web.AdminTraderUserAction">
+			<result name="list">/trader_user_list.jsp</result>
+			<result name="add">/trader_user_add.jsp</result>
+			<result name="update">/trader_user_update.jsp</result>
+		</action>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://code.alibabatech.com/schema/dubbo
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+    <bean id="thirdPartyRechargeService" class="project.blockchain.internal.ThirdPartyRechargeServiceImpl">
+        <property name="thirdPartyManager" ref="thirdPartyManager"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="sysparaService" ref="sysparaService"/>
+        <property name="tipService" ref="tipService"/>
+        <property name="walletLogService" ref="walletLogService"/>
+        <property name="walletService" ref="walletService"/>
+        <property name="moneyLogService" ref="moneyLogService"/>
+        <property name="rechargeBlockchainService" ref="rechargeBlockchainService"/>
+        <property name="userDataService" ref="userDataService"/>
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>
+    <bean id="thirdPartyManager"
+          class="project.blockchain.manager.ThirdPartyManager">
+        <property name="sysparaService" ref="sysparaService"/>
+    </bean>
+
+
+</beans>

@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.orders.model.MallOrdersPrize" table="T_MALL_ORDERS_PRIZE">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+		</id>
+
+		<property name="partyId"  type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="userCode"  type="java.lang.String">
+			<column name="USER_CODE" />
+		</property>
+		<property name="sellerId"  type="java.lang.String">
+			<column name="SELLER_ID" />
+		</property>
+
+		<property name="sellerName" type="java.lang.String">
+			<column name="SELLER_NAME" />
+		</property>
+
+		<property  name="goodsCount" type="java.lang.Integer">
+			<column name="GOODS__COUNT" />
+		</property>
+
+		<property name="prizeOriginal" type="double">
+			<column name="PRIZE_ORIGINAL" />
+		</property>
+
+		<property name="prizeReal" type="double">
+			<column name="PRIZE_REAL" />
+		</property>
+
+		<property name="systemPrice" type="double">
+			<column name="SYSTEM_PRICE" />
+		</property>
+
+
+		<property  name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+
+		<property  name="orderStatus" type="java.lang.Integer">
+			<column name="ORDER_STATUS" />
+		</property>
+		<property  name="flag" type="java.lang.Integer">
+			<column name="FLAG" />
+		</property>
+
+		<property  name="returnStatus" type="java.lang.Integer">
+			<column name="RETURN_STATUS" />
+		</property>
+
+		<property name="fees" type="double">
+			<column name="FEES" />
+		</property>
+
+		<property name="tax" type="double">
+			<column name="TAX" />
+		</property>
+
+		<property name="profit" type="double">
+			<column name="PROFIT" />
+		</property>
+
+		<property name="payTime"  type="timestamp">
+			<column name="PAY_TIME" />
+		</property>
+
+		<property  name="payStatus" type="java.lang.Integer">
+			<column name="PAY_STATUS" />
+		</property>
+
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="refundTime"  type="timestamp">
+			<column name="REFUND_TIME" />
+		</property>
+		<property name="refundDealTime"  type="timestamp">
+			<column name="REFUND_DEAL_TIME" />
+		</property>
+
+		<property name="upTime"  type="java.lang.Long">
+			<column name="UP_TIME" />
+		</property>
+
+		<property name="phone"  type="java.lang.String">
+			<column name="PHONE" />
+		</property>
+
+		<property name="email"  type="java.lang.String">
+			<column name="EMAIL" />
+		</property>
+
+		<property name="contacts"  type="java.lang.String">
+			<column name="CONTACTS" />
+		</property>
+
+		<property name="postcode"  type="java.lang.String">
+			<column name="POSTCODE" />
+		</property>
+
+		<property name="country"  type="java.lang.String">
+			<column name="COUNTRY" />
+		</property>
+
+		<property name="province"  type="java.lang.String">
+			<column name="PROVINCE" />
+		</property>
+
+		<property name="city"  type="java.lang.String">
+			<column name="CITY" />
+		</property>
+
+		<property name="address"  type="java.lang.String">
+			<column name="ADDRESS" />
+		</property>
+
+		<property  name="profitStatus" type="java.lang.Integer">
+			<column name="PROFIT_STATUS" />
+		</property>
+
+		<property  name="purchStatus" type="java.lang.Integer">
+			<column name="PURCH_STATUS" />
+		</property>
+		<property  name="purchTime" type="timestamp">
+			<column name="PURCH_TIME" />
+		</property>
+		<property  name="purchTimeOutStatus" type="int">
+			<column name="PURCH_TIME_OUT_STATUS" />
+		</property>
+		<property  name="purchTimeOutTime" type="timestamp">
+			<column name="PURCH_TIME_OUT_TIME" />
+		</property>
+		<property  name="refundRemark" type="java.lang.String">
+			<column name="REFUND_REMARK" />
+		</property>
+
+		<property  name="returnReason" type="java.lang.String">
+			<column name="RETURN_REASON" />
+		</property>
+
+		<property  name="returnDetail" type="java.lang.String">
+			<column name="RETURN_DETAIL" />
+		</property>
+
+		<property  name="hasComment" type="java.lang.Integer">
+			<column name="HAS_COMMENT" />
+		</property>
+
+		<property name="countryId"  type="java.lang.Integer">
+			<column name="COUNTRY_ID" />
+		</property>
+
+		<property name="provinceId"  type="java.lang.Integer">
+			<column name="PROVINCE_ID" />
+		</property>
+
+		<property name="cityId"  type="java.lang.Integer">
+			<column name="CITY_ID" />
+		</property>
+
+		<property name="sellerDiscount"  type="double">
+			<column name="SELLER_DISCOUNT" />
+		</property>
+
+		<property name="manualReceiptStatus"  type="java.lang.Integer">
+			<column name="MANUAL_RECEIPT_STATUS" />
+		</property>
+
+		<property name="manualShipStatus"  type="java.lang.Integer">
+			<column name="MANUAL_SHIP_STATUS" />
+		</property>
+
+		<property name="pushAmount"  type="double">
+			<column name="PUSH_AMOUNT" />
+		</property>
+		<property name="isDelete"  type="java.lang.Integer">
+			<column name="IS_DELETE" />
+		</property>
+		<property name="statusBeforeLastRefund"  type="java.lang.Integer">
+			<column name="STATUS_BEFORE_LAST_REFUND" />
+		</property>
+
+        <!-- ShipmentProvider -->
+        <property name="shipmentProvider" type="java.lang.String">
+            <column name="shipment_provider" length="20"/>
+        </property>
+        <!-- ShipmentTradeNo -->
+        <property name="shipmentTradeNo" type="java.lang.String">
+            <column name="shipment_trade_no" length="40"/>
+        </property>
+        <!-- FinishAutoTime -->
+        <property name="finishAutoTime" type="java.lang.Long">
+            <column name="finish_auto_time" length="-1"/>
+        </property>
+	</class>
+</hibernate-mapping>

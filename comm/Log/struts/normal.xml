@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="normal" namespace="/normal" extends="root">
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
+		<interceptors>
+			<interceptor name="json"
+				class="org.apache.struts2.json.JSONInterceptor" />
+		</interceptors>
+		
+		<action name="NewsAction" class="project.news.action.NewsAction">
+			<result name="list">/news_list.jsp</result>
+			<result name="details">/news_details.jsp</result>
+		</action>
+		
+		<action name="AdminNewsAction" class="project.news.action.AdminNewsAction">
+			<result name="view">/news_list.jsp</result>
+			<result name="add">/news_add.jsp</result>
+			<result name="update">/news_update.jsp</result>
+		</action>
+	
+	</package>
+</struts>

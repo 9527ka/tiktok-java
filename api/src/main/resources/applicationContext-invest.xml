@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd ">
+	
+	
+	<bean id="goodsService" class="project.invest.goods.internal.GoodsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="moneyLogService" ref="moneyLogService"/>
+		<property name="walletService" ref="walletService"/>
+	</bean>
+
+
+	<bean id="projectService" class="project.invest.project.internal.ProjectServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService"/>
+		<property name="moneyLogService" ref="moneyLogService"/>
+		<property name="partyService" ref="partyService"/>
+		<property name="vipService" ref="vipService"/>
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="userDataService" ref="userDataService" />
+	</bean>
+
+
+	<bean id="vipService" class="project.invest.vip.internal.VipServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="walletService" ref="walletService"/>
+		<property name="moneyLogService" ref="moneyLogService"/>
+		<property name="partyService" ref="partyService"/>
+		<property name="userDataService" ref="userDataService" />
+	</bean>
+
+
+
+</beans>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+	<bean id="pledgeConfigService"
+		class="project.monitor.pledge.internal.PledgeConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />		
+	</bean>
+	
+	<bean id="pledgeGalaxyConfigService"
+		class="project.monitor.pledgegalaxy.internal.PledgeGalaxyConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="pledgeGalaxyOrderService" ref="pledgeGalaxyOrderService" />
+	</bean>
+	
+	<bean id="pledgeOrderService"
+		class="project.monitor.pledge.internal.PledgeOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pledgeConfigService" ref="pledgeConfigService" />
+		<property name="partyService" ref="partyService" />
+	</bean>
+	
+	<bean id="pledgeService"
+		class="project.monitor.pledge.internal.PledgeServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="dataService" ref="dataService" />
+		<property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService" />
+	</bean>
+
+	<bean id="adminPledgeConfigService"
+		class="project.monitor.pledge.internal.AdminPledgeConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="adminPledgeGalaxyConfigService"
+		class="project.monitor.pledgegalaxy.internal.AdminPledgeGalaxyConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+	
+	<bean id="adminPledgeOrderService"
+		class="project.monitor.pledge.internal.AdminPledgeOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />		
+	</bean>
+	
+	<bean id="adminPledgeGalaxyOrderService"
+		class="project.monitor.pledgegalaxy.internal.AdminPledgeGalaxyOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />		
+	</bean>
+	
+	<bean id="adminPledgeGalaxyProfitService"
+		class="project.monitor.pledgegalaxy.internal.AdminPledgeGalaxyProfitServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />		
+		<property name="walletService" ref="walletService" />	
+		<property name="moneyLogService" ref="moneyLogService" />	
+		<property name="redisHandler" ref="redisHandler" />	
+		<property name="userDataService" ref="userDataService" />	
+		<property name="pledgeGalaxyOrderService" ref="pledgeGalaxyOrderService" />
+		<property name="pledgeGalaxyProfitService" ref="pledgeGalaxyProfitService" />
+	</bean>
+	
+	<bean id="pledgeGalaxyProfitService"
+		class="project.monitor.pledgegalaxy.internal.PledgeGalaxyProfitServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="pledgeGalaxyOrderService" ref="pledgeGalaxyOrderService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="userDataService" ref="userDataService" />
+	</bean>
+	
+	<!-- 质押2.0 -->
+	<bean id="pledgeGalaxyOrderService"
+		class="project.monitor.pledgegalaxy.internal.PledgeGalaxyOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="partyService" ref="partyService" />
+		<property name="dAppAccountService" ref="dAppAccountService" />
+		<property name="pledgeGalaxyConfigService" ref="pledgeGalaxyConfigService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="tipService" ref="tipService" />
+	</bean>
+
+	<!-- <bean id="activityOrderService"
+		class="project.monitor.activity.internal.ActivityOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="activityService" ref="activityService" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="walletService" ref="walletService" />
+		<property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService" />
+		<property name="telegramBusinessMessageService" ref="telegramBusinessMessageService" />
+	</bean>
+	
+		<bean id="adminActivityOrderService"
+		class="project.monitor.activity.internal.AdminActivityOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+		
+	</bean> -->
+	
+</beans>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="partyService"
+		class="project.party.internal.PartyServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="redisLocalCache" ref="redisLocalCache" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
+
+	<bean id="userRecomService"
+		class="project.party.recom.internal.UserRecomServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="vipService" ref="vipService"/>
+
+	</bean>
+
+
+	<bean id="partyLoadCacheService"
+		class="project.data.loadcache.PartyLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+	<bean id="userMetricsService"
+		  class="project.party.internal.UserMetricsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+</beans>

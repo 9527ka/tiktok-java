@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<!-- init-method="init" -->
+	
+	<bean id="walletService" class="project.wallet.internal.WalletServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="walletService" class="project.wallet.internal.WalletServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="walletLogService" class="project.wallet.internal.WalletLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	
+	<bean id="exchangeRateService" class="project.wallet.rate.internal.ExchangeRateServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="walletLoadCacheService"
+		class="data.loadcache.WalletLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="walletLogLoadCacheService"
+		class="data.loadcache.WalletLogLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="exchangeRateLoadCacheService"
+		class="data.loadcache.ExchangeRateLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="userRateConfigLoadCacheService"
+		class="data.loadcache.UserRateConfigLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="walletDao" class="project.wallet.consumer.WalletDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="walletConsumeServer" class="project.wallet.consumer.WalletConsumeServer">
+		<property name="walletDao" ref="walletDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	
+	<bean id="walletExtendConsumeServer" class="project.wallet.consumer.WalletExtendConsumeServer">
+		<property name="walletDao" ref="walletDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	
+</beans>

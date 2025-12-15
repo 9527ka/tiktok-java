@@ -1,0 +1,13 @@
+
+admin
+<action name="adminCmsAction"
+	class="project.cms.web.AdminCmsAction">
+	<result name="list">/cms_list.jsp</result>
+	<result name="add">/cms_add.jsp</result>
+	<result name="update">/cms_update.jsp</result>
+</action>
+
+api
+
+<action name="cms" class="project.cms.web.CmsAction">
+</action>

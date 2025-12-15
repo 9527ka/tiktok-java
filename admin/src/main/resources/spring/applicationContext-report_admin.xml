@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+		">
+
+
+	<!-- <bean id="adminMoneyInOutStatisticsService"
+		class="project.report.internal.AdminMoneyInOutStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean> -->
+	<!-- <bean id="adminExchangeOrderStatisticsService"
+		class="project.report.internal.AdminExchangeOrderStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean> -->
+	<bean id="adminAllStatisticsService"
+		class="project.web.admin.impl.report.AdminAllStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+<!-- 		<property name="jdbcTemplate" ref="jdbcTemplate" /> -->
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<bean id="adminUserMoneyStatisticsService"
+		class="project.web.admin.impl.report.AdminUserMoneyStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="dataService" ref="dataService" />
+		<property name="walletService" ref="walletService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<!-- <bean id="adminUserAddStatisticsService"
+		class="project.report.internal.AdminUserAddStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="adminUserService" ref="adminUserService" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+	</bean> -->
+	<bean id="adminUserAllStatisticsService"
+		class="project.web.admin.impl.report.AdminUserAllStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="assetService" ref="assetService" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+	</bean>
+	<!-- <bean id="adminFuturesOrderStatisticsService"
+		class="project.report.internal.AdminFuturesOrderStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+	</bean>
+	<bean id="adminContractOrderStatisticsService"
+		class="project.report.internal.AdminContractOrderStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<bean id="adminFinanceStatisticsService"
+		class="project.report.internal.AdminFinanceStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean> -->
+	<bean id="adminAgentAllStatisticsService"
+		class="project.web.admin.impl.report.AdminAgentAllStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+<!-- 		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" /> -->
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+	</bean>
+	
+	<!-- <bean id="adminRechargeSymbolStatisticsService"
+		class="project.report.internal.AdminRechargeSymbolStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	
+	<bean id="adminMinerOrderStatisticsService"
+		class="project.report.internal.AdminMinerOrderStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<bean id="adminUserRecordStatisticsService"
+		class="project.report.internal.AdminUserRecordStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+		<property name="walletService" ref="walletService" />
+		<property name="logService" ref="logService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+	</bean> -->
+	<!--1_day  start-->
+	<!-- <bean id="statisticsJob" class="project.report.job.StatisticsJob">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="adminMoneyInOutStatisticsService" ref="adminMoneyInOutStatisticsService" />
+		<property name="adminContractOrderStatisticsService" ref="adminContractOrderStatisticsService" />
+		<property name="adminAllStatisticsService" ref="adminAllStatisticsService" />
+		<property name="adminExchangeOrderStatisticsService" ref="adminExchangeOrderStatisticsService" />
+	</bean>
+	<bean id="statisticsJobDetail_1_day"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="statisticsJob" />
+		</property>
+		<property name="targetMethod">
+			<value>taskJob</value>
+		</property>
+	</bean>
+	每天启动一次
+	<bean id="statisticsTaskCronTrigger_1_day" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="statisticsJobDetail_1_day" />
+		</property>
+		<property name="cronExpression">
+			<value>0 5 0 * * ? *</value>
+			<value>0 * * * * ? *</value>
+		</property>
+	</bean>
+	1_day  end
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref local="statisticsTaskCronTrigger_1_day" />
+			</list>
+		</property>
+	</bean> -->
+</beans>

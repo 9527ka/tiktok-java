@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.area.model.MobilePrefix" table="T_MALL_MOBILE_PREFIX">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="country" type="java.lang.String">
+			<column name="COUNTRY" />
+		</property>
+		<property name="mobilePrefix" type="java.lang.String">
+			<column name="MOBILE_PREFIX" />
+		</property>
+	</class>
+</hibernate-mapping>

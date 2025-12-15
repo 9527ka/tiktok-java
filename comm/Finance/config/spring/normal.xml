@@ -1,0 +1,22 @@
+admin
+
+		<action name="adminFinanceAction"
+			class="project.finance.web.AdminFinanceAction">
+			<result name="list">/finance_list.jsp</result>
+			<result name="add">/finance_add.jsp</result>
+			<result name="update">/finance_update.jsp</result>
+		</action>
+		<action name="adminFinanceOrderAction"
+			class="project.finance.web.AdminFinanceOrderAction">
+			<result name="holdings">/finance_order_holdings_list.jsp</result>
+			<result name="list">/finance_order_list.jsp</result>
+		</action>
+		
+api
+
+		<action name="finance"
+			class="project.finance.web.FinanceAction">
+		</action>
+		<action name="financeOrder"
+			class="project.finance.web.FinanceOrderAction">
+		</action>

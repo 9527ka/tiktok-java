@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<dubbo:reference id="checkIpRequestCountService"
+		interface="project.ddos.CheckIpRequestCountService" check="false"  retries="0"  timeout="10000" />
+	<dubbo:reference id="ipMenuService"
+		interface="project.ddos.IpMenuService" check="false"  retries="0"  timeout="10000" />
+	<dubbo:reference id="urlSpecialService"
+		interface="project.ddos.UrlSpecialService" check="false"  retries="0"  timeout="10000" />
+		
+	<bean id="adminIpMenuService" class="project.ddos.internal.AdminIpMenuServiceImpl" >
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="logService" ref="logService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="ipMenuService" ref="ipMenuService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="checkIpRequestCountService" ref="checkIpRequestCountService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="adminUrlSpecialService" class="project.ddos.internal.AdminUrlSpecialServiceImpl" >
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="logService" ref="logService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="urlSpecialService" ref="urlSpecialService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+	<bean id="adminIpCountService" class="project.ddos.internal.AdminIpCountServiceImpl" >
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="logService" ref="logService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="ipMenuService" ref="ipMenuService" />
+		<property name="checkIpRequestCountService" ref="checkIpRequestCountService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+</beans>

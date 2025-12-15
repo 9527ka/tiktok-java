@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.ddos.model.UrlSpecial" table="T_URL_SPECIAL">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="url" type="java.lang.String">
+			<column name="URL" />
+		</property>
+		<property name="remarks" type="java.lang.String">
+			<column name="REMARKS" />
+		</property>
+		
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+
+	</class>
+</hibernate-mapping>

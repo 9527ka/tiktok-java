@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="project.mall.activity.model.ActivityUserJoinLog" table="ACTIVITY_USER_JOIN_LOG">
+
+        <id name="id" type="java.lang.String">
+            <column name="UUID"/>
+            <generator class="uuid.hex"/>
+        </id>
+
+        <property name="userId" type="java.lang.String">
+            <column name="USER_ID"/>
+        </property>
+        <property name="activityId" type="java.lang.String">
+            <column name="ACTIVITY_ID"/>
+        </property>
+        <property name="triggerTime" type="java.lang.Long">
+            <column name="TRIGGER_TIME"/>
+        </property>
+        <property name="finishTime" type="java.lang.Long">
+            <column name="FINISH_TIME"/>
+        </property>
+        <property name="eventKey" type="java.lang.String">
+            <column name="EVENT_KEY"/>
+        </property>
+        <property name="eventType" type="java.lang.String">
+            <column name="EVENT_TYPE"/>
+        </property>
+        <property name="times" type="java.lang.Integer">
+            <column name="TIMES"/>
+        </property>
+        <property name="refId" type="java.lang.String">
+            <column name="REF_ID"/>
+        </property>
+        <property name="refType" type="java.lang.Integer">
+            <column name="REF_TYPE"/>
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS"/>
+        </property>
+        <property name="extraInfo" type="java.lang.String">
+            <column name="EXTRA_INFO"/>
+        </property>
+
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="deleted" type="java.lang.Integer">
+            <column name="DELETED" />
+        </property>
+    </class>
+</hibernate-mapping>

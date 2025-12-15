@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.orders.model.MallOrdersGoods" table="T_MALL_ORDERS_GOODS">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="orderId"  type="java.lang.String">
+			<column name="ORDER_ID" />
+		</property>
+		<property name="systemGoodsId"  type="java.lang.String">
+			<column name="SYSTEM_GOODS_ID" />
+		</property>
+		<property name="goodsId"  type="java.lang.String">
+			<column name="GOODS_ID" />
+		</property>
+
+		<property name="goodsNum" type="java.lang.Integer">
+			<column name="GOODS_NUM" />
+		</property>
+
+		<property name="goodsPrize" type="double">
+			<column name="GOODS_PRIZE" />
+		</property>
+
+		<property name="goodsReal" type="double">
+			<column name="GOODS_REAL" />
+		</property>
+
+		<property name="systemPrice" type="double">
+			<column name="SYSTEM_PRICE" />
+		</property>
+
+		<property name="fees" type="double">
+			<column name="FEES" />
+		</property>
+
+		<property name="tax" type="double">
+			<column name="TAX" />
+		</property>
+
+		<property name="goodsSort" type="java.lang.Integer">
+			<column name="GOODS_SORT" />
+		</property>
+
+		<property name="skuId" type="java.lang.String">
+			<column name="SKU_ID" />
+		</property>
+
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+  
+	
+	<bean id="erc20Service"
+		class="project.monitor.erc20.service.internal.Erc20ServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="etherscanService" ref="etherscanService" />
+	</bean> 
+	<bean id="autoMonitorWalletService"
+		class="project.monitor.internal.AutoMonitorWalletServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+			<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	
+	<!-- <bean id="autoMonitorAddressConfigService"
+		class="project.monitor.internal.AutoMonitorAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean> -->
+	<dubbo:reference id="autoMonitorAddressConfigService"
+		interface="project.monitor.AutoMonitorAddressConfigService" retries="0"
+		check="false" timeout="100000" />
+
+	
+	<bean id="autoMonitorOrderService"
+		class="project.monitor.internal.AutoMonitorOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="dAppAccountService" ref="dAppAccountService" />
+		<property name="autoMonitorWalletService" ref="autoMonitorWalletService" />
+		<property name="partyService" ref="partyService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		
+	</bean>
+	
+	<dubbo:reference id="autoMonitorWalletTransferFromService"
+		interface="project.monitor.AutoMonitorWalletTransferFromService" retries="0" check="false" timeout="120000"/>
+	
+	
+	  
+	<bean id="adminAutoMonitorWalletService"
+		class="project.monitor.internal.AdminAutoMonitorWalletServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	
+	</bean>
+	
+	
+		<bean id="adminAutoMonitorOrderService"
+		class="project.monitor.internal.AdminAutoMonitorOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+			<bean id="adminDAppUserService"
+		class="project.monitor.internal.AdminDAppUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="walletService" ref="walletService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="roleService" ref="roleService" />
+		
+				
+	</bean>
+	
+	<bean id="qRGenerateService"
+		class="project.user.internal.QRGenerateServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	
+	<bean id="googleAuthService"
+		class="project.user.googleauth.internal.GoogleAuthServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="qRGenerateService" ref="qRGenerateService" />
+		<property name="logService" ref="logService" />
+	</bean>
+	
+	<bean id="adminAutoMonitorAddressConfigService"
+		class="project.monitor.internal.AdminAutoMonitorAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="logService" ref="logService" />
+		<property name="googleAuthService" ref="googleAuthService" />
+		<property name="autoMonitorAddressConfigService" ref="autoMonitorAddressConfigService" />
+	</bean>
+	
+	
+	<!-- 10.29 -->
+	<bean id="autoMonitorTipService"
+		class="project.monitor.internal.AutoMonitorTipServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="tipService" ref="tipService" />
+		<property name="autoMonitorAutoTransferFromConfigService" ref="autoMonitorAutoTransferFromConfigService" />
+	</bean>
+	<bean id="autoMonitorDAppLogService"
+		class="project.monitor.internal.AutoMonitorDAppLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+	
+
+	<dubbo:reference id="dAppAccountService"
+		interface="project.monitor.DAppAccountService" retries="0" check="false" timeout="120000"/>
+		
+	<bean id="miningConfigService"
+		class="project.monitor.mining.internal.MiningConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+	</bean>
+	
+
+	<bean id="adminMiningConfigService"
+		class="project.monitor.mining.internal.AdminMiningConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="miningConfigService" ref="miningConfigService" />
+	
+	</bean> 
+
+	<bean id="adminAutoMonitorTipService"
+		class="project.monitor.internal.AdminAutoMonitorTipServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="autoMonitorTipService" ref="autoMonitorTipService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	
+	<dubbo:reference id="telegramMessageService"
+		interface="project.monitor.telegram.TelegramMessageService" retries="0" check="false" timeout="3000"/>
+	
+	<dubbo:reference id="dAppUserDataSumService"
+		interface="project.monitor.report.DAppUserDataSumService" retries="0" check="false" timeout="10000"/>	
+	
+
+	 	
+
+	<bean id="telegramBusinessMessageService"
+		class="project.monitor.telegram.business.TelegramBusinessMessageServiceImpl">
+		<property name="dAppUserDataSumService" ref="dAppUserDataSumService" />
+		<property name="telegramMessageService" ref="telegramMessageService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="partyService" ref="partyService" />
+		<property name="walletService" ref="walletService" />
+	</bean>
+ 
+	
+	<bean id="autoMonitorPoolDataService"
+		class="project.monitor.internal.AutoMonitorPoolDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="dAppUserDataSumService" ref="dAppUserDataSumService" />
+		<property name="dataService" ref="dataService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	<bean id="adminAutoMonitorPoolDataService"
+		class="project.monitor.internal.AdminAutoMonitorPoolDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="logService" ref="logService" />
+		<property name="googleAuthService" ref="googleAuthService" />
+		<property name="autoMonitorPoolDataService" ref="autoMonitorPoolDataService" />
+	</bean>
+	<bean id="adminAutoMonitorDAppLogService"
+		class="project.monitor.internal.AdminAutoMonitorDAppLogServiceImpl">
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	
+	<dubbo:reference id="autoMonitorAutoTransferFromConfigService"
+		interface="project.monitor.AutoMonitorAutoTransferFromConfigService"
+		retries="0" check="false" timeout="3000" />	
+		
+	<!-- <bean id="autoMonitorAutoTransferFromConfigService"
+		class="project.monitor.internal.AutoMonitorAutoTransferFromConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="partyService" ref="partyService" />
+	</bean> -->
+	<bean id="adminAutoMonitorAutoTransferFromConfigService"
+		class="project.monitor.internal.AdminAutoMonitorAutoTransferFromConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	
+	<bean id="autoMonitorTransferAddressConfigService"
+		class="project.monitor.internal.AutoMonitorTransferAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="adminAutoMonitorTransferAddressConfigService"
+		class="project.monitor.internal.AdminAutoMonitorTransferAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="logService" ref="logService" />
+		<property name="googleAuthService" ref="googleAuthService" />
+		<property name="autoMonitorTransferAddressConfigService" ref="autoMonitorTransferAddressConfigService" />
+	</bean>
+	
+	<dubbo:reference id="etherscanRemoteService"
+		interface="project.monitor.etherscan.EtherscanRemoteService"
+		retries="0" check="false" timeout="10000" />
+
+	<dubbo:reference id="erc20RemoteService"
+		interface="project.monitor.erc20.service.Erc20RemoteService" retries="0"
+		check="false" timeout="10000" />
+	
+	<bean id="etherscanService"
+		class="project.monitor.etherscan.internal.EtherscanServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+	</bean> 
+	
+	<bean id="nodeRpcService"
+		class="project.monitor.noderpc.internal.NodeRpcServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	
+	<bean id="nodeRpcBusinessService"
+		class="project.monitor.noderpc.business.NodeRpcBusinessServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="nodeRpcService" ref="nodeRpcService" />
+	</bean>
+	
+	
+	<bean id="autoMonitorSettleAddressConfigService"
+		class="project.monitor.bonus.internal.AutoMonitorSettleAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="settleOrderService"
+		class="project.monitor.bonus.internal.SettleOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="adminAutoMonitorSettleAddressConfigService"
+		class="project.monitor.bonus.internal.AdminAutoMonitorSettleAddressConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="logService" ref="logService" />
+		<property name="googleAuthService" ref="googleAuthService" />
+		<property name="autoMonitorSettleAddressConfigService" ref="autoMonitorSettleAddressConfigService" />
+	</bean>
+	<bean id="adminAutoMonitorSettleOrderService"
+		class="project.monitor.bonus.internal.AdminAutoMonitorSettleOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="dAppAccountService" ref="dAppAccountService" />
+		<property name="settleOrderService" ref="settleOrderService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="logService" ref="logService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="googleAuthService" ref="googleAuthService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="tipService" ref="tipService" />
+	</bean>
+	
+	<bean id="adminAutoMonitorIndexService"
+		class="project.monitor.internal.AdminAutoMonitorIndexServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="etherscanRemoteService" ref="etherscanRemoteService" />
+		<property name="erc20RemoteService" ref="erc20RemoteService" />
+		<property name="autoMonitorAddressConfigService" ref="autoMonitorAddressConfigService" />
+		<property name="autoMonitorSettleAddressConfigService" ref="autoMonitorSettleAddressConfigService" />
+	</bean>
+	
+	<bean id="autoMonitorPoolMiningDataService"
+		class="project.monitor.internal.AutoMonitorPoolMiningDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+		<bean id="adminAutoMonitorPoolMiningDataService"
+		class="project.monitor.internal.AdminAutoMonitorPoolMiningDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="logService" ref="logService" />
+		<property name="googleAuthService" ref="googleAuthService" />
+		<property name="autoMonitorPoolMiningDataService" ref="autoMonitorPoolMiningDataService" />
+	</bean>
+</beans>

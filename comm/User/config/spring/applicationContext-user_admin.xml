@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	
+	
+	<dubbo:reference id="identifyingCodeTimeWindow"
+		interface="project.user.idcode.IdentifyingCodeTimeWindow" check="false" />
+	<dubbo:reference id="identifyingCodeTimeWindow"
+		interface="project.user.idcode.IdentifyingCodeTimeWindow" check="false" />
+		
+	<bean id="userService"
+		class="project.user.internal.UserServiceImpl">
+		<property name="partyService" ref="partyService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="identifyingCodeTimeWindow"
+			ref="identifyingCodeTimeWindow" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="onlineUserTimeWindow"
+			ref="onlineUserTimeWindow" />
+	</bean>
+	
+	<bean id="onlineUserTimeWindow"
+		class="project.user.internal.OnlineUserTimeWindow">
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="adminKycService"
+		class=" project.user.kyc.internal.AdminKycServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<bean id="adminKycHighLevelService"
+		class=" project.user.kyc.internal.AdminKycHighLevelServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<bean id="adminSystemUserService"
+		class="project.admin.interal.AdminSystemUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="secUserService" ref="secUserService" />
+<!-- 		<property name="userRecomService" ref="userRecomService" /> -->
+	</bean>
+	
+</beans>

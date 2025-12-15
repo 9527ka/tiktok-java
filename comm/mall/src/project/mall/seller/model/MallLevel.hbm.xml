@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.seller.model.MallLevel" table="T_MALL_LEVEL">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+		</id>
+		<property name="level" type="java.lang.String">
+			<column name="LEVEL" />
+		</property>
+		<property name="title" type="java.lang.String">
+			<column name="TITLE" />
+		</property>
+		<property name="condExpr" type="java.lang.String">
+			<column name="COND_EXPR" />
+		</property>
+		<property name="profitRationMin" type="double">
+			<column name="PROFIT_RATION_MIN" />
+		</property>
+		<property name="ProfitRationMax" type="double">
+			<column name="PROFIT_RATION_MAX" />
+		</property>
+		<property name="promoteViewDaily" type="java.lang.String">
+			<column name="PROMOTE_VIEW_DAILY" />
+		</property>
+		<property name="awardBaseView" type="java.lang.Integer">
+			<column name="AWARD_BASE_VIEW" />
+		</property>
+		<property name="awardViewMin" type="java.lang.Integer">
+			<column name="AWARD_VIEW_MIN" />
+		</property>
+		<property name="awardViewMax" type="java.lang.Integer">
+			<column name="AWARD_VIEW_MAX" />
+		</property>
+		<property name="upgradeCash" type="java.lang.Integer">
+			<column name="UPGRADE_CASH" />
+		</property>
+
+		<property name="hasExclusiveService" type="int">
+			<column name="HAS_EXCLUSIVE_SERVICE" />
+		</property>
+		<property name="recommendAtFirstPage" type="int">
+			<column name="RECOMMEND_AT_FIRST_PAGE" />
+		</property>
+
+		<property name="deliveryDays" type="java.lang.String">
+			<column name="DELIVERY_DAYS" />
+		</property>
+		<property name="updateBy" type="java.lang.String">
+			<column name="UPDATE_BY" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="updateTime" type="timestamp">
+			<column name="UPDATE_TIME" />
+		</property>
+		<property name="sellerDiscount" type="double">
+			<column name="SELLER_DISCOUNT" />
+		</property>
+		<property name="price" type="double">
+			<column name="PRICE" />
+		</property>
+		<property name="goodsNum" type="int">
+			<column name="GOODS_NUM" />
+		</property>
+	</class>
+</hibernate-mapping>

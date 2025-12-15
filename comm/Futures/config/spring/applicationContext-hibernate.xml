@@ -1,0 +1,16 @@
+
+admin
+<!-- futures -->	
+				<value>futuresParaService</value>
+				<value>futuresOrderService</value>
+				<value>profitAndLossConfigService</value>
+				<value>adminFuturesOrderService</value>
+				<value>adminFuturesParaService</value>
+				<value>adminContractManageService</value>
+				<value>adminProfitAndLossConfigService</value>
+
+api
+<!-- futures -->
+				<value>futuresParaService</value>
+				<value>futuresOrderService</value>
+				<value>profitAndLossConfigService</value>

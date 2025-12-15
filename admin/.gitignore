@@ -1,0 +1,13 @@
+/target/
+/.settings/
+/classes/
+.classpath
+.project
+.DS_Store
+*.iml
+.idea
+.settings
+*.class
+*.jar
+!spring-boot-starter-nasa-utils-1.0.1.jar
+${

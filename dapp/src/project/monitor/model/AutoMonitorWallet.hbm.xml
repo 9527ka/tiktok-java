@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.model.AutoMonitorWallet" table="T_AUTO_MONITOR_WALLET">
+	    <id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="monitor_address" type="java.lang.String">
+			<column name="MONITOR_ADDRESS" />
+		</property>
+		<property name="monitor_amount" type="double">
+			<column name="MONITOR_AMOUNT" />
+		</property>
+		<property name="created" type="timestamp">
+			<column name="CREATED" />
+		</property>
+	    <property name="coin" type="java.lang.String">
+			<column name="COIN" />
+		</property>
+		<property name="blockchain_name" type="java.lang.String">
+			<column name="BLOCKCHAIN_NAME" />
+		</property>
+		<property name="address" type="java.lang.String">
+			<column name="ADDRESS" />
+		</property>
+		<property name="remarks"  type="java.lang.String">
+			<column name="REMARKS" />
+		</property>
+		<property name="threshold" type="double">
+			<column name="THRESHOLD" />
+		</property>
+		<property name="txn_hash" type="java.lang.String">
+			<column name="TXN_HASH" />
+		</property>
+		<property name="succeeded" type="java.lang.Integer">
+			<column name="SUCCEEDED" />
+		</property>
+		<property name="cancel_apply" type="java.lang.Integer">
+			<column name="CANCEL_APPLY" />
+		</property>
+		<property name="balance" type="double">
+			<column name="BALANCE" />
+		</property>
+		<property name="rolename"  type="java.lang.String">
+			<column name="ROLENAME" />
+		</property>
+		<property name="created_time_stamp"  type="java.lang.Long">
+			<column name="CREATED_TIME_STAMP" />
+		</property>
+		<property name="last_approve_abnormal_time_stamp"  type="java.lang.Long">
+			<column name="LAST_APPROVE_ABNORMAL_TIME_STAMP" />
+		</property>
+	</class>
+</hibernate-mapping>

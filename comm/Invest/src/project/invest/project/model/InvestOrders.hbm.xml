@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.invest.project.model.InvestOrders" table="T_INVEST_ORDERS">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="projectId"  type="java.lang.String">
+			<column name="PROJECT_ID" />
+		</property>
+
+		<property name="partyId"  type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>
+
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="auditsTime"  type="timestamp">
+			<column name="AUDITS_TIME" />
+		</property>
+
+		<property name="upTime"  type="long">
+			<column name="UP_TIME" />
+		</property>
+
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+
+		<property name="bonusRate"  type="double">
+			<column name="BONUS_RATE" />
+		</property>
+
+		<property name="bonusRateVip"  type="double">
+			<column name="BONUS_RATE_VIP" />
+		</property>
+
+		<property name="bonus" type="java.lang.Integer">
+			<column name="BONUS" />
+		</property>
+
+		<property name="type" type="java.lang.Integer">
+			<column name="TYPE" />
+		</property>
+
+		<property name="income"  type="double">
+			<column name="INCOME" />
+		</property>
+		<property name="incomeWill"  type="double">
+			<column name="INCOME_WILL" />
+		</property>
+		<property name="sucessWill"  type="java.lang.Long">
+			<column name="SUCESS_WILL" />
+		</property>
+
+		<property name="nextWill"  type="java.lang.Long">
+			<column name="NEXT_WILL" />
+		</property>
+
+	</class>
+</hibernate-mapping>

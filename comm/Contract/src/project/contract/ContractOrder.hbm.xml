@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.contract.ContractOrder" table="T_CONTRACT_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+			<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="direction" type="java.lang.String">
+			<column name="DIRECTION" />
+		</property>	
+		<property name="unit_amount" type="double">
+			<column name="UNIT_AMOUNT" />
+		</property>	
+		<property name="amount_close" type="double">
+			<column name="AMOUNT_CLOSE" />
+		</property>	
+			<property name="fee" type="double">
+			<column name="FEE" />
+		</property>	
+		<property name="deposit" type="double">
+			<column name="DEPOSIT" />
+		</property>	
+			<property name="deposit_open" type="double">
+			<column name="DEPOSIT_OPEN" />
+		</property>	
+			<property name="profit" type="double">
+			<column name="PROFIT" />
+		</property>	
+		<property name="trade_avg_price" type="double">
+			<column name="TRADE_AVG_PRICE" />
+		</property>	
+		<property name="close_avg_price" type="double">
+			<column name="CLOSE_AVG_PRICE" />
+		</property>	
+		
+		<property name="stop_price_profit" type="double">
+			<column name="STOP_PRICE_PROFIT" />
+		</property>
+		
+		<property name="stop_price_loss" type="double">
+			<column name="STOP_PRICE_LOSS" />
+		</property>
+		
+		<property name="pips" type="double">
+			<column name="PIPS" />
+		</property>	
+		
+		<property name="pips_amount" type="double">
+			<column name="PIPS_AMOUNT" />
+		</property>
+		
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>	
+			<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		<property name="close_time" type="timestamp">
+			<column name="CLOSE_TIME" />
+		</property>	
+		<property name="lever_rate" type="double">
+			<column name="LEVER_RATE" />
+		</property>	
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>	
+			<property name="volume_open" type="double">
+			<column name="VOLUME_OPEN" />
+		</property>	
+	</class>
+</hibernate-mapping>

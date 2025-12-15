@@ -1,0 +1,14 @@
+admin
+
+	<!-- fincance -->
+				<value>financeService</value>
+				<value>financeOrderService</value>
+				<value>adminFinanceService</value>
+				<value>adminFinanceOrderService</value>
+
+
+api
+
+<!-- fincance -->
+				<value>financeService</value>
+				<value>financeOrderService</value>

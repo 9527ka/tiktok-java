@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- <bean id="userDetailsService"
+        class="security.internal.UserDetailsServiceImpl">
+        <property name="secUserService" ref="secUserService" />
+        <property name="passwordEncoder" ref="passwordEncoder" />
+        <property name="roleService" ref="roleService" />
+        <property name="tokenService" ref="tokenService" />
+    </bean> -->
+    <bean id="qRGenerateService"
+          class="project.user.internal.QRGenerateServiceImpl">
+        <property name="sysparaService" ref="sysparaService"/>
+    </bean>
+
+
+    <bean id="adminAgentService"
+          class="project.web.admin.impl.user.AdminAgentServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="pagedQueryDao" ref="pagedDao"/>
+        <property name="userRecomService" ref="userRecomService"/>
+        <property name="walletService" ref="walletService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="secUserService" ref="secUserService"/>
+        <property name="roleService" ref="roleService"/>
+        <property name="qRGenerateService" ref="qRGenerateService"/>
+        <property name="sysparaService" ref="sysparaService"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>
+
+    <bean id="adminUserService"
+          class="project.web.admin.impl.user.AdminUserServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="pagedQueryDao" ref="pagedDao"/>
+        <property name="userRecomService" ref="userRecomService"/>
+        <property name="walletService" ref="walletService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="secUserService" ref="secUserService"/>
+        <property name="roleService" ref="roleService"/>
+        <property name="userDataService" ref="userDataService"/>
+        <property name="moneyLogService" ref="moneyLogService"/>
+        <property name="userService" ref="userService"/>
+        <property name="qRGenerateService" ref="qRGenerateService"/>
+        <property name="logService" ref="logService"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+        <property name="sysparaService" ref="sysparaService"/>
+        <property name="walletLogService" ref="walletLogService"/>
+        <property name="dataService" ref="dataService"/>
+        <property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService"/>
+        <property name="pledgeOrderService" ref="pledgeOrderService"/>
+        <property name="pledgeConfigService" ref="pledgeConfigService"/>
+        <property name="redisHandler" ref="redisHandler" />
+        <property name="notificationHelperClient" ref="notificationHelperClient" />
+    </bean>
+
+
+    <!-- <bean id="adminMyDataService"
+        class="project.user.internal.AdminMyDataServiceImpl">
+        <property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+    </bean> -->
+
+
+    <!-- <bean id="adminUserDataService"
+        class="project.user.internal.AdminUserDataServiceImpl">
+        <property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+        <property name="userRecomService" ref="userRecomService" />
+    </bean> -->
+
+
+    <bean id="adminPublicUserService" class="project.web.admin.impl.user.AdminPublicUserServiceImpl">
+        <property name="secUserService" ref="secUserService"/>
+        <property name="logService" ref="logService"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+        <!-- 		<property name="identifyingCodeService" ref="identifyingCodeService" />
+                <property name="identifyingCodeTimeWindowService" ref="identifyingCodeTimeWindowService" /> -->
+        <property name="sysparaService" ref="sysparaService"/>
+        <property name="googleAuthService" ref="googleAuthService"/>
+    </bean>
+    <bean id="adminLogService" class="project.log.internal.AdminLogServiceImpl">
+        <property name="pagedQueryDao" ref="pagedDao"/>
+        <property name="userRecomService" ref="userRecomService"/>
+    </bean>
+    <!-- <bean id="adminSysUserNotifyConfigService" class="project.admin.interal.AdminSysUserNotifyConfigServiceImpl" init-method="init">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+        <property name="pagedQueryDao" ref="pagedDao" />
+    </bean> -->
+    <!-- <bean id="msgWarningService" class="project.admin.interal.MsgWarningServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+        <property name="adminKycService" ref="adminKycService" />
+        <property name="adminKycHighLevelService" ref="adminKycHighLevelService" />
+        <property name="smsSendService" ref="smsSendService" />
+        <property name="emailSendService" ref="emailSendService" />
+        <property name="adminSysUserNotifyConfigService" ref="adminSysUserNotifyConfigService" />
+    </bean> -->
+
+    <bean id="adminUserRecomService" class="project.web.admin.impl.user.AdminUserRecomServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="pagedQueryDao" ref="pagedDao"/>
+        <property name="secUserService" ref="secUserService"/>
+        <property name="userDataService" ref="userDataService"/>
+        <property name="logService" ref="logService"/>
+        <property name="userRecomService" ref="userRecomService"/>
+        <property name="adminAgentService" ref="adminAgentService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>
+
+    <bean id="adminEmailCodeService" class="project.web.admin.impl.email.AdminEmailCodeServiceImpl">
+        <property name="secUserService" ref="secUserService"/>
+        <property name="logService" ref="logService"/>
+        <!-- <property name="identifyingCodeService" ref="identifyingCodeService" />
+        <property name="identifyingCodeTimeWindowService" ref="identifyingCodeTimeWindowService" /> -->
+        <property name="sysparaService" ref="sysparaService"/>
+        <property name="googleAuthService" ref="googleAuthService"/>
+    </bean>
+
+    <bean id="posService" class="project.web.admin.impl.mall.PosServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="pagedQueryDao" ref="pagedDao"/>
+        <property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+    </bean>
+
+</beans>

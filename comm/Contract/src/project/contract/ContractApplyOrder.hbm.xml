@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.contract.ContractApplyOrder" table="T_CONTRACT_APPLY_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+			<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="direction" type="java.lang.String">
+			<column name="DIRECTION" />
+		</property>	
+			<property name="offset" type="java.lang.String">
+			<column name="OFFSET" />
+		</property>	
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>	
+			<property name="volume_open" type="double">
+			<column name="VOLUME_OPEN" />
+		</property>	
+			<property name="lever_rate" type="double">
+			<column name="LEVER_RATE" />
+		</property>	
+			<property name="price" type="double">
+			<column name="PRICE" />
+		</property>	
+		<property name="stop_price_profit" type="double">
+			<column name="STOP_PRICE_PROFIT" />
+		</property>
+		
+		<property name="stop_price_loss" type="double">
+			<column name="STOP_PRICE_LOSS" />
+		</property>
+		
+		<property name="order_price_type" type="java.lang.String">
+			<column name="ORDER_PRICE_TYPE" />
+		</property>
+		
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>	
+		
+			<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		
+			
+		
+		<property name="unit_amount" type="double">
+			<column name="UNIT_AMOUNT" />
+		</property>	
+	
+			<property name="fee" type="double">
+			<column name="FEE" />
+		</property>	
+		<property name="deposit" type="double">
+			<column name="DEPOSIT" />
+		</property>	
+			
+		
+	</class>
+</hibernate-mapping>

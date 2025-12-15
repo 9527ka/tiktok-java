@@ -1,0 +1,6 @@
+<action name="tokenJsonAction"
+	class="web.TokenJsonAction">
+	<result name="json" type="json">
+		<param name="root">result</param>
+	</result>
+</action>

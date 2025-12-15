@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.model.AutoMonitorAutoTransferFromConfig" table="T_AUTO_MONITOR_AUTO_TRANSFER_FROM_CONFIG">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+	
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+		<property generated="never"  name="eth_collect_button"
+			type="yes_no">
+			<column name="ETH_COLLECT_BUTTON" />
+		</property>
+		<property name="usdt_threshold" type="java.lang.Double">
+			<column name="USDT_THRESHOLD" />
+		</property>
+		<property name="type" type="java.lang.String">
+			<column name="TYPE" />
+		</property>
+		<property generated="never"  name="enabled_eth_add"
+			type="yes_no">
+			<column name="ENABLED_ETH_ADD" />
+		</property>
+		<property generated="never"  name="enabled_usdt_threshold"
+			type="yes_no">
+			<column name="ENABLED_USDT_THRESHOLD" />
+		</property>
+		<property generated="never"  name="enabled_cancel"
+			type="yes_no">
+			<column name="ENABLED_CANCEL" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

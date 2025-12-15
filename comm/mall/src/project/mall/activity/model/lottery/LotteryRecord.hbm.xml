@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.activity.model.lottery.LotteryRecord" table="ACTIVITY_LOTTERY_RECORD">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="recommendName" type="java.lang.String">
+			<column name="RECOMMEND_NAME" />
+		</property>
+
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property name="partyName" type="java.lang.String">
+			<column name="PARTY_NAME" />
+		</property>
+
+		<property name="sellerName" type="java.lang.String">
+			<column name="SELLER_NAME" />
+		</property>
+
+		<property name="activityId" type="java.lang.String">
+			<column name="ACTIVITY_ID" />
+		</property>
+
+		<property name="lotteryName" type="java.lang.String">
+			<column name="LOTTERY_NAME" />
+		</property>
+
+		<property name="prizeId" type="java.lang.String">
+			<column name="PRIZE_ID" />
+		</property>
+
+		<property name="prizeName" type="java.lang.String">
+			<column name="PRIZE_NAME" />
+		</property>
+
+		<property name="prizeType" type="java.lang.Integer">
+			<column name="PRIZE_TYPE" />
+		</property>
+
+		<property name="prizeAmount" type="java.math.BigDecimal">
+			<column name="PRIZE_AMOUNT" />
+		</property>
+
+		<property name="receiveState" type="java.lang.Integer">
+			<column name="RECEIVE_STATE" />
+		</property>
+
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="updateTime" type="timestamp">
+			<column name="UPDATE_TIME" />
+		</property>
+
+		<property name="lotteryTime" type="timestamp">
+			<column name="LOTTERY_TIME" />
+		</property>
+
+		<property name="receiveTime" type="timestamp">
+			<column name="RECEIVE_TIME" />
+		</property>
+
+		<property name="prizeImage" type="java.lang.String">
+			<column name="PRIZE_IMAGE" />
+		</property>
+	</class>
+</hibernate-mapping>

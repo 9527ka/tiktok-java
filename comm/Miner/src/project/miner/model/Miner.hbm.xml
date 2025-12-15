@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.miner.model.Miner" table="T_MINER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+				<property name="name_en" type="java.lang.String">
+			<column name="NAME_EN" />
+		</property>
+				<property name="name_cn" type="java.lang.String">
+			<column name="NAME_CN" />
+		</property>
+		
+		<property name="cycle" type="java.lang.Integer">
+			<column name="CYCLE" />
+		</property>
+		<property name="cycle_close" type="java.lang.Integer">
+			<column name="CYCLE_CLOSE" />
+		</property>
+		<property name="daily_rate" type="double">
+			<column name="DAILY_RATE" />
+		</property>
+		<property name="show_daily_rate" type="double">
+			<column name="SHOW_DAILY_RATE" />
+		</property>
+
+		<property name="investment_min" type="double">
+			<column name="INVESTMENT_MIN" />
+		</property>	
+		<property name="investment_max" type="double">
+			<column name="INVESTMENT_MAX" />
+		</property>	
+			
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>
+		<property name="on_sale" type="java.lang.String">
+			<column name="ON_SALE" />
+		</property>
+		<property name="test" type="yes_no">
+			<column name="TEST" />
+		</property>
+	
+	
+		<property name="algorithm" type="java.lang.String">
+			<column name="ALGORITHM" />
+		</property>
+		
+		<property name="computing_power" type="double">
+			<column name="COMPUTING_POWER" />
+		</property>
+		<property name="computing_power_unit" type="java.lang.String">
+			<column name="COMPUTING_POWER_UNIT" />
+		</property>
+		<property name="power" type="double">
+			<column name="POWER" />
+		</property>
+		<property name="product_factory" type="java.lang.String">
+			<column name="PRODUCT_FACTORY" />
+		</property>
+		<property name="product_size" type="java.lang.String">
+			<column name="PRODUCT_SIZE" />
+		</property>
+		<property name="weight" type="double">
+			<column name="WEIGHT" />
+		</property>
+		<property name="work_temperature_min" type="double">
+			<column name="WORK_TEMPERATURE_MIN" />
+		</property>
+		<property name="work_temperature_max" type="double">
+			<column name="WORK_TEMPERATURE_MAX" />
+		</property>
+		<property name="work_humidity_min" type="double">
+			<column name="WORK_HUMIDITY_MIN" />
+		</property>
+		<property name="work_humidity_max" type="double">
+			<column name="WORK_HUMIDITY_MAX" />
+		</property>
+		<property name="internet" type="java.lang.String">
+			<column name="INTERNET" />
+		</property>
+		<property name="base_compute_amount" type="double">
+			<column name="BASE_COMPUTE_AMOUNT" />
+		</property>	
+	</class>
+</hibernate-mapping>

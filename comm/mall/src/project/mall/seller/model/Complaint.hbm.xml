@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="project.mall.seller.model.Complaint" table="T_MALL_COMPLAINT">
+
+        <id name="id" type="java.lang.String">
+            <column name="UUID" />
+            <generator class="uuid.hex" />
+        </id>
+        <property name="partyId" type="java.lang.String">
+            <column name="PARTY_ID" />
+        </property>
+        <property name="userCode" type="java.lang.String">
+            <column name="USER_CODE" />
+        </property>
+        <property name="storeId" type="java.lang.String">
+            <column name="STORE_ID" />
+        </property>
+        <property name="storeCode" type="java.lang.String">
+            <column name="STORE_CODE" />
+        </property>
+        <property name="complaintStatus" type="int">
+            <column name="COMPLAINT_STATUS" />
+        </property>
+        <property name="content" type="java.lang.String">
+            <column name="CONTENT" />
+        </property>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME" />
+        </property>
+        <property name="imgUrl1" type="java.lang.String">
+            <column name="IMG_URL_1" />
+        </property>
+        <property name="imgUrl2" type="java.lang.String">
+            <column name="IMG_URL_2" />
+        </property>
+        <property name="imgUrl3" type="java.lang.String">
+            <column name="IMG_URL_3" />
+        </property>
+        <property name="imgUrl4" type="java.lang.String">
+            <column name="IMG_URL_4" />
+        </property>
+        <property name="imgUrl5" type="java.lang.String">
+            <column name="IMG_URL_5" />
+        </property>
+        <property name="imgUrl6" type="java.lang.String">
+            <column name="IMG_URL_6" />
+        </property>
+        <property name="imgUrl7" type="java.lang.String">
+            <column name="IMG_URL_7" />
+        </property>
+        <property name="imgUrl8" type="java.lang.String">
+            <column name="IMG_URL_8" />
+        </property>
+        <property name="imgUrl9" type="java.lang.String">
+            <column name="IMG_URL_9" />
+        </property>
+        <property name="auditStatus" type="int">
+            <column name="AUDIT_STATUS" />
+        </property>
+        <property name="auditTime" type="timestamp">
+            <column name="AUDIT_TIME" />
+        </property>
+        <property name="remark" type="java.lang.String">
+            <column name="REMARK" />
+        </property>
+        <property name="createUser" type="java.lang.String">
+            <column name="CREATE_USER" />
+        </property>
+    </class>
+</hibernate-mapping>

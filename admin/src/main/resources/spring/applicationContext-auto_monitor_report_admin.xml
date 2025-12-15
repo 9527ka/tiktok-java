@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+		">
+
+	<bean id="adminAutoMonitorDAppStatisticsService"
+		class="project.monitor.report.internal.AdminAutoMonitorDAppStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<bean id="adminAutoMonitorUserMoneyStatisticsService"
+		class="project.monitor.report.internal.AdminAutoMonitorUserMoneyStatisticsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="dataService" ref="dataService" />
+		<property name="walletService" ref="walletService" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+</beans>

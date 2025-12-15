@@ -1,0 +1,10 @@
+
+admin
+
+<!-- news -->
+<value>newsService</value>
+<value>adminNewsService</value>
+
+api
+<!-- news -->
+<value>newsService</value>

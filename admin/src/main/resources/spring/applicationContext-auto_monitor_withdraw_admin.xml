@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<!-- Service -->
+	<bean id="adminAutoMonitorWithdrawService"
+		class="project.monitor.withdraw.internal.AdminAutoMonitorWithdrawServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+<!-- 		<property name="walletLogService" ref="walletLogService" /> -->
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+			<property name="sysparaService" ref="sysparaService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="autoMonitorWithdrawService" ref="autoMonitorWithdrawService" />
+		<property name="partyService" ref="partyService" />
+		<property name="tipService" ref="tipService" />
+<!-- 		<property name="thirdBlockChainService" ref="thirdBlockChainService" /> -->
+		<property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService" />
+		<property name="walletLogService" ref="walletLogService" />
+		
+		
+	</bean>
+	
+	
+	<bean id="autoMonitorWithdrawService"
+		class="project.monitor.withdraw.internal.AutoMonitorWithdrawServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="exchangeRateService"
+			ref="exchangeRateService" />
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="qRGenerateService" ref="qRGenerateService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+		<!-- <property name="kycService" ref="kycService" /> -->
+		<!-- <property name="kycHighLevelService" ref="kycHighLevelService" /> -->
+		<property name="tipService" ref="tipService" />
+		<property name="dataService" ref="dataService" />
+		<property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService" />
+		<property name="telegramBusinessMessageService" ref="telegramBusinessMessageService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		
+	</bean>
+	
+	
+	
+		<!-- Service -->
+	<bean id="adminAutoMonitorWithdrawCollectionService"
+		class="project.monitor.withdraw.internal.AdminAutoMonitorWithdrawCollectionServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+<!-- 		<property name="walletLogService" ref="walletLogService" /> -->
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+			<property name="sysparaService" ref="sysparaService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="partyService" ref="partyService" />
+		<property name="tipService" ref="tipService" />
+<!-- 		<property name="thirdBlockChainService" ref="thirdBlockChainService" /> -->
+		<property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService" />
+		
+	</bean>
+	
+		<bean id="autoMonitorWithdrawCollectionService"
+		class="project.monitor.withdraw.internal.AutoMonitorWithdrawCollectionServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="exchangeRateService"
+			ref="exchangeRateService" />
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="qRGenerateService" ref="qRGenerateService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+		<property name="tipService" ref="tipService" />
+		<property name="dataService" ref="dataService" />
+		<property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService" />
+		<property name="telegramBusinessMessageService" ref="telegramBusinessMessageService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		
+	</bean>
+</beans>

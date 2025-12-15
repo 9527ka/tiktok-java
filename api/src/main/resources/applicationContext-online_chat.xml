@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+
+
+	<dubbo:reference id="onlineChatMessageService"
+		interface="project.onlinechat.OnlineChatMessageService" check="false" retries="0"  timeout="3000" />
+	<dubbo:reference id="onlineChatVisitorMessageService"
+		interface="project.onlinechat.OnlineChatVisitorMessageService" check="false" retries="0"  timeout="3000" />
+	<dubbo:reference id="onlineChatUserMessageService"
+					 interface="project.onlinechat.OnlineChatUserMessageService" check="false" retries="0"  timeout="3000" />
+
+	<bean id="notifySellerImEventListener" class="project.onlinechat.event.NotifySellerImEventListener">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="partyService" ref="partyService" />
+	</bean>
+
+</beans>

@@ -1,0 +1,3 @@
+\
+<dubbo:reference id="onlineChatMessageService"
+		interface="project.onlinechat.OnlineChatMessageService" check="false" />

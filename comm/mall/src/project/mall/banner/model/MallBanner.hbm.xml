@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.banner.model.MallBanner" table="T_MALL_BANNER">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="imgUrl" type="java.lang.String">
+			<column name="IMG_URL" />
+		</property>
+		<property name="sort" type="int">
+			<column name="SORT" />
+		</property>
+		<property name="type" type="java.lang.String">
+			<column name="TYPE" />
+		</property>
+		<property name="link" type="java.lang.String">
+			<column name="LINK" />
+		</property>
+		<property name="imgType" type="int">
+			<column name="IMG_TYPE" />
+		</property>
+		<property name="remarks" type="java.lang.String">
+			<column name="REMARKS" />
+		</property>
+		<property name="createTime" type="java.util.Date">
+			<column name="CREATE_TIME" />
+		</property>
+	</class>
+</hibernate-mapping>

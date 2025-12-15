@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.invest.project.model.InvestRebate" table="T_INVEST_REBATE">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="partyId"  type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property name="orderPartyId"  type="java.lang.String">
+			<column name="ORDER_PARTY_ID" />
+		</property>
+
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+
+		<property name="rebate" type="double">
+			<column name="REBATE" />
+		</property>
+
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>
+
+		<property name="level" type="java.lang.Integer">
+			<column name="LEVEL" />
+		</property>
+
+		<property name="orderId" type="java.lang.String">
+			<column name="ORDER_ID" />
+		</property>
+
+		<property name="createTime" type="java.lang.String">
+			<column name="CREATE_TIME" />
+		</property>
+
+		<property name="realTime" type="java.lang.String">
+			<column name="REAL_TIME" />
+		</property>
+
+	</class>
+</hibernate-mapping>

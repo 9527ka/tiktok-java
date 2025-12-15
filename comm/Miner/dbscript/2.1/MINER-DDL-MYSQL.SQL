@@ -1,0 +1,53 @@
+
+-- ----------------------------
+-- Table structure for `T_MINER`
+-- ----------------------------
+DROP TABLE IF EXISTS `T_MINER`;
+CREATE TABLE `T_MINER` (
+  `UUID` varchar(32) NOT NULL,
+  `NAME` varchar(32) DEFAULT NULL,
+  `NAME_EN` varchar(64) DEFAULT NULL,
+  `NAME_CN` varchar(32) DEFAULT NULL,
+  `IMG` varchar(64) DEFAULT NULL,
+  `CYCLE` varchar(32) DEFAULT NULL,
+  `DAILY_RATE` double DEFAULT NULL,
+  `INVESTMENT_MIN` double DEFAULT NULL,
+  `STATE` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`UUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- ----------------------------
+-- Table structure for `T_MINER_ORDER`
+-- ----------------------------
+DROP TABLE IF EXISTS `T_MINER_ORDER`;
+CREATE TABLE `T_MINER_ORDER` (
+  `UUID` varchar(32) NOT NULL,
+  `PARTY_ID` varchar(32) DEFAULT NULL,
+  `ORDER_NO` varchar(64) DEFAULT NULL,
+  `MINER_ID` varchar(32) DEFAULT NULL,
+  `AMOUNT` double DEFAULT NULL,
+  `EARN_TIME` datetime DEFAULT NULL,
+  `STOP_TIME` datetime DEFAULT NULL,
+  `CREATE_TIME` datetime DEFAULT NULL,
+  `COMPUTE_DAY` datetime DEFAULT NULL,
+  `PROFIT` double DEFAULT NULL,
+  `STATE` varchar(32) DEFAULT NULL,
+  `COMPUTE_PROFIT` double DEFAULT '0',
+  `DEFAULT_MONEY` double DEFAULT '0',
+  `CLOSE_TIME` datetime DEFAULT NULL,
+  PRIMARY KEY (`UUID`),
+  KEY `INDEX_FINANCE_ORDER_ORDER_NO` (`ORDER_NO`),
+  KEY `INDEX_FINANCE_ORDER_STATE` (`STATE`),
+  KEY `INDEX_FINANCE_ORDER_PARTY_ID` (`PARTY_ID`,`STATE`,`CREATE_TIME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `T_MINER` 
+ADD COLUMN `TEST`  char(1) NULL AFTER `STATE`,
+ADD COLUMN `ON_SALE`  varchar(2) NULL AFTER `TEST`;
+
+
+
+
+ALTER TABLE T_MINER ADD CYCLE_CLOSE double;
+UPDATE T_MINER SET CYCLE_CLOSE = 0; 

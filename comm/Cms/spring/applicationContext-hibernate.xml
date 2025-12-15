@@ -1,0 +1,10 @@
+
+admin
+
+<!-- cms -->
+<value>cmsService</value>
+<value>adminCmsService</value>
+
+api
+<!-- cms -->
+<value>cmsService</value>

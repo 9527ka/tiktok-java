@@ -1,0 +1,23 @@
+
+admin
+
+		<action name="adminMoneyLogAction"
+			class="project.log.action.AdminMoneyLogAction">
+			<result name="list">/moneylog_list.jsp</result>
+		</action>
+		<action name="adminSysLogAction" class="project.log.action.AdminSysLogAction">
+			<result name="list">/systemlog_list.jsp</result>
+		</action>
+		<action name="adminLogAction" class="project.log.action.AdminLogAction">
+			<result name="list">/log_list.jsp</result>
+		</action>
+
+			
+		<action name="adminCodeLogAction" class="project.log.action.AdminCodeLogAction">
+			<result name="list">/code_log_list.jsp</result>
+		</action>
+
+api
+		<action name="moneylog"
+			class="project.log.action.MoneyLogAction">
+		</action>

@@ -1,0 +1,15 @@
+
+admin
+
+		<action name="adminExchangeApplyOrderAction"
+			class="project.exchange.web.AdminExchangeApplyOrderAction">
+			<result name="list">/exchange_order_list.jsp</result>
+<!-- 			<result name="result_make" type="json"> -->
+<!-- 				<param name="root">result_make</param> -->
+<!-- 			</result> -->
+		</action>
+
+api
+		<action name="exchangeapplyorder"
+			class="project.exchange.web.ExchangeApplyOrderAction">
+		</action>

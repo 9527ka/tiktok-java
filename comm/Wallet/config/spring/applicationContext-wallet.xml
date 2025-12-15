@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+	
+	<bean id="walletService" class="project.wallet.internal.WalletServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="walletLogService" class="project.wallet.internal.WalletLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	
+	<bean id="exchangeRateService" class="project.wallet.rate.internal.ExchangeRateServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="userRateConfigService" class="project.wallet.rate.internal.UserRateConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="exchangeRateService" ref="exchangeRateService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+</beans>

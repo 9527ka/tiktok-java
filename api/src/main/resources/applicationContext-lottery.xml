@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!--
+    <bean id="lotteryService" class="project.mall.activity.service.impl.lottery.LotteryServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="lotteryInfoPrizeService" ref="lotteryInfoPrizeService"/>
+        <property name="lotteryPrizeService" ref="lotteryPrizeService"/>
+    </bean>-->
+
+    <bean id="activityUserPointsService" class="project.mall.activity.service.impl.ActivityUserPointsServiceImpl" >
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    <bean id="activityUserPointsLogService" class="project.mall.activity.service.impl.ActivityUserPointsLogServiceImpl" >
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+
+    <!--
+    <bean id="lotteryPrizeService" class="project.mall.activity.service.impl.lottery.LotteryPrizeServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="lotteryInfoPrizeService" ref="lotteryInfoPrizeService"/>
+        <property name="redisHandler" ref="redisHandler" />
+        <property name="lotteryRecordService" ref="lotteryRecordService"/>
+        <property name="lotteryService" ref="lotteryService" />
+        <property name="activityUserPointsService" ref="activityUserPointsService"/>
+    </bean>-->
+
+    <bean id="lotteryReceiveService" class="project.mall.activity.service.impl.lottery.LotteryReceiveServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+        <property name="walletService" ref="walletService"/>
+        <property name="walletLogService" ref="walletLogService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="moneyLogService" ref="moneyLogService"/>
+    </bean>
+
+    <bean id="lotteryRecordService" class="project.mall.activity.service.impl.lottery.LotteryRecordServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="activityPrizeService" ref="activityPrizeService"/>
+        <!--<property name="lotteryPrizeService" ref="lotteryPrizeService"/>-->
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+        <property name="lotteryReceiveService" ref="lotteryReceiveService" />
+        <property name="tipService" ref="tipService" />
+    </bean>
+
+    <!--
+    <bean id="lotteryInfoPrizeService" class="project.mall.activity.service.impl.lottery.LotteryInfoPrizeServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+    </bean>-->
+
+</beans>

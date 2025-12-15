@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.combo.model.ComboUser" table="T_MALL_COMBO_USER">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+		</id>
+		<property name="comboId"  type="java.lang.String">
+			<column name="COMBO_ID" />
+		</property>
+		<property name="promoteNum" type="int">
+			<column name="PROMOTE_NUM" />
+		</property>
+		<property name="stopTime" type="long">
+			<column name="STOP_TIME" />
+		</property>
+	</class>
+</hibernate-mapping>

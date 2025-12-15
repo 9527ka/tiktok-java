@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+
+<bean id="onlineChatMessageService"
+	class="project.onlinechat.internal.OnlineChatMessageServiceImpl" init-method="init" >
+	<property name="hibernateTemplate" ref="hibernateTemplate" />
+	<property name="pagedQueryDao" ref="pagedDao" />
+	<property name="partyService" ref="partyService" />
+	<property name="userRecomService" ref="userRecomService" />
+	<property name="tipService" ref="tipService" />
+	<property name="customerService" ref="customerService" />
+	<property name="userService" ref="userService" />
+</bean>
+
+<dubbo:service
+		interface="project.onlinechat.OnlineChatMessageService"
+		ref="onlineChatMessageService" timeout="5000"/>
+
+<bean id="onlineChatVisitorMessageService"
+	class="project.onlinechat.internal.OnlineChatVisitorMessageServiceImpl" >
+	<property name="hibernateTemplate" ref="hibernateTemplate" />
+	<property name="onlineChatMessageService" ref="onlineChatMessageService" />
+	<property name="tipService" ref="tipService" />
+	<property name="customerService" ref="customerService" />
+</bean>
+
+<dubbo:service
+		interface="project.onlinechat.OnlineChatVisitorMessageService"
+		ref="onlineChatVisitorMessageService" timeout="5000"/>
+
+<bean id="onlineChatUserMessageService"
+	  class="project.onlinechat.internal.OnlineChatUserMessageServiceImpl" init-method="init" >
+	<property name="hibernateTemplate" ref="hibernateTemplate" />
+	<property name="jdbcTemplate" ref="jdbcTemplate" />
+	<property name="sysparaService" ref="sysparaService" />
+	<property name="userRecomService" ref="userRecomService" />
+	<property name="pagedQueryDao" ref="pagedDao" />
+	<property name="sellerService" ref="sellerService"/>
+	<property name="partyService" ref="partyService"/>
+</bean>
+
+<dubbo:service
+		interface="project.onlinechat.OnlineChatUserMessageService"
+		ref="onlineChatUserMessageService" />
+</beans>

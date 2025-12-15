@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="security.Role" table="SCT_ROLE">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+<!-- 			<generator class="uuid.hex" /> -->
+		</id>
+		<property generated="never" lazy="false" name="roleName"
+			type="java.lang.String">
+			<column length="64" name="ROLE_NAME" />
+		</property>
+		
+		<set cascade="none" lazy="false" name="resources"
+			outer-join="false" sort="unsorted" table="SCT_ROLE_RESOURCE">
+			<key column="ROLE_UUID" />
+			<many-to-many class="security.Resource"
+				column="RESOURCE_UUID" unique="false" />
+		</set>
+		
+		
+	</class>
+</hibernate-mapping>

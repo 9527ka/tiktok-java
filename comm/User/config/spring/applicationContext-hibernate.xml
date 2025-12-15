@@ -1,0 +1,16 @@
+
+admin
+<value>adminKycService</value>
+<value>userService</value>
+<value>adminKycHighLevelService</value>
+<value>adminSystemUserService</value>
+<!-- user -->
+
+
+api
+<!-- user -->
+<value>paymentMethodService</value>
+<value>kycService</value>
+<value>tokenService</value>
+<value>kycHighLevelService</value>
+<value>userService</value>

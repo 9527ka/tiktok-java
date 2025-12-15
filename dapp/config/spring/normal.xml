@@ -1,0 +1,22 @@
+admin
+		<action name="adminChannelBlockchainAction"
+			class="project.blockchain.web.AdminChannelBlockchainAction">
+			<result name="list">/channel_blockchain_list.jsp</result>
+			<result name="add">/channel_blockchain_add.jsp</result>
+			<result name="update">/channel_blockchain_update.jsp</result>
+		</action>
+		
+				<action name="adminRechargeBlockchainOrderAction"
+			class="project.blockchain.web.AdminRechargeBlockchainOrderAction">
+			<result name="list">/recharge_blockchain_list.jsp</result>
+		</action>
+
+api
+
+		<action name="rechargeblockchain"
+			class="project.blockchain.web.RechargeBlockchainAction">
+		</action>
+		
+		<action name="channelBlockchain"
+			class="project.blockchain.web.ChannelBlockchainAction">
+		</action>

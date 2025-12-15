@@ -1,0 +1,10 @@
+admin
+		<action name="adminTipAction"
+			class="project.tip.web.AdminTipAction">
+			<result name="result_make" type="json">
+				<param name="root">result_make</param>
+			</result>
+		</action>
+		
+		
+		

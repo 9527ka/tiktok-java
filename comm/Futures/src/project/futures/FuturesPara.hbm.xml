@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.futures.FuturesPara" table="T_FUTURES_PARA">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="timeNum" type="java.lang.Integer">
+			<column name="TIMENUM" />
+		</property>
+		<property name="timeUnit" type="java.lang.String">
+			<column name="TIMEUNIT" />
+		</property>
+		<property name="unit_amount" type="double">
+			<column name="UNIT_AMOUNT" />
+		</property>	
+		
+		<property name="profit_ratio" type="double">
+			<column name="PROFIT_RATIO" />
+		</property>	
+		<property name="unit_fee" type="double">
+			<column name="UNIT_FEE" />
+		</property>	
+		<property name="profit_ratio_max" type="double">
+			<column name="PROFIT_RATIO_MAX" />
+		</property>	
+		<property name="unit_max_amount" type="double">
+			<column name="UNIT_MAX_AMOUNT" />
+		</property>	
+	</class>
+</hibernate-mapping>

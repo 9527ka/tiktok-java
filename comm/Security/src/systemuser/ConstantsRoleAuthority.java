@@ -1,0 +1,88 @@
+package systemuser;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ConstantsRoleAuthority {
+	
+	public static final String ADMIN_AGENT = "ADMIN_AGENT";
+	public static final String ADMIN_FINANCE_ORDER = "ADMIN_FINANCE_ORDER";
+	public static final String ADMIN_FINANCE_STATISTICS = "ADMIN_FINANCE_STATISTICS";
+	public static final String ADMIN_FUND_ORDER = "ADMIN_FUND_ORDER";
+	public static final String ADMIN_USER_ALL_STATISTICS = "ADMIN_USER_ALL_STATISTICS";
+	public static final String ADMIN_EXCHANGE_ORDER_STATISTICS = "ADMIN_EXCHANGE_ORDER_STATISTICS";
+	public static final String ADMIN_NEWS = "ADMIN_NEWS";
+	public static final String ADMIN_USER_RECOM = "ADMIN_USER_RECOM";
+	public static final String ADMIN_MINER = "ADMIN_MINER";
+	public static final String ADMIN_ALL_STATISTICS = "ADMIN_ALL_STATISTICS";
+	public static final String ADMIN_MONEY_IN_OUT_STATISTICS = "ADMIN_MONEY_IN_OUT_STATISTICS";
+	public static final String ADMIN_HISTORY_CONTRACT_ORDER = "ADMIN_HISTORY_CONTRACT_ORDER";
+	public static final String ADMIN_PROFIT_LOSS_CONFIG = "ADMIN_PROFIT_LOSS_CONFIG";
+	public static final String ADMIN_CHANNEL_BLOCKCHAIN = "ADMIN_CHANNEL_BLOCKCHAIN";
+	public static final String ADMIN_EXCHANGE_RATE = "ADMIN_EXCHANGE_RATE";
+	public static final String ADMIN_MESSAGE_NOTIFY = "ADMIN_MESSAGE_NOTIFY";
+	public static final String ADMIN_MARKET_QUOTATIONS_MANAGE = "ADMIN_MARKET_QUOTATIONS_MANAGE";
+	public static final String ADMIN_MONEY_LOG = "ADMIN_MONEY_LOG";
+	public static final String ADMIN_USER_MONEY_STATISTICS = "ADMIN_USER_MONEY_STATISTICS";
+	public static final String ADMIN_CMS = "ADMIN_CMS";
+	public static final String ADMIN_EXCHANGE_APPLY_ORDER = "ADMIN_EXCHANGE_APPLY_ORDER";
+	public static final String ADMIN_USER_ADD_STATISTICS = "ADMIN_USER_ADD_STATISTICS";
+	public static final String ADMIN_USER_DATE = "ADMIN_USER_DATE";
+	public static final String ADMIN_MINER_ORDER = "ADMIN_MINER_ORDER";
+	public static final String ADMIN_CONTRACT_ORDER_STATISTICS = "ADMIN_CONTRACT_ORDER_STATISTICS";
+	public static final String ADMIN_USER = "ADMIN_USER";
+	public static final String ADMIN_CONTRACT_APPLY_ORDER = "ADMIN_CONTRACT_APPLY_ORDER";
+	public static final String ADMIN_RECHARGE_BLOCKCHAIN = "ADMIN_RECHARGE_BLOCKCHAIN";
+	public static final String ADMIN_FUTURES_ORDER_STATISTICS = "ADMIN_FUTURES_ORDER_STATISTICS";
+	public static final String ADMIN_KYC_HIGH_LEVEL = "ADMIN_KYC_HIGH_LEVEL";
+	public static final String ADMIN_CONTRACT_ORDER = "ADMIN_CONTRACT_ORDER";
+	public static final String ADMIN_FUTURES_ORDER = "ADMIN_FUTURES_ORDER";
+	public static final String ADMIN_KYC = "ADMIN_KYC";
+	public static final String ADMIN_WITHDRAW = "ADMIN_WITHDRAW";
+	public static final String ADMIN_AGENT_ALL_STATISTICS = "ADMIN_AGENT_ALL_STATISTICS";
+	public static final String ADMIN_RECHARGE_SYMBOL_STATISTICS = "ADMIN_RECHARGE_SYMBOL_STATISTICS";
+	public static final String ADMIN_CONTRACT_MANAGE = "ADMIN_CONTRACT_MANAGE";
+
+	public static Map<String, String> MODEL_NAME = new HashMap<String, String>();
+	
+	static {
+		MODEL_NAME.put(ADMIN_AGENT,"代理商");
+		MODEL_NAME.put(ADMIN_FINANCE_ORDER,"历史理财产品订单");
+		MODEL_NAME.put(ADMIN_FINANCE_STATISTICS,"理财产品收益统计");
+		MODEL_NAME.put(ADMIN_FUND_ORDER,"跟单策略基金订单");
+		MODEL_NAME.put(ADMIN_USER_ALL_STATISTICS,"用户收益报表");
+		MODEL_NAME.put(ADMIN_EXCHANGE_ORDER_STATISTICS,"币币交易收益统计");
+		MODEL_NAME.put(ADMIN_NEWS,"新闻管理");
+		MODEL_NAME.put(ADMIN_USER_RECOM,"用户推荐关系管理");
+//		MODEL_NAME.put(ADMIN_MINER,"矿机配置");
+		MODEL_NAME.put(ADMIN_ALL_STATISTICS,"总充提报表");
+		MODEL_NAME.put(ADMIN_MONEY_IN_OUT_STATISTICS,"充提金额统计");
+		MODEL_NAME.put(ADMIN_HISTORY_CONTRACT_ORDER,"历史永续合约单");
+		MODEL_NAME.put(ADMIN_PROFIT_LOSS_CONFIG,"交割场控设置");
+		MODEL_NAME.put(ADMIN_CHANNEL_BLOCKCHAIN,"区块链充值地址维护");
+		MODEL_NAME.put(ADMIN_EXCHANGE_RATE,"货币汇率配置");
+		MODEL_NAME.put(ADMIN_MESSAGE_NOTIFY,"管理员消息通知");
+		MODEL_NAME.put(ADMIN_MARKET_QUOTATIONS_MANAGE,"行情管理");
+		MODEL_NAME.put(ADMIN_MONEY_LOG,"账变记录");
+		MODEL_NAME.put(ADMIN_USER_MONEY_STATISTICS,"用户存量汇总");
+		MODEL_NAME.put(ADMIN_CMS,"用户端内容管理");
+		MODEL_NAME.put(ADMIN_EXCHANGE_APPLY_ORDER,"币币交易订单");
+		MODEL_NAME.put(ADMIN_USER_ADD_STATISTICS,"新增用户统计");
+		MODEL_NAME.put(ADMIN_USER_DATE,"代理分润对账报表");
+		MODEL_NAME.put(ADMIN_MINER_ORDER,"矿机订单");
+		MODEL_NAME.put(ADMIN_CONTRACT_ORDER_STATISTICS,"永续合约收益统计");
+		MODEL_NAME.put(ADMIN_USER,"用户管理");
+		MODEL_NAME.put(ADMIN_CONTRACT_APPLY_ORDER,"永续委托单");
+		MODEL_NAME.put(ADMIN_RECHARGE_BLOCKCHAIN,"充值订单");
+		MODEL_NAME.put(ADMIN_FUTURES_ORDER_STATISTICS,"交割合约收益统计");
+		MODEL_NAME.put(ADMIN_KYC_HIGH_LEVEL,"用户高级认证");
+		MODEL_NAME.put(ADMIN_CONTRACT_ORDER,"当前永续持仓单");
+		MODEL_NAME.put(ADMIN_FUTURES_ORDER,"交割合约单");
+		MODEL_NAME.put(ADMIN_KYC,"用户基础认证");
+		MODEL_NAME.put(ADMIN_WITHDRAW,"提现订单");
+		MODEL_NAME.put(ADMIN_AGENT_ALL_STATISTICS,"代理商充提报表");
+		MODEL_NAME.put(ADMIN_RECHARGE_SYMBOL_STATISTICS,"充值币种统计");
+		MODEL_NAME.put(ADMIN_CONTRACT_MANAGE,"交割合约配置");
+	};
+	
+}

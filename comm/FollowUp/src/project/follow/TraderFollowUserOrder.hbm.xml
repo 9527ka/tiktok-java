@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.follow.TraderFollowUserOrder" table="T_TRADER_FOLLOW_USER_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="trader_partyId" type="java.lang.String">
+			<column name="TRADER_PARTY_ID" />
+		</property>
+		<property name="user_order_no" type="java.lang.String">
+			<column name="USER_ORDER_NO" />
+		</property>
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>
+		
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>	
+		<property name="trader_order_no" type="java.lang.String">
+			<column name="TRADER_ORDER_NO" />
+		</property>
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		
+		
+	</class>
+</hibernate-mapping>

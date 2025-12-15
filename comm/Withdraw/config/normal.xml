@@ -1,0 +1,11 @@
+admin
+<action name="adminWithdrawAction"
+	class="project.withdraw.web.AdminWithdrawAction">
+	<result name="list">/withdraw_list.jsp</result>
+</action>
+
+
+api
+
+<action name="withdraw" class="project.withdraw.web.WithdrawAction">
+		</action>

@@ -1,0 +1,13 @@
+admin
+		<action name="adminNewsAction" class="project.news.web.AdminNewsAction">
+			<result name="list">/news_list.jsp</result>
+			<result name="add">/news_add.jsp</result>
+			<result name="update">/news_update.jsp</result>
+			
+		</action>
+
+api
+
+		<action name="news"
+			class="project.news.web.NewsAction">
+		</action>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="project.monitor.pledgegalaxy.PledgeGalaxyConfig" table="T_AUTO_MONITOR_PLEDGE_GALAXY_CONFIG">
+		<id name="id" type="java.lang.String"> 
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="pledgeAmountMin" type="java.lang.Double">
+			<column name="PLEDGE_AMOUNT_MIN" />
+		</property>
+		<property name="pledgeAmountMax" type="java.lang.Double">
+			<column name="PLEDGE_AMOUNT_MAX" />
+		</property>
+		<property name="validRecomPledgeAmountMin" type="java.lang.Double">
+			<column name="VALID_RECOM_PLEDGE_AMOUNT_MIN" />
+		</property>
+		<property name="staticIncomeForceValue" type="java.lang.String">
+			<column name="STATIC_INCOME_FORCE_VALUE" />
+		</property>
+		<property name="dynamicIncomeAssistValue" type="java.lang.String">
+			<column name="DYNAMIC_INCOME_ASSIST_VALUE" />
+		</property>
+		<property name="teamIncomeProfitRatio" type="java.lang.String">
+			<column name="TEAM_INCOME_PROFIT_RATIO" />
+		</property>
+		<property name="created" type="timestamp">
+			<column name="CREATED" />
+		</property>
+		<property name="updated" type="timestamp">
+			<column name="UPDATED" />
+		</property>
+	</class>
+</hibernate-mapping>

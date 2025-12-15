@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.user.kyc.KycHighLevel" table="T_KYC_HIGH_LEVEL">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		
+		<property name="work_place" type="java.lang.String">
+			<column name="WORK_PLACE" />
+			
+		</property>
+		
+		<property name="home_place" type="java.lang.String">
+			<column name="HOME_PLACE" />
+		</property>
+		
+		<property name="relatives_relation" type="java.lang.String">
+			<column name="RELATIVES_RELATION" />
+		</property>
+
+		<property name="relatives_name" type="java.lang.String">
+			<column name="RELATIVES_NAME" />
+		</property>
+		
+		<property name="relatives_place" type="java.lang.String">
+			<column name="RELATIVES_PLACE" />
+		</property>
+		
+		<property name="relatives_phone" type="java.lang.String">
+			<column name="RELATIVES_PHONE" />
+		</property>
+		<property name="status" type="int">
+			<column name="STATUS" />
+		</property>
+		<property name="msg" type="java.lang.String">
+			<column name="MSG" />
+		</property>
+		
+		<property name="apply_time" type="timestamp">
+			<column name="APPLY_TIME" />
+		</property>	
+		<property name="operation_time" type="timestamp">
+			<column name="OPERATION_TIME" />
+		</property>
+			<property name="idimg_1" type="java.lang.String">
+			<column name="IDIMG_1" />
+		</property>
+		
+		<property name="idimg_2" type="java.lang.String">
+			<column name="IDIMG_2" />
+		</property>
+		<property name="idimg_3" type="java.lang.String">
+			<column name="IDIMG_3" />
+		</property>
+		
+		
+	</class>
+</hibernate-mapping>

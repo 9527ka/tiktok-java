@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.tip.model.Tip" table="T_TIP">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="model" type="java.lang.String">
+			<column name="MODEL" />
+		</property>
+		<property name="business_id" type="java.lang.String">
+			<column name="BUSINESS_ID" />
+		</property>
+		<property name="create_time"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="time_stamp"  type="java.lang.Long">
+			<column name="TIME_STAMP" />
+		</property>
+		<property name="target_username" type="java.lang.String">
+			<column name="TARGET_USERNAME" />
+		</property>
+		
+	</class>
+</hibernate-mapping>

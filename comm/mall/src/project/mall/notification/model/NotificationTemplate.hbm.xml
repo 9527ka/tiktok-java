@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.notification.model.NotificationTemplate" table="T_NOTIFICATION_TEMPLATE">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="title" type="java.lang.String">
+			<column name="TITLE" />
+		</property>
+
+		<property name="templateCode" type="java.lang.String">
+			<column name="TEMPLATE_CODE" />
+		</property>
+
+		<property name="language" type="java.lang.String">
+			<column name="LANGUAGE" />
+		</property>
+
+		<property name="type" type="int">
+			<column name="TYPE" />
+		</property>
+
+		<property name="platform" type="java.lang.String">
+			<column name="PLATFORM" />
+		</property>
+
+		<property name="bizType" type="java.lang.String">
+			<column name="BIZ_TYPE" />
+		</property>
+
+		<property name="handler" type="java.lang.String">
+			<column name="HANDLER" />
+		</property>
+
+		<property name="module" type="int">
+			<column name="MODULE" />
+		</property>
+
+		<property name="content" type="java.lang.String">
+			<column name="CONTENT" />
+		</property>
+
+		<property name="varPlaceholdersJson" type="java.lang.String">
+			<column name="VAR_PLACEHOLDERS_JSON" />
+		</property>
+
+		<property name="status" type="int">
+			<column name="STATUS" />
+		</property>
+
+	</class>
+</hibernate-mapping>

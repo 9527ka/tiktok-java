@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<bean id="withdrawService"
+		class="project.withdraw.internal.WithdrawServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="exchangeRateService" ref="exchangeRateService" />
+<!-- 		<property name="paymentMethodService" ref="paymentMethodService" /> -->
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="qRGenerateService" ref="qRGenerateService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="partyService" ref="partyService" />
+		<property name="kycService" ref="kycService" />
+<!-- 		<property name="kycHighLevelService" ref="kycHighLevelService" /> -->
+		<property name="tipService" ref="tipService" />
+		<property name="hobiDataService" ref="hobiDataService" />
+	</bean>
+
+</beans>

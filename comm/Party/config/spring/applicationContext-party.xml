@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+	<!-- 不存在   
+	<bean id="codeTimeWindow" class="project.party.internal.CodeTimeWindow">
+	</bean>
+	-->
+
+		<bean id="partyService" class="project.party.internal.PartyServiceImpl"
+		init-method="init">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="passwordEncoder" ref="passwordEncoder" />  
+		<property name="redisHandler" ref="redisHandler" />  
+		<property name="redisLocalCache" ref="redisLocalCache" />  
+
+		
+	</bean>
+
+   <!-- 
+	<dubbo:service interface="project.party.PartyService"
+		ref="partyService" />
+
+	<dubbo:service interface="project.party.RegisterService"
+		ref="registerService" />
+
+	<dubbo:service interface="project.party.recom.UserRecomService"
+		ref="userRecomService" />
+
+	<dubbo:service interface="project.party.doubletrack.UserCompCacheHelper"
+		ref="userCompCacheHelper" />
+
+	<dubbo:service interface="project.party.doubletrack.UserCompService"
+		ref="userCompService" />
+    -->
+
+   <!--
+	<bean id="registerService" class="project.party.internal.RegisterServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="smsSendService" ref="smsSendService" />
+		<property name="roleService" ref="roleService" />
+		<property name="tenantService" ref="tenantService" />
+		<property name="partyDataService" ref="partyDataService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="smsTimeWindow" ref="smsTimeWindow" />
+		<property name="userCompService" ref="userCompService" />
+		<property name="walletService" ref="walletService" />
+		<property name="userCompCacheHelper" ref="userCompCacheHelper" />
+	</bean>
+    
+    
+	<bean id="partyDataService" class="project.party.internal.PartyDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+    <bean id="walletService" class="project.party.internal.WalletServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+    </bean>
+
+	<bean id="tenantService" class="project.party.internal.TenantServiceImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+    -->
+	<bean id="userRecomService" class="project.party.recom.internal.UserRecomServiceImpl"
+		init-method="init">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<!--
+		<property name="partyDataService" ref="partyDataService" />
+		-->
+	</bean>
+
+<!-- 
+	<bean id="userCompService" class="project.party.doubletrack.internal.UserCompServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		
+	</bean>
+
+
+	<bean id="userCompCacheHelper"
+	class="project.party.doubletrack.internal.DefaultUserCompCacheHelper">
+		<property name="userCompService" ref="userCompService" />
+		<property name="partyService" ref="partyService" />
+		<property name="userDataService" ref="userDataService" />
+	</bean>
+ -->
+
+</beans>

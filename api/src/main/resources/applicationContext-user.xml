@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+	<bean id="GeetestService"
+		class="project.user.captcha.internal.GeetestServiceImpl">
+	</bean>
+	
+	<!-- <bean id="paymentMethodService"
+		class="project.user.payment.internal.PaymentMethodServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean> -->
+
+	<bean id="kycService"
+		class="project.user.kyc.internal.KycServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="kycHighLevelService"
+		class="project.user.kyc.internal.KycHighLevelServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="tipService" ref="tipService" />
+	</bean>	
+	
+	<dubbo:reference id="identifyingCodeService"
+		interface="project.user.idcode.IdentifyingCodeService" check="false" retries="0"  timeout="3000"/>
+	<!--
+    <dubbo:reference id="identifyingCodeTimeWindow"
+        interface="project.user.idcode.IdentifyingCodeTimeWindow" check="false" />-->
+    <dubbo:reference id="identifyingCodeTimeWindowService"
+        interface="project.user.idcode.IdentifyingCodeTimeWindowService" check="false" retries="0"  timeout="3000" />
+	
+		
+	<bean id="userService"
+		class="project.user.internal.UserServiceImpl">
+		<property name="partyService" ref="partyService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+        <property name="identifyingCodeTimeWindowService" ref="identifyingCodeTimeWindowService" />
+<!-- 		<property name="identifyingCodeTimeWindow" -->
+<!-- 			ref="identifyingCodeTimeWindow" /> -->
+		<property name="secUserService" ref="secUserService" />
+<!-- 		<property name="onlineUserTimeWindow" -->
+<!-- 			ref="onlineUserTimeWindow" /> -->
+        <property name="onlineUserService" ref="onlineUserService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="sellerService" ref="sellerService" />
+		<property name="tokenService" ref="tokenService" />
+		<property name="focusSellerService" ref="focusSellerService" />
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
+		<property name="logService" ref="logService" />
+	</bean>
+	
+	<bean id="onlineUserService"
+		class="project.user.internal.OnlineUserService">
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<!-- <bean id="onlineUserTimeWindow"
+		class="project.user.internal.OnlineUserTimeWindow">
+		<property name="redisHandler" ref="redisHandler" />
+	</bean> -->
+	
+	<bean id="tokenService"
+		class="project.user.token.internal.TokenServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="userSafewordApplyService"
+		class="project.user.internal.UserSafewordApplyServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="kycService" ref="kycService" />
+		<property name="tipService" ref="tipService" />
+	</bean>
+	
+	<bean id="googleAuthService"
+		class="project.user.googleauth.internal.GoogleAuthServiceImpl">
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="qRGenerateService" ref="qRGenerateService" />
+	</bean>
+
+	<bean id="modifyUserInfoEventListener" class="project.event.ModifyUserInfoEventListener">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="partyService" ref="partyService" />
+		<property name="userService" ref="userService" />
+		<property name="onlineUserService" ref="onlineUserService" />
+		<property name="tokenService" ref="tokenService" />
+		<property name="evaluationService" ref="evaluationService" />
+	</bean>
+
+	<bean id="logoffAccountEventListener" class="project.event.LogoffAccountEventListener">
+		<property name="evaluationService" ref="evaluationService" />
+	</bean>
+
+	<bean id="rechargeSuccessEventListener" class="project.blockchain.event.RechargeSuccessEventListener">
+		<property name="rechargeBlockchainService" ref="rechargeBlockchainService" />
+		<property name="userMetricsService" ref="userMetricsService" />
+		<property name="walletLogService" ref="walletLogService" />
+	</bean>
+
+	<bean id="upgradeSellerLevelByRechargeEventListener" class="project.blockchain.event.UpgradeSellerLevelByRechargeEventListener">
+		<property name="walletLogService" ref="walletLogService" />
+		<property name="sellerService" ref="sellerService" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="mallLevelService" ref="mallLevelService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="fundChangeService" ref="fundChangeService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+<!-- 	<dubbo:reference id="userTestTurnMemberService" -->
+<!-- 		interface="project.user.UserTestTurnMemberService" check="false" retries="0"  timeout="3000" /> -->
+	
+</beans>

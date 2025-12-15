@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+
+
+
+	<bean id="paymentMethodService"
+		class="project.user.payment.internal.PaymentMethodServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+	<bean id="kycService"
+		class="project.user.kyc.internal.KycServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="kycHighLevelService"
+		class="project.user.kyc.internal.KycHighLevelServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	
+	<dubbo:reference id="identifyingCodeService"
+		interface="project.user.idcode.IdentifyingCodeService" check="false" />
+	<dubbo:reference id="identifyingCodeTimeWindow"
+		interface="project.user.idcode.IdentifyingCodeTimeWindow" check="false" />
+	
+		
+	<bean id="userService"
+		class="project.user.internal.UserServiceImpl">
+		<property name="partyService" ref="partyService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="identifyingCodeTimeWindow"
+			ref="identifyingCodeTimeWindow" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="onlineUserService"
+			ref="onlineUserService" />
+	</bean>
+	
+	
+	<bean id="onlineUserService"
+		class="project.user.internal.OnlineUserService">
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="tokenService"
+		class="project.user.token.internal.TokenServiceImpl" >
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+</beans>

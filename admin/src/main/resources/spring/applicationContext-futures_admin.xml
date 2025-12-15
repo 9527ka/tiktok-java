@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">	
+	
+	<bean id="futuresParaService" 
+		class="project.futures.internal.FuturesParaServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+	<!-- <bean id="futuresOrderService"
+		class="project.futures.internal.FuturesOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="itemService" ref="itemService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="futuresParaService" ref="futuresParaService" />
+		<property name="partyService" ref="partyService" />
+		<property name="dataService" ref="dataService" />
+		<property name="profitAndLossConfigService" ref="profitAndLossConfigService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="tipService" ref="tipService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="logService" ref="logService" />		
+	</bean> -->
+	
+	<bean id="profitAndLossConfigService"
+		class="project.futures.internal.ProfitAndLossConfigServiceImpl" >
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="logService" ref="logService" />
+		<property name="partyService" ref="partyService" />		
+	</bean>
+		
+	<bean id="adminFuturesOrderService"
+		class="project.futures.internal.AdminFuturesOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="futuresOrderService" ref="futuresOrderService" />
+	</bean>
+	
+	<bean id="adminFuturesParaService"
+		class="project.futures.internal.AdminFuturesParaImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="futuresParaService" ref="futuresParaService" />
+	</bean>
+	
+	<bean id="adminContractManageService"
+		class="project.futures.internal.AdminContractManageServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="adminItemService" ref="adminItemService" />
+		<property name="adminFuturesParaService" ref="adminFuturesParaService" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="logService" ref="logService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="googleAuthService" ref="googleAuthService" />
+	</bean>
+	
+	<bean id="adminProfitAndLossConfigService"
+		class="project.futures.internal.AdminProfitAndLossConfigServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />		
+	</bean>
+	
+</beans>

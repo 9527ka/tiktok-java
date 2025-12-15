@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd         
+	    ">
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}">
+        <dubbo:parameter key="qos.enable" value="false"/>
+        <dubbo:parameter key="qos.accept.foreign.ip" value="false"/>
+    </dubbo:application>
+    <!-- 使用zkp注册中心暴露服务地址 -->
+    <!-- 使用zookeeper注册中心暴露服务地址 -->
+    <dubbo:registry protocol="${dubbo.registry.protocol}"
+                    address="${dubbo.registry.address}"/>
+    <dubbo:protocol host="127.0.0.1" payload="50331648"/>
+    <!-- <dubbo:reference id="userRecomService"
+        interface="project.party.recom.UserRecomService" check="false" /> admin本地注入
+    <dubbo:reference id="partyService"
+        interface="project.party.PartyService" check="false" /> admin本地注入
+    <dubbo:reference id="userDataService"
+        interface="project.user.UserDataService" check="false" />  data注册
+    <dubbo:reference id="dataService"
+        interface="project.data.DataService" check="false" /> data注册
+    <dubbo:reference id="klineService"
+        interface="project.data.KlineService" check="false" /> 没被调用
+    <dubbo:reference id="rechargeService"
+        interface="project.recharge.RechargeService" check="false" />
+    <dubbo:reference id="qRProducerService"
+        interface="project.blockchain.QRProducerService" check="false" /> admin本地注入
+    <dubbo:reference id="rechargeBonusService"
+        interface="project.bonus.RechargeBonusService" check="false" /> admin本地注入
+    <dubbo:reference id="qRGenerateService"
+        interface="project.user.QRGenerateService" check="false" /> admin本地注入-->
+    <!-- q -->
+    <dubbo:reference id="rechargeService"
+                     interface="project.recharge.RechargeService" check="false" retries="0" timeout="10000"/>
+    <!-- q -->
+    <dubbo:reference id="userDataService"
+                     interface="project.user.UserDataService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="logService"
+                     interface="project.log.LogService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="codeLogService"
+                     interface="project.log.CodeLogService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="sysLogService"
+                     interface="project.log.SysLogService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="adjustmentValueService"
+                     interface="project.data.AdjustmentValueService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="onlineChatMessageService"
+                     interface="project.onlinechat.OnlineChatMessageService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="onlineChatVisitorMessageService"
+                     interface="project.onlinechat.OnlineChatVisitorMessageService" check="false" retries="0"
+                     timeout="10000"/>
+    <dubbo:reference id="onlineChatUserMessageService"
+                     interface="project.onlinechat.OnlineChatUserMessageService" check="false" retries="0"
+                     timeout="10000"/>
+    <!--<dubbo:reference id="otcOnlineChatMessageService"
+        interface="project.onlinechat.otc.OtcOnlineChatMessageService" check="false" retries="0"  timeout="10000" />-->
+    <dubbo:reference id="traderService"
+                     interface="project.follow.TraderService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="traderOrderService"
+                     interface="project.follow.TraderOrderService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="traderFollowUserService"
+                     interface="project.follow.TraderFollowUserService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="traderFollowUserOrderService"
+                     interface="project.follow.TraderFollowUserOrderService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="traderUserService"
+                     interface="project.follow.TraderUserService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="futuresOrderService"
+                     interface="project.futures.FuturesOrderService" check="false" retries="0" timeout="10000"/>
+    <dubbo:reference id="minerOrderProfitService"
+                     interface="project.miner.job.MinerOrderProfitService" retries="0" check="false" timeout="120000"/>
+    <dubbo:reference id="sellerGoodsService"
+                     interface="project.mall.goods.SellerGoodsService" retries="0" check="false" timeout="120000"/>
+</beans>

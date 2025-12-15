@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="project.mall.activity.model.ActivityUser" table="ACTIVITY_USER">
+
+        <id name="id" type="java.lang.String">
+            <column name="UUID"/>
+            <generator class="uuid.hex"/>
+        </id>
+        <property name="activityId" type="java.lang.String">
+            <column name="ACTIVITY_ID"/>
+        </property>
+        <property name="activityType" type="java.lang.String">
+            <column name="ACTIVITY_TYPE"/>
+        </property>
+        <property name="userId" type="java.lang.String">
+            <column name="USER_ID"/>
+        </property>
+        <property name="triggerType" type="java.lang.String">
+            <column name="TRIGGER_TYPE"/>
+        </property>
+        <property name="validBeginTime" type="timestamp">
+            <column name="VALID_BEGIN_TIME"/>
+        </property>
+        <property name="validEndTime" type="timestamp">
+            <column name="VALID_END_TIME"/>
+        </property>
+        <property name="firstTriggerTime" type="java.lang.Long">
+            <column name="FIRST_TRIGGER_TIME"/>
+        </property>
+        <property name="lastTriggerTime" type="java.lang.Long">
+            <column name="LAST_TRIGGER_TIME"/>
+        </property>
+
+        <property name="allowJoinTimes" type="java.lang.Integer">
+            <column name="ALLOW_JOIN_TIMES"/>
+        </property>
+        <property name="joinTimes" type="java.lang.Integer">
+            <column name="JOIN_TIMES"/>
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS"/>
+        </property>
+        <property name="userType" type="java.lang.Integer">
+            <column name="USER_TYPE"/>
+        </property>
+        <property name="userRegistTime" type="java.lang.Long">
+            <column name="USER_REGIST_TIME"/>
+        </property>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="deleted" type="java.lang.Integer">
+            <column name="DELETED" />
+        </property>
+    </class>
+</hibernate-mapping>

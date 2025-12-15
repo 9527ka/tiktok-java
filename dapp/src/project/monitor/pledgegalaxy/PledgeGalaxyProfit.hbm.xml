@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.pledgegalaxy.PledgeGalaxyProfit" table="T_AUTO_MONITOR_PLEDGE_GALAXY_PROFIT">
+	    <id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="type" type="java.lang.Integer">
+			<column name="TYPE" />
+		</property>
+		<property name="amount" type="java.lang.Double">
+			<column name="AMOUNT" />
+		</property>
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+		<property name="auditTime" type="timestamp">
+			<column name="AUDIT_TIME" />
+		</property>
+	    <property name="expireTime" type="timestamp">
+			<column name="EXPIRE_TIME" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="relationOrderNo" type="java.lang.String">
+			<column name="RELATION_ORDER_NO" />
+		</property>
+		<property name="msg" type="java.lang.String">
+			<column name="MSG" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,11 @@
+
+admin
+<!-- hobi -->
+<value>adminSymbolsService</value>
+<value>adminContractSymbolsService</value>
+
+
+data
+<!-- hobi -->
+<value>dataDBService</value>
+<value>klineService</value>

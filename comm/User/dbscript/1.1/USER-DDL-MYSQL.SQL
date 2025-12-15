@@ -1,0 +1,49 @@
+DROP TABLE IF EXISTS `T_PAYMENT_METHOD`;
+CREATE TABLE `T_PAYMENT_METHOD` (
+`UUID`  varchar(32) NOT NULL ,
+`PARTY_ID`  varchar(32) NOT NULL ,
+`METHOD`  varchar(32)  ,
+`BANK`  varchar(256) , 
+`ACCOUNT`  varchar(256) ,
+`QDCODE`  varchar(64),
+`DEPOSIT_BANK`  varchar(256) ,
+`USERNAME`  varchar(256),
+PRIMARY KEY (`UUID`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create index INDEX_PAYMENT_METHOD_PARTY_ID on T_PAYMENT_METHOD (
+   PARTY_ID
+);
+
+
+DROP TABLE IF EXISTS `T_KYC`;
+CREATE TABLE `T_KYC` (
+`UUID`  varchar(32) NOT NULL ,
+`PARTY_ID`  varchar(32) NOT NULL ,
+`IDNUMBER`  varchar(128)  ,
+`IDNAME`  varchar(256)  ,
+`NAME`  varchar(128) ,
+`IDIMG_1`  varchar(64),
+`IDIMG_2`  varchar(64),
+`STATUS`  int(11),
+`MSG`  varchar(256),
+PRIMARY KEY (`UUID`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create index INDEX_KYC_PARTY_ID on T_KYC (
+   PARTY_ID
+);
+
+
+DROP TABLE IF EXISTS `T_TOKEN`;
+CREATE TABLE `T_TOKEN` (
+`UUID`  varchar(32) NOT NULL ,
+`PARTY_ID`  varchar(32) NOT NULL ,
+`TOKEN`  varchar(128)  ,
+PRIMARY KEY (`UUID`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create index INDEX_TOKEN_PARTY_ID on T_TOKEN (
+   PARTY_ID
+);
+

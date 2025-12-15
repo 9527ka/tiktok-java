@@ -1,0 +1,20 @@
+admin
+		<action name="adminIpMenuAction" class="project.ddos.web.AdminIpMenuAction">
+			<result name="list">/ip_menu_list.jsp</result>
+			<result name="add">/ip_menu_add.jsp</result>
+			<result name="update">/ip_menu_update.jsp</result>
+		</action>
+		<action name="adminUrlSpecialAction" class="project.ddos.web.AdminUrlSpecialAction">
+			<result name="list">/url_special_list.jsp</result>
+			<result name="add">/url_special_add.jsp</result>
+			<result name="update">/url_special_update.jsp</result>
+		</action>
+		<action name="adminIpCountAction" class="project.ddos.web.AdminIpCountAction">
+			<result name="list">/ip_count_list.jsp</result>
+			<result name="result_make" type="json">
+				<param name="root">result_make</param>
+			</result>
+		</action>
+		
+		
+		

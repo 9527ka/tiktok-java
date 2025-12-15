@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+
+	<dubbo:reference id="hobiDataService"
+		interface="project.hobi.HobiDataService" check="false" />
+		
+	<bean id="adminSymbolsService"
+		class="project.hobi.internal.AdminSymbolsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="hobiDataService" ref="hobiDataService" />
+	</bean>
+	<bean id="adminContractSymbolsService"
+		class="project.hobi.internal.AdminContractSymbolsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="hobiDataService" ref="hobiDataService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+
+	<dubbo:reference id="klineInitService"
+		interface="project.data.internal.KlineInitService" check="false" />
+
+</beans>

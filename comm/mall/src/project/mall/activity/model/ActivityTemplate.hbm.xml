@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="project.mall.activity.model.ActivityTemplate" table="ACTIVITY_TEMPLATE">
+
+        <id name="id" type="java.lang.String">
+            <column name="UUID"/>
+            <generator class="uuid.hex"/>
+        </id>
+
+        <property name="type" type="java.lang.String">
+            <column name="TYPE"/>
+        </property>
+        <property name="title" type="java.lang.String">
+            <column name="TITLE"/>
+        </property>
+        <property name="tags" type="java.lang.String">
+            <column name="TAGS"/>
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS"/>
+        </property>
+        <property name="activityConfig" type="java.lang.String">
+            <column name="ACTIVITY_CONFIG"/>
+        </property>
+        <property name="joinRule" type="java.lang.String">
+            <column name="JOIN_RULE"/>
+        </property>
+        <property name="awardRule" type="java.lang.String">
+            <column name="AWARD_RULE"/>
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="DESCRIPTION"/>
+        </property>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="deleted" type="java.lang.Integer">
+            <column name="DELETED" />
+        </property>
+    </class>
+</hibernate-mapping>

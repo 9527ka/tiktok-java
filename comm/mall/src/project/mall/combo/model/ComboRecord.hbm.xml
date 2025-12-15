@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.combo.model.ComboRecord" table="T_MALL_COMBO_RECORD">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="partyId"  type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="comboId"  type="java.lang.String">
+			<column name="COMBO_ID" />
+		</property>
+
+		<property name="promoteNum" type="int">
+			<column name="PROMOTE_NUM" />
+		</property>
+
+		<property name="stopTime" type="java.lang.Long">
+			<column name="STOP_TIME" />
+		</property>
+
+		<property name="name"  type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		<property name="day" type="int">
+			<column name="DAY" />
+		</property>
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>
+
+		<property name="createTime" type="java.util.Date">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="baseAccessNum" type="int">
+			<column name="BASE_ACCESS_NUM" />
+		</property>
+		<property name="autoAccMin" type="int">
+			<column name="AUTO_ACC_MIN" />
+		</property>
+		<property name="autoAccMax" type="int">
+			<column name="AUTO_ACC_MAX" />
+		</property>
+		<property name="accInterval" type="int">
+			<column name="ACC_INTERVAL" />
+		</property>
+	</class>
+</hibernate-mapping>

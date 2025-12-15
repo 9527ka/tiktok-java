@@ -1,0 +1,23 @@
+
+admin
+<action name="adminSymbolsAction"
+	class="project.hobi.web.AdminSymbolsAction">
+	<result name="list">/symbols_list.jsp</result>
+</action>
+<action name="adminContractSymbolsAction"
+	class="project.hobi.web.AdminContractSymbolsAction">
+	<result name="list">/contract_manage_add_symbols_list.jsp</result>
+</action>
+api
+
+<action name="realtime" class="project.api.RealtimeAction">
+</action>
+
+<action name="trend" class="project.api.TrendAction">
+</action>
+<action name="depth" class="project.api.DepthAction">
+</action>
+<action name="trade" class="project.api.TradeAction">
+</action>
+<action name="kline" class="project.api.KlineAction">
+</action>

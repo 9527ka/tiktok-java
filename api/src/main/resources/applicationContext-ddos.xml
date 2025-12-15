@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+
+	<bean id="ipRequestTimeWindow" class="project.ddos.utils.IpRequestTimeWindow" >
+	</bean>
+	<bean id="ipSpecialRequestTimeWindow" class="project.ddos.utils.IpSpecialRequestTimeWindow" >
+	</bean>
+	<bean id="blacklistIpSerivceTimeWindow" class="project.ddos.utils.BlacklistIpSerivceTimeWindow" >
+	</bean>
+	<bean id="systemParaReadRequestTimeWindow" class="project.ddos.utils.SystemParaReadRequestTimeWindow" >
+	</bean>
+	<bean id="ipLockRequestTimeWindow" class="project.ddos.utils.IpLockRequestTimeWindow" >
+	</bean>
+	<bean id="locklistIpSerivceTimeWindow" class="project.ddos.utils.LocklistIpSerivceTimeWindow" >
+	</bean>
+	<bean id="ipMenuService" class="project.ddos.internal.IpMenuServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="blacklistIpSerivceTimeWindow" ref="blacklistIpSerivceTimeWindow" />
+		<property name="locklistIpSerivceTimeWindow" ref="locklistIpSerivceTimeWindow" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="urlSpecialService" class="project.ddos.internal.UrlSpecialServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="checkIpRequestCountService" class="project.ddos.internal.CheckIpRequestCountServiceImpl" >
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="ipRequestTimeWindow" ref="ipRequestTimeWindow" />
+		<property name="ipSpecialRequestTimeWindow" ref="ipSpecialRequestTimeWindow" />
+		<property name="blacklistIpSerivceTimeWindow" ref="blacklistIpSerivceTimeWindow" />
+		<property name="ipLockRequestTimeWindow" ref="ipLockRequestTimeWindow" />
+		<property name="locklistIpSerivceTimeWindow" ref="locklistIpSerivceTimeWindow" />
+		<property name="systemParaReadRequestTimeWindow" ref="systemParaReadRequestTimeWindow" />
+		<property name="ipMenuService" ref="ipMenuService" />
+		<property name="urlSpecialService" ref="urlSpecialService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+	<dubbo:service
+		interface="project.ddos.IpMenuService"
+		ref="ipMenuService" />
+	<dubbo:service
+		interface="project.ddos.UrlSpecialService"
+		ref="urlSpecialService" />
+	<dubbo:service
+		interface="project.ddos.CheckIpRequestCountService"
+		ref="checkIpRequestCountService" />
+
+</beans>

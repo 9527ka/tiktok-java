@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	<!-- init-method="init" -->
+	
+	
+	<bean id="walletService" class="project.wallet.internal.WalletServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="dataService" ref="dataService" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="walletLogService" class="project.wallet.internal.WalletLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	
+	<bean id="exchangeRateService" class="project.wallet.rate.internal.ExchangeRateServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="walletLoadCacheService"
+		class="data.loadcache.WalletLoadCacheService">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	
+	<bean id="walletDao" class="project.wallet.consumer.WalletDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<bean id="walletConsumeServer" class="project.wallet.consumer.WalletConsumeServer">
+		<property name="walletDao" ref="walletDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="walletExtendConsumeServer" class="project.wallet.consumer.WalletExtendConsumeServer">
+		<property name="walletDao" ref="walletDao" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<!-- <bean id="exchangeRatePullService"
+		class="project.wallet.rate.job.ExchangeRatePullServiceImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="exchangeRateService" ref="exchangeRateService" />
+		<property name="walletLoadCacheService" ref="walletLoadCacheService" />
+	</bean>
+	
+	<bean id="exchangeRatePullJob"
+		class="project.wallet.rate.job.ExchangeRatePullJob">
+		<property name="informationPullService" ref="informationPullService" />
+	</bean> 
+	
+	<bean id="assetService" class="project.wallet.internal.AssetServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="dataService" ref="dataService" />
+		<property name="walletService" ref="walletService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="itemService" ref="itemService" />		
+		<property name="contractOrderService" ref="contractOrderService" />
+		<property name="contractApplyOrderService" ref="contractApplyOrderService" />
+		<property name="financeOrderService" ref="financeOrderService" />
+		<property name="minerOrderService" ref="minerOrderService" />
+		<property name="futuresOrderService" ref="futuresOrderService" />
+		<property name="exchangeApplyOrderService" ref="exchangeApplyOrderService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<dubbo:service
+		interface="project.wallet.AssetService"
+		ref="assetService" />-->
+</beans>

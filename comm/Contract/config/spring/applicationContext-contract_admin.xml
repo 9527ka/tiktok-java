@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+
+	<bean id="adminContractOrderService"
+		class="project.contract.internal.AdminContractOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+
+	<bean id="adminContractApplyOrderService"
+		class="project.contract.internal.AdminContractApplyOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+	</bean>
+	<bean id="adminMarketQuotationsService"
+		class="project.contract.internal.AdminMarketQuotationsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="adminItemService" ref="adminItemService" />
+		<property name="adjustmentValueService" ref="adjustmentValueService" />
+		<property name="dataService" ref="dataService" />
+	</bean>
+	
+	
+	<bean id="contractOrderService"
+		class="project.contract.internal.ContractOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="userDataService" ref="userDataService" />
+		<property name="contractApplyOrderService"
+			ref="contractApplyOrderService" />
+		<property name="itemService" ref="itemService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	
+	<bean id="contractApplyOrderService"
+		class="project.contract.internal.ContractApplyOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="itemService" ref="itemService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="contractOrderService"
+			ref="contractOrderService" />
+	</bean>
+	
+	
+</beans>

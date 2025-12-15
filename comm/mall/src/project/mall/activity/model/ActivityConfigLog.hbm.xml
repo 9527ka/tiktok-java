@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="project.mall.activity.model.ActivityConfigLog" table="ACTIVITY_CONFIG_LOG">
+
+        <id name="id" type="java.lang.String">
+            <column name="UUID"/>
+            <generator class="uuid.hex"/>
+        </id>
+
+        <property name="activityId" type="java.lang.String">
+            <column name="ACTIVITY_ID"/>
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE"/>
+        </property>
+        <property name="titleCn" type="java.lang.String">
+            <column name="TITLE_CN"/>
+        </property>
+        <property name="titleEn" type="java.lang.String">
+            <column name="TITLE_EN"/>
+        </property>
+        <property name="tags" type="java.lang.String">
+            <column name="TAGS"/>
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS"/>
+        </property>
+        <property name="startTime" type="timestamp">
+            <column name="START_TIME"/>
+        </property>
+        <property name="endTime" type="timestamp">
+            <column name="END_TIME"/>
+        </property>
+        <property name="allowJoinTimes" type="java.lang.Integer">
+            <column name="ALLOW_JOIN_TIMES"/>
+        </property>
+
+        <property name="activityConfig" type="java.lang.String">
+            <column name="ACTIVITY_CONFIG"/>
+        </property>
+        <property name="joinRule" type="java.lang.String">
+            <column name="JOIN_RULE"/>
+        </property>
+        <property name="awardRule" type="java.lang.String">
+            <column name="AWARD_RULE"/>
+        </property>
+
+        <property name="detailUrl" type="java.lang.String">
+            <column name="DETAIL_URL"/>
+        </property>
+        <property name="imageUrl" type="java.lang.String">
+            <column name="IMAGE_URL"/>
+        </property>
+        <property name="location" type="java.lang.Integer">
+            <column name="LOCATION"/>
+        </property>
+
+        <property name="descriptionCn" type="java.lang.String">
+            <column name="DESCRIPTION_CN"/>
+        </property>
+        <property name="descriptionEn" type="java.lang.String">
+            <column name="DESCRIPTION_EN"/>
+        </property>
+        <property name="lastOperator" type="java.lang.String">
+            <column name="LAST_OPERATOR"/>
+        </property>
+        <property name="createTime" type="timestamp">
+            <column name="CREATE_TIME"/>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="UPDATE_TIME"/>
+        </property>
+        <property name="logTime" type="timestamp">
+            <column name="LOG_TIME"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="project.mall.credit.model.Credit" table="T_MALL_CREDIT">
+
+        <id name="id" type="java.lang.String">
+            <column name="UUID" />
+            <generator class="uuid.hex"/>
+        </id>
+        <property name="partyId" type="java.lang.String">
+            <column name="PARTY_ID"/>
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS"/>
+        </property>
+        <property name="realName" type="java.lang.String">
+            <column name="REAL_NAME"/>
+        </property>
+        <property name="identification" type="java.lang.String">
+            <column name="IDENTIFICATION"/>
+        </property>
+        <property name="countryId" type="java.lang.Integer">
+            <column name="COUNTRY_ID"/>
+        </property>
+        <property name="imgCertificateFace" type="java.lang.String">
+            <column name="IMG_CERTIFICATE_FACE"/>
+        </property>
+        <property name="imgCertificateBack" type="java.lang.String">
+            <column name="IMG_CERTIFICATE_BACK"/>
+        </property>
+        <property name="imgCertificateHand" type="java.lang.String">
+            <column name="IMG_CERTIFICATE_HAND"/>
+        </property>
+        <property name="creditPeriod" type="java.lang.Integer">
+            <column name="CREDIT_PERIOD "/>
+        </property>
+        <property name="applyAmount" type="double">
+            <column name="APPLY_AMOUNT"/>
+        </property>
+        <property name="creditRate" type="double">
+            <column name="CREDIT_RATE"/>
+        </property>
+        <property name="defaultRate" type="double">
+            <column name="DEFAULT_RATE"/>
+        </property>
+        <property name="totalInterest" type="double">
+            <column name="TOTAL_INTEREST"/>
+        </property>
+        <property name="totalRepayment" type="double">
+            <column name="TOTAL_REPAYMENT"/>
+        </property>
+        <property name="actualRepayment" type="double">
+            <column name="ACTUAL_REPAYMENT"/>
+        </property>
+        <property name="rejectReason" type="java.lang.String">
+            <column name="REJECT_REASON"/>
+        </property>
+        <property name="customerSubmitTime" type="java.util.Date">
+            <column name="CUSTOMER_SUBMIT_TIME"/>
+        </property>
+        <property name="systemAuditTime" type="java.util.Date">
+            <column name="SYSTEM_AUDIT_TIME"/>
+        </property>
+        <property name="finalRepayTime" type="java.util.Date">
+            <column name="FINAL_REPAY_TIME"/>
+        </property>
+        <property name="expireTime" type="java.util.Date">
+            <column name="EXPIRE_TIME"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	
+
+	<!-- <bean id="tipService"
+		class="project.tip.internal.TipServiceImpl" init-method="init">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
+	<dubbo:service
+		interface="project.tip.TipService"
+		ref="tipService" /> -->
+	<dubbo:reference id="tipService"
+		interface="project.tip.TipService" check="false"  retries="0"  timeout="3000"/>
+
+
+</beans>

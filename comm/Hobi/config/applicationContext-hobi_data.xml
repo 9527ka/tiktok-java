@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+
+	<bean id="klineInitService"
+		class="project.data.internal.KlineInitServiceImpl">
+		<property name="klineService" ref="klineService" />
+	</bean>
+	<dubbo:service
+		interface="project.data.internal.KlineInitService"
+		ref="klineInitService" />
+
+	<bean id="hobiDataService"
+		class="project.hobi.internal.HobiDataServiceImpl">
+		<property name="itemService" ref="itemService" />
+	</bean>
+	<dubbo:service interface="project.hobi.HobiDataService"
+		ref="hobiDataService" />
+
+
+	<bean id="cleanDataJob" class="project.data.job.CleanDataJob">
+		<property name="itemService" ref="itemService" />
+		<property name="dataDBService" ref="dataDBService" />
+		<property name="klineService" ref="klineService" />
+
+	</bean>
+
+
+	<bean id="dataDBService"
+		class="project.data.internal.DataDBServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="namedParameterJdbcTemplate"
+			ref="namedParameterJdbcTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="itemService" ref="itemService" />
+	</bean>
+
+	<bean id="klineService"
+		class="project.data.internal.KlineServiceImpl">
+		<property name="itemService" ref="itemService" />
+		<property name="hobiDataService" ref="hobiDataService" />
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="namedParameterJdbcTemplate"
+			ref="namedParameterJdbcTemplate" />
+	</bean>
+
+
+	<bean id="klineCacheJob" class="project.data.job.KlineCacheJob">
+		<property name="itemService" ref="itemService" />
+		<property name="hobiDataService" ref="hobiDataService" />
+	</bean>
+
+
+
+	<bean id="dataServer" class="project.data.job.DataServer">
+		<property name="hobiDataService" ref="hobiDataService" />
+		<property name="taskExecutor" ref="dataServerThreadPool" />
+	</bean>
+
+	<bean id="dataServerThreadPool"
+		class="kernel.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="1" />
+		<property name="keepAliveSeconds" value="60" />
+		<property name="maxPoolSize" value="2" />
+		<property name="queueCapacity" value="50" />
+		<property name="rejectedExecutionHandler"
+			ref="dataServerThreadRejectExecutingHandler" />
+	</bean>
+
+	<bean id="dataServerThreadRejectExecutingHandler"
+		class="kernel.util.RejectExecutionHandlerDelegator">
+		<property name="rejectExecutionHandlers">
+			<list>
+
+				<bean
+					class="project.data.job.OffLineEventRejectExecutingHandler" />
+
+			</list>
+		</property>
+	</bean>
+
+	<bean id="saveRealtimeServer"
+		class="project.data.job.SaveRealtimeServer">
+		<property name="dataDBService" ref="dataDBService" />
+	</bean>
+
+	<bean id="dataFrequencyServer"
+		class="project.data.job.DataFrequencyServer">
+		<property name="itemService" ref="itemService" />
+		<property name="hobiDataService" ref="hobiDataService" />
+	</bean>
+
+	<bean id="adjustmentValueService"
+		class="project.data.internal.AdjustmentValueServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="dataService" ref="dataService" />
+		<property name="itemService" ref="itemService" />
+	</bean>
+
+	<dubbo:service
+		interface="project.data.AdjustmentValueService"
+		ref="adjustmentValueService" />
+
+	<bean id="dataService"
+		class="project.data.internal.RemoteDataServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="itemService" ref="itemService" />
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="klineService" ref="klineService" />
+	</bean>
+
+	<dubbo:service interface="project.data.DataService"
+		ref="dataService" />
+</beans>

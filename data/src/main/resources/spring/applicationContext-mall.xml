@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+
+    <bean id="mallLoadCacheService"
+          class="project.mall.loadcache.MallLoadCacheService">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="redisHandler" ref="redisHandler"/>
+        <property name="sysparaService" ref="sysparaService"/>
+        <property name="sellerGoodsService" ref="sellerGoodsService"/>
+
+    </bean>
+
+    <bean id="adminSellerService"
+          class="project.mall.seller.impl.AdminSellerServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="pagedQueryDao" ref="pagedDao"/>
+    </bean>
+
+    <bean id="sellerGoodsService" class="project.mall.goods.impl.SellerGoodsServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <bean id="comboService" class="project.mall.combo.impl.ComboServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="redisHandler" ref="redisHandler"/>
+        <property name="moneyLogService" ref="moneyLogService"/>
+    </bean>
+
+    <bean id="adminSystemCommentService"
+          class="project.mall.comment.impl.AdminSystemCommentServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="pagedQueryDao" ref="pagedDao"/>
+    </bean>
+
+    <bean id="evaluationService"
+          class="project.mall.evaluation.impl.EvaluationServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="goodsOrdersService" ref="goodsOrdersService"/>
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="goodsOrdersService" class="project.mall.orders.internal.GoodsOrdersServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+        <property name="walletService" ref="walletService"/>
+        <property name="moneyLogService" ref="moneyLogService"/>
+        <property name="partyService" ref="partyService"/>
+        <property name="userDataService" ref="userDataService" />
+        <property name="redisHandler" ref="redisHandler" />
+        <property name="sysparaService" ref="sysparaService"/>
+        <property name="adminSellerService" ref="adminSellerService" />
+        <property name="orderLogService" ref="orderLogService" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+        <property name="sellerGoodsService" ref="sellerGoodsService" />
+        <property name="comboService" ref="comboService" />
+        <property name="evaluationService" ref="evaluationService" />
+        <property name="commonNotifyService" ref="commonNotifyService"/>
+        <property name="notificationHelperClient" ref="notificationHelperClient"/>
+        <property name="adminSystemCommentService" ref="adminSystemCommentService"/>
+        <property name="mallLevelService" ref="mallLevelService"/>
+    </bean>
+
+    <bean id="walletDayService"
+          class="project.invest.walletday.impl.WalletDayServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate"/>
+        <property name="pagedQueryDao" ref="pagedDao"/>
+    </bean>
+
+    <bean id="sellerService" class="project.mall.seller.impl.SellerServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+        <property name="pagedQueryDao" ref="pagedDao" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+    <bean id="moneyFreezeService" class="project.log.internal.MoneyFreezeServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+        <property name="pagedDao" ref="pagedDao" />
+        <property name="walletService" ref="walletService" />
+        <property name="moneyLogService" ref="moneyLogService" />
+        <property name="sellerService" ref="sellerService" />
+        <property name="redisHandler" ref="redisHandler" />
+    </bean>
+
+    <bean id="goodsStatisticsService" class="project.mall.goods.impl.GoodsStatisticsServiceImpl">
+        <property name="redisHandler" ref="redisHandler" />
+        <property name="sellerGoodsService" ref="sellerGoodsService" />
+        <property name="keepGoodsService" ref="keepGoodsService" />
+        <property name="evaluationService" ref="evaluationService" />
+    </bean>
+
+    <bean id="keepGoodsService" class="project.mall.goods.impl.KeepGoodsServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+
+    <bean id="mallLevelService" class="project.mall.seller.impl.MallLevelServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+    </bean>
+
+</beans>

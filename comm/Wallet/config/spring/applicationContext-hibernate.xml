@@ -1,0 +1,13 @@
+
+admin
+<!-- wallet -->
+<value>walletService</value>
+<value>walletLogService</value>
+<value>exchangeRateService</value>
+
+api
+<!-- wallet -->
+<value>walletService</value>
+<value>walletLogService</value>
+<value>exchangeRateService</value>
+<value>userRateConfigService</value>

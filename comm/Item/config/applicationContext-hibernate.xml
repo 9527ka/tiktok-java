@@ -1,0 +1,11 @@
+
+admin
+
+<!-- item -->
+<value>itemService</value>
+<value>adminItemService</value>
+<value>adminItemLeverageService</value>
+
+api
+<!-- item -->
+<value>itemService</value>

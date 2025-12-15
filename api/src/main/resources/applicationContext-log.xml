@@ -1,0 +1,32 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+	<bean id="moneyLogService" class="project.log.internal.MoneyLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+		<property name="partyService" ref="partyService" />
+		<property name="sysparaService" ref="sysparaService"/>
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+	<bean id="apiLogService" class="project.log.internal.ApiLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="orderLogService" class="project.mall.log.impl.OrderLogServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+
+	<bean id="moneyFreezeService" class="project.log.internal.MoneyFreezeServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+		<property name="walletService" ref="walletService" />
+		<property name="moneyLogService" ref="moneyLogService" />
+		<property name="sellerService" ref="sellerService" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+
+</beans>

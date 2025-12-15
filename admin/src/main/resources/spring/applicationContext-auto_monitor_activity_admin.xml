@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+	
+	<bean id="activityService"
+		class="project.monitor.activity.internal.ActivityServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		
+	</bean>
+
+
+	<bean id="activityOrderService"
+		class="project.monitor.activity.internal.ActivityOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="activityService" ref="activityService" />
+		<property name="partyService" ref="partyService" />
+		<property name="userRecomService" ref="userRecomService" />
+		<property name="walletService" ref="walletService" />
+		<property name="autoMonitorDAppLogService" ref="autoMonitorDAppLogService" />
+		<property name="telegramBusinessMessageService" ref="telegramBusinessMessageService" />
+	</bean>
+	
+	
+	
+	<bean id="adminActivityService"
+		class="project.monitor.activity.internal.AdminActivityServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="activityService" ref="activityService" />
+		
+	</bean>
+	
+		<bean id="adminActivityOrderService"
+		class="project.monitor.activity.internal.AdminActivityOrderServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="userRecomService" ref="userRecomService" />
+		
+	</bean>
+	
+</beans>

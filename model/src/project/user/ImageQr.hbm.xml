@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.user.ImageQr" table="T_IMAGE_QR">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="img_name" type="java.lang.String">
+			<column name="IMG_NAME" />
+		</property>
+		<property name="content" type="java.lang.String">
+			<column name="CONTENT" />
+		</property>
+		<property name="img_type" type="java.lang.String">
+			<column name="IMG_TYPE" />
+		</property>
+		<property name="img_language" type="java.lang.String">
+			<column name="IMG_LANGUAGE" />
+		</property>
+		<property name="usercode" type="java.lang.String">
+			<column name="USERCODE" />
+		</property>
+		
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		
+		
+		
+	</class>
+</hibernate-mapping>

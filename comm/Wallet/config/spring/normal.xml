@@ -1,0 +1,18 @@
+
+admin
+
+		<action name="adminExchangeRateAction"
+			class="project.wallet.rate.web.AdminExchangeRateAction">
+			<result name="list">/exchangerate_list.jsp</result>
+			<result name="update">/exchangerate_update.jsp</result>
+		</action>
+
+api
+		<action name="exchangerate"
+			class="project.wallet.rate.web.ExchangeRateAction">
+		</action>
+		<action name="exchangerateuserconfig"
+			class="project.wallet.rate.web.ExchangeRateUserConfigAction">
+		</action>
+		<action name="wallet" class="project.wallet.web.WalletAction">
+		</action>

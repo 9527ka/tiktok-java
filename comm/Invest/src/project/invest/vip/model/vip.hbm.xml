@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.invest.vip.model.Vip" table="T_INVEST_VIP">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+		</id>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		<property name="subSales" type="java.lang.Double">
+			<column name="SUB_SALES" />
+		</property>
+		<property name="subCount" type="java.lang.Integer">
+			<column name="SUB_COUNT" />
+		</property>
+		<property name="rebate0" type="java.lang.Double">
+			<column name="REBATE_0" />
+		</property>
+		<property name="rebate1" type="java.lang.Double">
+			<column name="REBATE_1" />
+		</property>
+		<property name="rebate2" type="java.lang.Double">
+			<column name="REBATE_2" />
+		</property>
+		<property name="mustNumber" type="java.lang.Integer">
+			<column name="MUST_NUMBER" />
+		</property>
+		<property name="withdrawalMin" type="java.lang.Integer">
+			<column name="WITHDRAWAL_MIN" />
+		</property>
+		<property name="withdrawalMax" type="java.lang.Integer">
+			<column name="WITHDRAWAL_MAX" />
+		</property>
+
+		<property name="iconBig" type="java.lang.String">
+			<column name="ICON_BIG" />
+		</property>
+
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,15 @@
+
+admin
+
+<!-- recharge -->
+	<value>adminRechargeBlockchainOrderService</value>
+				<value>adminChannelBlockchainService</value>
+
+api
+<!-- recharge -->
+		
+				<!-- blockchain -->
+				<value>rechargeBlockchainService</value>
+				<value>channelBlockchainService</value>
+				<value>qRProducerService</value>
+				<value>rechargeBonusService</value>

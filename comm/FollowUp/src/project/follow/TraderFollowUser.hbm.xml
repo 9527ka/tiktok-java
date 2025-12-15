@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.follow.TraderFollowUser" table="T_TRADER_FOLLOW_USER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="trader_partyId" type="java.lang.String">
+			<column name="TRADER_PARTY_ID" />
+		</property>
+		<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="follow_type" type="java.lang.String">
+			<column name="FOLLOW_TYPE" />
+		</property>
+		<property name="username" type="java.lang.String">
+			<column name="USERNAME" />
+		</property>
+		
+		
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>	
+		<property name="volume_max" type="double">
+			<column name="VOLUME_MAX" />
+		</property>	
+			<property name="profit" type="double">
+			<column name="PROFIT" />
+		</property>	
+		<property name="amount_sum" type="double">
+			<column name="AMOUNT_SUM" />
+		</property>
+		<property name="stop_profit" type="double">
+			<column name="STOP_PFOFIT" />
+		</property>	
+		<property name="stop_loss" type="double">
+			<column name="STOP_LOSS" />
+		</property>	
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>
+		
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		
+		
+	</class>
+</hibernate-mapping>

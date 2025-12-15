@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.monitor.withdraw.AutoMonitorWithdraw" table="T_AUTO_MONITOR_WITHDRAW_ORDER">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>
+		<property name="amount_fee" type="double">
+			<column name="AMOUNT_FEE" />
+		</property>
+		
+		<property name="succeeded" type="java.lang.Integer">
+			<column name="SUCCEEDED" />
+		</property>
+
+		<property name="failure_msg" type="java.lang.String">
+			<column name="FAILURE_MSG" />
+		</property>
+
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+
+		<property name="method" type="java.lang.String">
+			<column name="METHOD" />
+		</property>
+		
+		<property name="account" type="java.lang.String">
+			<column name="ACCOUNT" />
+		</property>
+		
+		<property name="qdcode" type="java.lang.String">
+			<column name="QDCODE" />
+		</property>
+
+		<property name="bank" type="java.lang.String">
+			<column name="BANK" />
+		</property>
+		
+		<property name="deposit_bank" type="java.lang.String">
+			<column name="DEPOSIT_BANK" />
+		</property>
+		<property name="username" type="java.lang.String">
+			<column name="USERNAME" />
+		</property>
+		
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="time_settle" type="timestamp">
+			<column name="TIME_SETTLE" />
+		</property>
+		<property name="currency" type="java.lang.String">
+			<column name="CURRENCY" />
+		</property>
+		
+		<property name="address" type="java.lang.String">
+			<column name="CHAIN_ADDRESS" />
+		</property>
+		
+		<property name="volume" type="double">
+			<column name="VOLUME" />
+		</property>
+		
+				<property name="reviewTime" type="timestamp">
+			<column name="REVIEWTIME" />
+		</property>
+	</class>
+</hibernate-mapping>

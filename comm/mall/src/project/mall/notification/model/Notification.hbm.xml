@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.notification.model.Notification" table="T_NOTIFICATION">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+
+		<property name="title" type="java.lang.String">
+			<column name="TITLE" />
+		</property>
+
+		<property name="templateCode" type="java.lang.String">
+			<column name="TEMPLATE_CODE" />
+		</property>
+
+		<property name="language" type="java.lang.String">
+			<column name="LANGUAGE" />
+		</property>
+
+		<property name="type" type="int">
+			<column name="TYPE" />
+		</property>
+
+		<property name="reserveSendTime" type="java.util.Date">
+			<column name="RESERVE_SEND_TIME" />
+		</property>
+
+		<property name="sendTime" type="java.util.Date">
+			<column name="SEND_TIME" />
+		</property>
+
+		<property name="location" type="long">
+			<column name="LOCATION" />
+		</property>
+
+		<property name="fromUserId" type="java.lang.String">
+			<column name="FROM_USER_ID" />
+		</property>
+
+		<property name="targetUserId" type="java.lang.String">
+			<column name="TARGET_USER_ID" />
+		</property>
+
+		<property name="targetTopic" type="java.lang.String">
+			<column name="TARGET_TOPIC" />
+		</property>
+
+		<property name="targetExtra" type="java.lang.String">
+			<column name="TARGET_EXTRA" />
+		</property>
+
+		<property name="bizType" type="java.lang.String">
+			<column name="BIZ_TYPE" />
+		</property>
+
+		<property name="handler" type="java.lang.String">
+			<column name="HANDLER" />
+		</property>
+
+		<property name="module" type="int">
+			<column name="MODULE" />
+		</property>
+
+		<property name="refId" type="java.lang.String">
+			<column name="REF_ID" />
+		</property>
+
+		<property name="refType" type="int">
+			<column name="REF_TYPE" />
+		</property>
+
+		<property name="content" type="java.lang.String">
+			<column name="CONTENT" />
+		</property>
+
+		<property name="varInfo" type="java.lang.String">
+			<column name="VAR_INFO" />
+		</property>
+
+		<property name="link" type="java.lang.String">
+			<column name="LINK" />
+		</property>
+
+		<property name="attachment" type="java.lang.String">
+			<column name="ATTACHMENT" />
+		</property>
+
+		<property name="status" type="int">
+			<column name="STATUS" />
+		</property>
+
+	</class>
+</hibernate-mapping>

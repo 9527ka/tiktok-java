@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+
+<bean id="adminSystemUserService"
+		class="systemuser.internal.AdminSystemUserServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="roleService" ref="roleService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="logService" ref="logService" />
+		<!-- <property name="identifyingCodeService" ref="identifyingCodeService" />
+		<property name="identifyingCodeTimeWindowService" ref="identifyingCodeTimeWindowService" /> -->
+		<property name="sysparaService" ref="sysparaService" />
+		<!-- <property name="googleAuthService" ref="googleAuthService" /> -->
+	</bean>
+
+<bean id="adminRoleAuthorityService"
+		class="systemuser.internal.AdminRoleAuthorityServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="roleService" ref="roleService" />
+		<property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" />
+		<property name="resourceService" ref="resourceService" />
+		<property name="resourceMappingService" ref="resourceMappingService" />
+		<!-- <property name="identifyingCodeTimeWindowService" ref="identifyingCodeTimeWindowService" /> -->
+		<property name="sysparaService" ref="sysparaService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="secUserService" ref="secUserService" />
+		<property name="googleAuthService" ref="googleAuthService" />
+	</bean>
+<bean id="resourceMappingService"
+		class="systemuser.internal.ResourceMappingServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<dubbo:reference id="customerService"
+		interface="systemuser.CustomerService" check="false"  retries="0"  timeout="10000" />
+<!-- <bean id="customerService"
+		class="systemuser.internal.CustomerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean> -->
+<bean id="adminCustomerService"
+		class="systemuser.internal.AdminCustomerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="customerService" ref="customerService" />
+		<property name="adminSystemUserService" ref="adminSystemUserService" />
+		<property name="onlineChatMessageService" ref="onlineChatMessageService" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+		<property name="logService" ref="logService" />
+		<property name="secUserService" ref="secUserService" />
+	</bean>
+	
+</beans>

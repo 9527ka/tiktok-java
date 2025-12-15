@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.mall.seller.model.Seller" table="T_MALL_SELLER">
+
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+		</id>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		<property name="keyWords" type="java.lang.String">
+			<column name="KEY_WORDS" />
+		</property>
+		<property name="avatar" type="java.lang.String">
+			<column name="AVATAR" />
+		</property>
+		<property name="contact" type="java.lang.String">
+			<column name="CONTACT" />
+		</property>
+		<property name="shopPhone" type="java.lang.String">
+			<column name="SHOP_PHONE" />
+		</property>
+		<property name="shopRemark" type="java.lang.String">
+			<column name="SHOP_REMARK" />
+		</property>
+		<property name="shopAddress" type="java.lang.String">
+			<column name="SHOP_ADDRESS" />
+		</property>
+		<property name="banner1" type="java.lang.String">
+			<column name="BANNER_1" />
+		</property>
+		<property name="banner2" type="java.lang.String">
+			<column name="BANNER_2" />
+		</property>
+		<property name="banner3" type="java.lang.String">
+			<column name="BANNER_3" />
+		</property>
+		<property name="facebook" type="java.lang.String">
+			<column name="FACEBOOK" />
+		</property>
+		<property name="instagram" type="java.lang.String">
+			<column name="INSTAGRAM" />
+		</property>
+		<property name="twitter" type="java.lang.String">
+			<column name="TWITTER" />
+		</property>
+		<property name="google" type="java.lang.String">
+			<column name="GOOGLE" />
+		</property>
+		<property name="youtube" type="java.lang.String">
+			<column name="YOUTUBE" />
+		</property>
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+		<property name="freeze" type="java.lang.Integer">
+			<column name="FREEZE" />
+		</property>
+		<property name="baseTraffic" type="java.lang.Integer">
+			<column name="BASE_TRAFFIC" />
+		</property>
+		<property name="autoStart" type="java.lang.Integer">
+			<column name="AUTO_START" />
+		</property>
+		<property name="autoEnd" type="java.lang.Integer">
+			<column name="AUTO_END" />
+		</property>
+		<property name="autoValid" type="java.lang.Integer">
+			<column name="AUTO_VALID" />
+		</property>
+		<property name="recTime" type="java.lang.Long">
+			<column name="REC_TIME" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="reals" type="java.lang.Integer">
+			<column name="REALS" />
+		</property>
+		<property name="fake" type="java.lang.Integer">
+			<column name="FAKE" />
+		</property>
+		<property name="creditScore" type="java.lang.Integer">
+			<column name="CREDIT_SCORE" />
+		</property>
+		<property name="black" type="java.lang.Integer">
+			<column name="BLACK" />
+		</property>
+		<property name="imInitMessage" type="java.lang.String">
+			<column name="IM_INIT_MESSAGE" />
+		</property>
+		<property name="imDefaultReply" type="java.lang.String">
+			<column name="IM_DEFAULT_REPLY" />
+		</property>
+		<property name="fakeSoldNum" type="java.lang.Integer">
+			<column name="FAKE_SOLD_NUM" />
+		</property>
+		<property name="rechargeBonusStatus" type="java.lang.Integer">
+			<column name="RECHARGE_BONUS_STATUS" />
+		</property>
+		<property name="rechargeBonus" type="java.lang.Double">
+			<column name="RECHARGE_BONUS" />
+		</property>
+		<property name="mallLevel" type="java.lang.String">
+			<column name="MALL_LEVEL" />
+		</property>
+		<property name="remark" type="java.lang.String">
+			<column name="REMARK" />
+		</property>
+		<property name="signPdfUrl" type="java.lang.String">
+			<column name="SIGN_PDF_URL" />
+		</property>
+		<property name="soldNum" type="java.lang.Long">
+			<column name="SOLD_NUM" />
+		</property>
+		<property name="inviteNum" type="int">
+			<column name="INVITE_NUM" />
+		</property>
+		<property name="inviteAmountReward" type="double">
+			<column name="INVITE_AMOUNT_REWARD" />
+		</property>
+		<property name="inviteReceivedReward" type="double">
+			<column name="INVITE_RECEIVED_REWARD" />
+		</property>
+		<property name="teamNum" type="int">
+			<column name="TEAM_NUM" />
+		</property>
+		<property name="childNum" type="int">
+			<column name="CHILD_NUM" />
+		</property>
+		<property name="flow" type="int">
+			<column name="FLOW" />
+		</property>
+		<property name="recommendDuration" type="int">
+			<column name="RECOMMEND_DURATION" />
+		</property>
+		<property name="highOpinion" type="java.lang.Double">
+			<column name="HIGH_OPINION" />
+		</property>
+		<property name="sellerGoodsNum" type="java.lang.Long">
+			<column name="SELLER_GOODS_NUM" />
+		</property>
+		<property name="focusNum" type="java.lang.Integer">
+			<column name="FOCUS_NUM" />
+		</property>
+	</class>
+</hibernate-mapping>

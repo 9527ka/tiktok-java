@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.follow.Trader" table="T_TRADER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" />
+		</property>
+		<property name="remarks" type="java.lang.String">
+			<column name="REMARKS" />
+		</property>
+		<property name="symbols" type="java.lang.String">
+			<column name="SYMBOLS" />
+		</property>
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>	
+		
+		<property name="follower_max" type="int">
+			<column name="FOLLOWER_MAX" />
+		</property>	
+		<property name="img" type="java.lang.String">
+			<column name="IMG" />
+		</property>	
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		
+		
+		<property name="profit" type="double">
+			<column name="PROFIT" />
+		</property>	
+		<property name="order_amount" type="double">
+			<column name="ORDER_AMOUNT" />
+		</property>	
+		<property name="profit_ratio" type="double">
+			<column name="PROFIT_RATIO" />
+		</property>	
+		<property name="order_profit" type="int">
+			<column name="ORDER_PROFIT" />
+		</property>	
+		<property name="order_loss" type="int">
+			<column name="ORDER_LOSS" />
+		</property>	
+		<property name="order_sum" type="int">
+			<column name="ORDER_SUM" />
+		</property>		
+		<property name="follower_sum" type="int">
+			<column name="FOLLOWER_SUM" />
+		</property>	
+		<property name="profit_share_ratio" type="double">
+			<column name="PROFIT_SHARE_RATIO" />
+		</property>	
+		
+		<property name="follower_now" type="int">
+			<column name="FOLLOWER_NOW" />
+		</property>	
+		
+	
+		<property name="week_3_profit" type="double">
+			<column name="WEEK_3_PROFIT" />
+		</property>	
+		<property name="week_3_order_amount" type="double">
+			<column name="WEEK_3_ORDER_AMOUNT" />
+		</property>	
+		<property name="week_3_profit_ratio" type="double">
+			<column name="WEEK_3_PROFIT_RATIO" />
+		</property>	
+		<property name="week_3_order_profit" type="int">
+			<column name="WEEK_3_ORDER_PROFIT" />
+		</property>
+		<property name="week_3_order_sum" type="int">
+			<column name="WEEK_3_ORDER_SUM" />
+		</property>	
+	
+
+		
+		
+		
+		
+		
+		<property name="deviation_profit" type="double">
+			<column name="DEVIATION_PROFIT" />
+		</property>	
+		<property name="deviation_order_amount" type="double">
+			<column name="DEVIATION_ORDER_AMOUNT" />
+		</property>	
+		<property name="deviation_profit_ratio" type="double">
+			<column name="DEVIATION_PROFIT_RATIO" />
+		</property>	
+		<property name="deviation_order_profit" type="int">
+			<column name="DEVIATION_ORDER_PROFIT" />
+		</property>	
+		<property name="deviation_order_loss" type="int">
+			<column name="DEVIATION_ORDER_LOSS" />
+		</property>	
+		<property name="deviation_order_sum" type="int">
+			<column name="DEVIATION_ORDER_SUM" />
+		</property>		
+		<property name="deviation_follower_sum" type="int">
+			<column name="DEVIATION_FOLLOWER_SUM" />
+		</property>	
+		
+		<property name="deviation_follower_now" type="int">
+			<column name="DEVIATION_FOLLOWER_NOW" />
+		</property>	
+		
+	
+		<property name="deviation_week_3_profit" type="double">
+			<column name="DEVIATION_WEEK_3_PROFIT" />
+		</property>	
+		<property name="deviation_week_3_order_amount" type="double">
+			<column name="DEVIATION_WEEK_3_ORDER_AMOUNT" />
+		</property>	
+		<property name="deviation_week_3_profit_ratio" type="double">
+			<column name="DEVIATION_WEEK_3_PROFIT_RATIO" />
+		</property>	
+		<property name="deviation_week_3_order_profit" type="int">
+			<column name="DEVIATION_WEEK_3_ORDER_PROFIT" />
+		</property>
+		<property name="deviation_week_3_order_sum" type="int">
+			<column name="DEVIATION_WEEK_3_ORDER_SUM" />
+		</property>	
+		
+		<property name="follow_volumn_min" type="int">
+			<column name="FOLLOW_VOLUMN_MIN" />
+		</property>	
+		
+	
+		
+	</class>
+</hibernate-mapping>

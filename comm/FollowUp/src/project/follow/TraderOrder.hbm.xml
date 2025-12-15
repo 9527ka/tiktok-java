@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.follow.TraderOrder" table="T_TRADER_ORDER">
+	<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="order_no" type="java.lang.String">
+			<column name="ORDER_NO" />
+		</property>
+			<property name="symbol" type="java.lang.String">
+			<column name="SYMBOL" />
+		</property>
+		<property name="direction" type="java.lang.String">
+			<column name="DIRECTION" />
+		</property>	
+		<property name="create_time" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>	
+		<property name="close_time" type="timestamp">
+			<column name="CLOSE_TIME" />
+		</property>	
+		<property name="lever_rate" type="double">
+			<column name="LEVER_RATE" />
+		</property>	
+		<property name="state" type="java.lang.String">
+			<column name="STATE" />
+		</property>	
+		<property name="volume_open" type="double">
+			<column name="VOLUME_OPEN" />
+		</property>	
+		<property name="profit" type="double">
+			<column name="PROFIT" />
+		</property>	
+		<property name="change_ratio" type="double">
+			<column name="CHANGE_RATIO" />
+		</property>	
+		
+		<property name="trade_avg_price" type="double">
+			<column name="TRADE_AVG_PRICE" />
+		</property>	
+		<property name="close_avg_price" type="double">
+			<column name="CLOSE_AVG_PRICE" />
+		</property>	
+		
+	</class>
+</hibernate-mapping>

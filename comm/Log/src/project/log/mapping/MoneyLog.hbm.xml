@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.log.MoneyLog" table="T_MONEY_LOG">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="log" type="java.lang.String">
+			<column name="LOG" />
+		</property>
+	
+		<property name="wallettype" type="java.lang.String">
+			<column name="WALLETTYPE" />
+		</property>
+		<property name="category" type="java.lang.String">
+			<column name="CATEGORY" />
+		</property>
+		
+		<property name="amount_before" type="java.lang.Double">
+			<column name="AMOUNT_BEFORE" />
+		</property>
+		<property name="amount" type="java.lang.Double">
+			<column name="AMOUNT" />
+		</property>
+		<property name="amount_after" type="java.lang.Double">
+			<column name="AMOUNT_AFTER" />
+		</property>
+	
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="content_type" type="java.lang.String">
+			<column name="CONTENT_TYPE" />
+		</property>
+		<property name="freeze" type="int">
+			<column name="FREEZE" />
+		</property>
+
+		<property name="remarks" type="java.lang.String">
+			<column name="REMARKS" />
+		</property>
+		<property name="notify" type="int">
+			<column name="NOTIFY" />
+		</property>
+
+		<property name="notifyTime" type="timestamp">
+			<column name="NOTIFY_TIME" />
+		</property>
+	</class>
+</hibernate-mapping>

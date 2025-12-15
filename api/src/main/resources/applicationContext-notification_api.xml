@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans         
+	    http://www.springframework.org/schema/beans/spring-beans.xsd         
+	    http://code.alibabatech.com/schema/dubbo         
+	    http://code.alibabatech.com/schema/dubbo/dubbo.xsd ">
+	    
+	<bean id="notificationService" class="project.mall.notification.impl.NotificationServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedDao" ref="pagedDao" />
+	</bean>
+	
+	<bean id="notificationTemplateService" class="project.mall.notification.impl.NotificationTemplateServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<dubbo:reference id="commonNotifyService"
+					 interface="project.mall.notification.utils.notify.client.CommonNotifyService" check="false" retries="0"  timeout="3000"/>
+	<dubbo:reference id="notificationHelperClient"
+					 interface="project.mall.notification.utils.notify.client.NotificationHelperClient" check="false" retries="0" timeout="3000"/>
+
+</beans>

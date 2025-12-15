@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+
+	<bean id="goodsOrdersService" class="project.mall.orders.internal.GoodsOrdersServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService"/>
+		<property name="moneyLogService" ref="moneyLogService"/>
+		<property name="partyService" ref="partyService"/>
+		<property name="userDataService" ref="userDataService" />
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="sysparaService" ref="sysparaService"/>
+		<property name="adminSellerService" ref="adminSellerService" />
+		<property name="orderLogService" ref="orderLogService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
+		<property name="comboService" ref="comboService" />
+		<property name="evaluationService" ref="evaluationService" />
+		<property name="commonNotifyService" ref="commonNotifyService"/>
+		<property name="notificationHelperClient" ref="notificationHelperClient"/>
+		<property name="mallLevelService" ref="mallLevelService"/>
+		<property name="pagedQueryDao" ref="pagedDao"/>
+ 	</bean>
+	<bean id="goodsAttrSkuService" class="project.mall.goods.internal.GoodsSkuAtrributionServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
+	</bean>
+<!--	<bean id="goodsAttrSkuService" class="project.mall.goods.internal.MockGoodsSkuAtrributionService">-->
+<!--	</bean>-->
+	<bean id="categoryService" class="project.mall.type.impl.CategoryServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="redisHandler" ref="redisHandler"/>
+	</bean>
+	<bean id="sellerService" class="project.mall.seller.impl.SellerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="WalletService" ref="walletService" />
+		<property name="MoneyLogService" ref="moneyLogService" />
+        <property name="sysparaService" ref="sysparaService" />
+		<property name="partyService" ref="partyService" />
+		<property name="tipService" ref="tipService" />
+		<property name="logService" ref="logService" />
+		<property name="userMetricsService" ref="userMetricsService"/>
+	</bean>
+	<bean id="complaintService" class="project.mall.seller.impl.ComplaintServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="sellerGoodsService" class="project.mall.goods.impl.SellerGoodsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="focusSellerService" class="project.mall.seller.impl.FocusSellerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sellerService" ref="sellerService" />
+	</bean>
+	<bean id="mallLevelService" class="project.mall.seller.impl.MallLevelServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="keepGoodsService" class="project.mall.goods.impl.KeepGoodsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="evaluationService" class="project.mall.evaluation.impl.EvaluationServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+		<property name="goodsOrdersService" ref="goodsOrdersService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="fundChangeService" class="project.blockchain.internal.FundChangeService">
+		<property name="walletService" ref="walletService"/>
+		<property name="walletLogService" ref="walletLogService"/>
+		<property name="userRecomService" ref="userRecomService"/>
+		<property name="sellerService" ref="sellerService"/>
+		<property name="moneyLogService" ref="moneyLogService"/>
+		<property name="partyService" ref="partyService"/>
+	</bean>
+	<bean id="mallAddressAreaService"
+		  class="project.mall.area.impl.MallAddressAreaServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="adminMallGoodsService" class="project.mall.goods.impl.AdminMallGoodsServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="comboService" class="project.mall.combo.impl.ComboServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="walletService" ref="walletService"/>
+		<property name="moneyLogService" ref="moneyLogService"/>
+		<property name="redisHandler" ref="redisHandler" />
+	</bean>
+	<bean id="adminSellerService"
+		  class="project.mall.seller.impl.AdminSellerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="mallLevelService" ref="mallLevelService" />
+		<property name="sellerService" ref="sellerService" />
+		<property name="userMetricsService" ref="userMetricsService" />
+		<property name="pagedQueryDao" ref="pagedDao" />
+	</bean>
+    <bean id="adminMallOrderService"
+          class="project.mall.orders.impl.AdminMallOrderServiceImpl">
+        <property name="hibernateTemplate" ref="hibernateTemplate" />
+        <property name="pagedQueryDao" ref="pagedDao" />
+        <property name="userDataService" ref="userDataService" />
+        <property name="walletService" ref="walletService" />
+        <property name="moneyLogService" ref="moneyLogService" />
+        <property name="secUserService" ref="secUserService" />
+        <property name="partyService" ref="partyService" />
+        <property name="logService" ref="logService" />
+    </bean>
+	<bean id="sellerCreditService"
+		  class="project.mall.seller.impl.SellerCreditServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="sellerService" ref="sellerService" />
+	</bean>
+
+	<bean id="subscribeService"
+		  class="project.mall.subscribe.impl.SubscribeServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="mallBannerService" class="project.mall.banner.impl.MallBannerServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="creditService" class="project.mall.credit.impl.CreditServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+		<property name="partyService" ref="partyService" />
+		<property name="walletService" ref="walletService" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="moneyLogService" ref="moneyLogService" />
+	</bean>
+
+	<bean id="goodsStatisticsService" class="project.mall.goods.impl.GoodsStatisticsServiceImpl">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
+		<property name="keepGoodsService" ref="keepGoodsService" />
+		<property name="evaluationService" ref="evaluationService" />
+	</bean>
+
+	<bean id="keepSellerGoodsEventListener" class="project.mall.event.KeepSellerGoodsEventListener">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="goodsStatisticsService" ref="goodsStatisticsService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	<bean id="orderGoodsEvaluationEventListener" class="project.mall.event.OrderGoodsEvaluationEventListener">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="goodsStatisticsService" ref="goodsStatisticsService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	<bean id="purchaseOrderGoodsEventListener" class="project.mall.event.PurchaseOrderGoodsEventListener">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="goodsOrdersService" ref="goodsOrdersService" />
+		<property name="goodsStatisticsService" ref="goodsStatisticsService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	<bean id="sellerGoodsUpdateEventListener" class="project.mall.event.SellerGoodsUpdateEventListener">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
+		<property name="goodsStatisticsService" ref="goodsStatisticsService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+	<bean id="sellerGoodsViewEventListener" class="project.mall.event.SellerGoodsViewEventListener">
+		<property name="redisHandler" ref="redisHandler" />
+		<property name="goodsStatisticsService" ref="goodsStatisticsService" />
+		<property name="sysparaService" ref="sysparaService" />
+	</bean>
+
+	<bean id="goFunExecuteResultEventListener" class="util.cache.GoFunExecuteResultEventListener">
+	</bean>
+
+</beans>

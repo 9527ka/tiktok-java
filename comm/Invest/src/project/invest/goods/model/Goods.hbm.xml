@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.invest.goods.model.Goods" table="T_INVEST_GOODS">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="iconImg"  type="java.lang.String">
+			<column name="ICON_IMG" />
+		</property>
+		<property name="prize" type="double">
+			<column name="PRIZE" />
+		</property>
+		<property name="createTime"  type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" />
+		</property>
+		<property name="sort" type="int">
+			<column name="SORT" />
+		</property>
+		<property name="payWay" type="java.lang.Integer">
+			<column name="PAY_WAY" />
+		</property>
+		<property name="total" type="java.lang.Integer">
+			<column name="TOTAL" />
+		</property>
+		<property name="lastAmount" type="java.lang.Integer">
+			<column name="LAST_AMOUNT" />
+		</property>
+		<property name="exchangeAmount" type="java.lang.Integer">
+			<column name="EXCHANGE_AMOUNT" />
+		</property>
+		<property name="upTime"  type="java.lang.Long">
+			<column name="UP_TIME" />
+		</property>
+	</class>
+</hibernate-mapping>

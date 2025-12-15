@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="project.log.MoneyFreeze" table="T_MONEY_FREEZE">
+		<id name="id" type="java.lang.String">
+			<column name="UUID" />
+			<generator class="uuid.hex" />
+		</id>
+		<property name="partyId" type="java.lang.String">
+			<column name="PARTY_ID" />
+		</property>
+		<property name="operator" type="java.lang.String">
+			<column name="OPERATOR" />
+		</property>
+		<property name="amount" type="double">
+			<column name="AMOUNT" />
+		</property>
+	
+		<property name="moneyLog" type="java.lang.String">
+			<column name="MONEY_LOG" />
+		</property>
+		<property name="beginTime" type="timestamp">
+			<column name="BEGIN_TIME" />
+		</property>
+		<property name="endTime" type="timestamp">
+			<column name="END_TIME" />
+		</property>
+		<property name="createTime" type="timestamp">
+			<column name="CREATE_TIME" />
+		</property>
+		<property name="status" type="int">
+			<column name="STATUS" />
+		</property>
+		<property name="reason" type="java.lang.String">
+			<column name="REASON" />
+		</property>
+	</class>
+</hibernate-mapping>
