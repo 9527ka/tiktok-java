@@ -26,6 +26,8 @@ import project.news.News;
 import security.Role;
 import security.SecUser;
 import security.internal.SecUserService;
+import project.blockchain.*;
+import project.user.googleauth.GoogleAuthService;
 
 /**
  * 用户端内容管理
@@ -43,6 +45,8 @@ public class AdminCmsController extends PageActionSupport {
 	private LogService logService;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	protected GoogleAuthService googleAuthService;
 
 	private final String action = "normal/adminCmsAction!";
 
@@ -145,7 +149,6 @@ public class AdminCmsController extends PageActionSupport {
 		ModelAndView modelAndView = new ModelAndView();
 		
 		try {
-			
 			String error = this.verif(cms.getTitle(), cms.getContent());
 			if (!StringUtils.isNullOrEmpty(error)) {
 				throw new BusinessException(error);
@@ -158,7 +161,7 @@ public class AdminCmsController extends PageActionSupport {
 			String username_login = this.getUsername_login();
 			
 			SecUser sec = this.secUserService.findUserByLoginName(username_login);
-
+			this.checkLoginSafeword(sec, username_login, login_safeword);
 			cms.setCreateTime(new Date());
 			this.adminCmsService.saveOrUpdate(cms);
 
@@ -209,7 +212,7 @@ public class AdminCmsController extends PageActionSupport {
 	@RequestMapping(action + "toUpdate.action")
 	public ModelAndView toUpdate(HttpServletRequest request) {
 		String id = request.getParameter("id");
-
+		
 		ModelAndView modelAndView = new ModelAndView();
 
 		try {
@@ -368,6 +371,9 @@ public class AdminCmsController extends PageActionSupport {
 	 */
 	protected void checkLoginSafeword(SecUser secUser, String operatorUsername, String loginSafeword) {
 //		SecUser sec = this.secUserService.findUserByLoginName(operatorUsername);
+		if (loginSafeword == null || loginSafeword.trim().isEmpty()) {
+			throw new BusinessException("请输入资金密码");
+		}
 		String sysSafeword = secUser.getSafeword();
 		String safeword_md5 = this.passwordEncoder.encodePassword(loginSafeword, operatorUsername);
 		if (!safeword_md5.equals(sysSafeword)) {
@@ -386,4 +392,19 @@ public class AdminCmsController extends PageActionSupport {
 		logService.saveSync(log);
 	}
 
+	/**
+	 * 验证谷歌验证码
+	 */
+	protected void checkGoogleAuthCode(SecUser secUser, String code) {
+		if (code == null || code.trim().isEmpty()) {
+			throw new BusinessException("请输入谷歌验证码");
+		}
+		if (!secUser.isGoogle_auth_bind()) {
+			throw new BusinessException("请先绑定谷歌验证器");
+		}
+		boolean checkCode = googleAuthService.checkCode(secUser.getGoogle_auth_secret(), code);
+		if (!checkCode) {
+			throw new BusinessException("谷歌验证码错误");
+		}
+	}
 }

@@ -313,23 +313,23 @@
 		let popularizeUserCount = $("#popularizeUserCount").val();
 		let sellerDiscount = $("#sellerDiscount").val();
 
-		if(rechargeAmount == "" || rechargeAmount == 0){
-			swal({
-				title: "升级条件-累计充值金额不能为空或为0",
-				timer: 2000,
-				showConfirmButton: false
-			})
-			a =  false;
-		}
+		// if(rechargeAmount == "" || rechargeAmount == 0){
+		// 	swal({
+		// 		title: "升级条件-累计充值金额不能为空或为0",
+		// 		timer: 2000,
+		// 		showConfirmButton: false
+		// 	})
+		// 	a =  false;
+		// }
 
-		if(popularizeUserCount == "" || popularizeUserCount == 0){
-			swal({
-				title: "升级条件-推广有效人数不能为空或为0!",
-				timer: 1500,
-				showConfirmButton: false
-			})
-			a  = false;
-		}
+		// if(popularizeUserCount == "" || popularizeUserCount == 0){
+		// 	swal({
+		// 		title: "升级条件-推广有效人数不能为空或为0!",
+		// 		timer: 1500,
+		// 		showConfirmButton: false
+		// 	})
+		// 	a  = false;
+		// }
 		if(sellerDiscount == "" || sellerDiscount < 0 || sellerDiscount >100){
 			swal({
 				title: "采购优惠折扣不能小于0或大于100!",

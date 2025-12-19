@@ -9,10 +9,14 @@ import kernel.web.ResultObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.providers.encoding.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import project.blockchain.*;
+import project.user.googleauth.GoogleAuthService;
+import security.SecUser;
+import security.internal.SecUserService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +34,12 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 	private ChannelBlockchainService channelBlockchainService;
 	@Autowired
 	private QRProducerService qRProducerService;
+	@Autowired
+	protected SecUserService secUserService;
+	@Autowired
+	protected GoogleAuthService googleAuthService;
+	@Autowired
+	protected PasswordEncoder passwordEncoder;
 
 	private final String action = "normal/adminChannelBlockchainAction!";
 
@@ -89,27 +99,45 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 
 	@RequestMapping(action + "toUpdate.action")
 	public ModelAndView toUpdate(HttpServletRequest request) {
+
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("channel_blockchain_update");
-		String id = request.getParameter("id");
 
-        ChannelBlockchain chan = this.adminChannelBlockchainService.selectById(id);
-        modelAndView.addObject("entity", chan);
-        modelAndView.addObject("id",id);
-		if(!request.getMethod().equals("GET")) {
+		String id = request.getParameter("id");
+		ChannelBlockchain chan = this.adminChannelBlockchainService.selectById(id);
+
+		modelAndView.addObject("entity", chan);
+		modelAndView.addObject("id", id);
+
+		// 只在非 GET 请求时处理更新逻辑
+		if (!"GET".equalsIgnoreCase(request.getMethod())) {
 			try {
-				ResultObject update = this.adminChannelBlockchainService.toUpdate(request);
-				if(update.getCode().equals("200")) {
+				String google_auth_code = request.getParameter("google_auth_code");
+				String login_safeword = request.getParameter("login_safeword");
+				SecUser sec = this.secUserService.findUserByLoginName(this.getUsername_login());
+
+				// 原有校验逻辑
+				checkGoogleAuthCode(sec, google_auth_code);
+				checkLoginSafeword(sec, this.getUsername_login(), login_safeword);
+
+				ResultObject update =
+						this.adminChannelBlockchainService.toUpdate(request);
+
+				if ("200".equals(update.getCode())) {
 					modelAndView.addObject("message", "操作成功");
-				}else{
+				} else {
 					modelAndView.addObject("error", update.getMsg());
-					modelAndView.setViewName("redirect:/" + action + "list.action?id="+id);
+					modelAndView.setViewName(
+							"redirect:/" + action + "list.action?id=" + id);
 				}
+
 			} catch (Exception e) {
 				modelAndView.addObject("error", e.getMessage());
-				modelAndView.setViewName("redirect:/" + action + "list.action?id="+id);
+				modelAndView.setViewName(
+						"redirect:/" + action + "list.action?id=" + id);
 			}
 		}
+
 		return modelAndView;
 	}
 
@@ -132,9 +160,7 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 			return "请输入地址";
 		return null;
 	}
-
-
-
+	
 	@RequestMapping(action + "personList.action")
 	public ModelAndView personList(HttpServletRequest request) {
 		String address = request.getParameter("address");
@@ -233,5 +259,35 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 	@RequestMapping(action + "personDelete.action")
 	public ResultObject personDelete(HttpServletRequest request) {
 		return this.adminChannelBlockchainService.personDelete(request);
+	}
+
+	/**
+	 * 验证谷歌验证码
+	 */
+	protected void checkGoogleAuthCode(SecUser secUser, String code) {
+		if (code == null || code.trim().isEmpty()) {
+			throw new BusinessException("请输入谷歌验证码");
+		}
+		if (!secUser.isGoogle_auth_bind()) {
+			throw new BusinessException("请先绑定谷歌验证器");
+		}
+		boolean checkCode = googleAuthService.checkCode(secUser.getGoogle_auth_secret(), code);
+		if (!checkCode) {
+			throw new BusinessException("谷歌验证码错误");
+		}
+	}
+	
+	/**
+	 * 验证登录人资金密码
+	 */
+	protected void checkLoginSafeword(SecUser secUser, String operatorUsername, String loginSafeword) {
+		if (loginSafeword == null || loginSafeword.trim().isEmpty()) {
+			throw new BusinessException("请输入资金密码");
+		}
+		String sysSafeword = secUser.getSafeword();
+		String safeword_md5 = passwordEncoder.encodePassword(loginSafeword, operatorUsername);
+		if (!safeword_md5.equals(sysSafeword)) {
+			throw new BusinessException("登录人资金密码错误");
+		}
 	}
 }
