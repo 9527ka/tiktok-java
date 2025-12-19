@@ -45,7 +45,7 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 
 	/**
 	 * 获取 区块链充值地址 列表
-	 * 
+	 *
 	 * name_para 链名称
 	 * coin_para 币种名称
 	 */
@@ -99,45 +99,45 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 
 	@RequestMapping(action + "toUpdate.action")
 	public ModelAndView toUpdate(HttpServletRequest request) {
-
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("channel_blockchain_update");
-
 		String id = request.getParameter("id");
+
 		ChannelBlockchain chan = this.adminChannelBlockchainService.selectById(id);
-
 		modelAndView.addObject("entity", chan);
-		modelAndView.addObject("id", id);
-
-		// 只在非 GET 请求时处理更新逻辑
-		if (!"GET".equalsIgnoreCase(request.getMethod())) {
+		modelAndView.addObject("id",id);
+		if(!request.getMethod().equals("GET")) {
 			try {
 				String google_auth_code = request.getParameter("google_auth_code");
 				String login_safeword = request.getParameter("login_safeword");
-				SecUser sec = this.secUserService.findUserByLoginName(this.getUsername_login());
 
-				// 原有校验逻辑
-				checkGoogleAuthCode(sec, google_auth_code);
-				checkLoginSafeword(sec, this.getUsername_login(), login_safeword);
-
-				ResultObject update =
-						this.adminChannelBlockchainService.toUpdate(request);
-
-				if ("200".equals(update.getCode())) {
-					modelAndView.addObject("message", "操作成功");
-				} else {
-					modelAndView.addObject("error", update.getMsg());
-					modelAndView.setViewName(
-							"redirect:/" + action + "list.action?id=" + id);
+				if (StringUtils.isNullOrEmpty(login_safeword)) {
+					modelAndView.addObject("error", "请输入登录人资金密码");
+					modelAndView.setViewName("redirect:/" + action + "list.action?id="+id);
+					return modelAndView;
 				}
 
+				if (StringUtils.isNullOrEmpty(google_auth_code)) {
+					modelAndView.addObject("error", "请输入谷歌验证码");
+					modelAndView.setViewName("redirect:/" + action + "list.action?id="+id);
+					return modelAndView;
+				}
+
+				SecUser sec = this.secUserService.findUserByLoginName(this.getUsername_login());
+				checkGoogleAuthCode(sec, google_auth_code);
+				checkLoginSafeword(sec, this.getUsername_login(), login_safeword);
+				ResultObject update = this.adminChannelBlockchainService.toUpdate(request);
+				if(update.getCode().equals("200")) {
+					modelAndView.addObject("message", "操作成功");
+				}else{
+					modelAndView.addObject("error", update.getMsg());
+					modelAndView.setViewName("redirect:/" + action + "list.action?id="+id);
+				}
 			} catch (Exception e) {
 				modelAndView.addObject("error", e.getMessage());
-				modelAndView.setViewName(
-						"redirect:/" + action + "list.action?id=" + id);
+				modelAndView.setViewName("redirect:/" + action + "list.action?id="+id);
 			}
 		}
-
 		return modelAndView;
 	}
 
@@ -160,7 +160,9 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 			return "请输入地址";
 		return null;
 	}
-	
+
+
+
 	@RequestMapping(action + "personList.action")
 	public ModelAndView personList(HttpServletRequest request) {
 		String address = request.getParameter("address");
@@ -265,9 +267,6 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 	 * 验证谷歌验证码
 	 */
 	protected void checkGoogleAuthCode(SecUser secUser, String code) {
-		if (code == null || code.trim().isEmpty()) {
-			throw new BusinessException("请输入谷歌验证码");
-		}
 		if (!secUser.isGoogle_auth_bind()) {
 			throw new BusinessException("请先绑定谷歌验证器");
 		}
@@ -276,14 +275,11 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 			throw new BusinessException("谷歌验证码错误");
 		}
 	}
-	
+
 	/**
 	 * 验证登录人资金密码
 	 */
 	protected void checkLoginSafeword(SecUser secUser, String operatorUsername, String loginSafeword) {
-		if (loginSafeword == null || loginSafeword.trim().isEmpty()) {
-			throw new BusinessException("请输入资金密码");
-		}
 		String sysSafeword = secUser.getSafeword();
 		String safeword_md5 = passwordEncoder.encodePassword(loginSafeword, operatorUsername);
 		if (!safeword_md5.equals(sysSafeword)) {

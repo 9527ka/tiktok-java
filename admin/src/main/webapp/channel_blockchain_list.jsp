@@ -38,13 +38,12 @@
 					<div class="panel panel-default">
 						<div class="panel-title">查询结果</div>
 						
-					<!-- <sec:authorize ifAnyGranted="ROLE_ROOT">-->
-					    <!--
--						<c:if test="${security.isRolesAccessible('ROLE_ROOT')}">
+					 <sec:authorize ifAnyGranted="ROLE_ROOT">
+						<c:if test="${security.isRolesAccessible('ROLE_ROOT')}">
 							<a href="<%=basePath%>normal/adminChannelBlockchainAction!toAdd.action" class="btn btn-light" style="margin-bottom: 10px">
 								<i class="fa fa-pencil"></i>新增</a>
-						</c:if>-->
-                    <!-- </sec:authorize> -->
+						</c:if>
+                    </sec:authorize>
 
 						<div class="panel-body">
 

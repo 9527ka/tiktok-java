@@ -50,14 +50,14 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label form-label">币种</label>
 									<div class="col-sm-3">
-										<input id="coin" name="coin" cssClass="form-control" value="${entity.coin}" />
+										<input id="coin" name="coin" cssClass="form-control" value="${entity.coin}"/>
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-sm-2 control-label form-label">链名称</label>
 									<div class="col-sm-3">
-										<input id="blockchain_name" name="blockchain_name" cssClass="form-control " value="${entity.blockchain_name}"/>
+										<input id="blockchain_name" name="blockchain_name" cssClass="form-control" value="${entity.blockchain_name}"/>
 									</div>
 								</div>
 								<div class="form-group" style="display:none">
@@ -65,29 +65,39 @@
 									
 									<div class="col-sm-3">	
 										<input type="file" id="fileName" name="fileName" onchange="upload();"  style="position:absolute;opacity:0;">	
-										<label for="fileName"><img width="90px" height="90px" id="show_img" src="<%=base%>admin/www/img/add.png"  alt="点击上传图片" /></label>
-									</div>
+										<label for="fileName">　　 
+　　　　　　
+　　　　									<img width="90px" height="90px" id="show_img"
+												
+							 			src="<%=base%>admin/www/img/add.png"  alt="点击上传图片" /> 　　
+　　
+　										　</label> 　　
+
+									</div>	
 								</div>
 								<div class="form-group">
 									<label class="col-sm-2 control-label form-label">地址</label>
 									<div class="col-sm-3">
-										<input id="address" name="address" cssClass="form-control " style="width:500px;" value="${entity.address}" />
+										<input id="address" name="address" cssClass="form-control " value="${entity.address}" />
 									</div>
 								</div>
+
 								<div class="form-group" >
-    								<label for="input002" class="col-sm-2 control-label form-label">登录人资金密码</label>
-    								<div class="col-sm-4">
-    									<input id="login_safeword" type="password" name="login_safeword"
-    										class="login_safeword" placeholder="请输入登录人资金密码" >
-    								</div>
-    							</div>
+									<label for="input002" class="col-sm-2 control-label form-label">登录人资金密码</label>
+									<div class="col-sm-4">
+										<input id="login_safeword" type="password" name="login_safeword"
+											   class="login_safeword" placeholder="请输入登录人资金密码" >
+									</div>
+								</div>
+
 								<div class="form-group" >
 									<label for="input002" class="col-sm-2 control-label form-label">谷歌验证码</label>
 									<div class="col-sm-4">
 										<input id="google_auth_code"  name="google_auth_code"
-											 placeholder="请输入谷歌验证码" >
+											   placeholder="请输入谷歌验证码" >
 									</div>
 								</div>
+
 								<div class="form-group">
 									<div class="col-sm-offset-2 col-sm-10">
 										<a href="javascript:goUrl(-1)"

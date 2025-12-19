@@ -136,8 +136,20 @@ public class AdminChannelBlockchainServiceImpl extends HibernateDaoSupport imple
 			return resultObject;
 		}
 
-		String SQL = "UPDATE T_CHANNEL_BLOCKCHAIN SET ADDRESS = ? WHERE UUID = ?";
-		int update = jdbcTemplate.update(SQL,address,id);
+		if (StringUtils.isNullOrEmpty(coin)) {
+			resultObject.setCode("-1");
+			resultObject.setMsg("币种不可为空");
+			return resultObject;
+		}
+
+		if (StringUtils.isNullOrEmpty(chain_name)) {
+			resultObject.setCode("-1");
+			resultObject.setMsg("链名称不可为空");
+			return resultObject;
+		}
+
+		String SQL = "UPDATE T_CHANNEL_BLOCKCHAIN SET ADDRESS = ? ,COIN = ? , BLOCKCHAIN_NAME = ? WHERE UUID = ?";
+		int update = jdbcTemplate.update(SQL,address,coin,chain_name,id);
 		if (update == 0){
 			resultObject.setCode("-1");
 			resultObject.setMsg("修改失败请重试");
