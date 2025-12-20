@@ -7,6 +7,31 @@ import kernel.bo.EntityObject;
  *
  */
 public class Cms extends EntityObject<String> {
+
+	private String id;
+	//getset
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	private String storeAccount;
+	public String getStoreAccount() {
+		return storeAccount;
+	}
+	public void setStoreAccount(String storeAccount) {
+		this.storeAccount = storeAccount;
+	}
+
+	private String storeUuid;
+	public String getStoreUuid() {
+		return storeUuid;
+	}
+	public void setStoreUuid(String storeUuid) {
+		this.storeUuid = storeUuid;
+	}
 	/**
 	 * 标题
 	 */

@@ -136,5 +136,8 @@
 		<property name="whatsApp" type="java.lang.String">
 			<column name="WHAT_APP" />
 		</property>
+		<property name="callFlag" type="yes_no">
+			<column name="call_flag" />
+		</property>
 	</class>
 </hibernate-mapping>

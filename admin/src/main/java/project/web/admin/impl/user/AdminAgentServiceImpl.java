@@ -48,9 +48,9 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 	private PartyService partyService;
 	private SecUserService secUserService;
 	private RoleService roleService;
-	
+
 	private QRGenerateService qRGenerateService;
-	
+
 	private SysparaService sysparaService;
 	private PasswordEncoder passwordEncoder;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -58,7 +58,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 	public Page pagedQuery(int pageNo, int pageSize, String name_para, String checkedPartyId) {
 
 		StringBuffer queryString = new StringBuffer(
-				"SELECT agent.UUID id,party.NAME name,party.USERNAME username,party.USERCODE usercode,party.ROLENAME rolename,party.LOGINAUTHORITY login_authority,party.USERCODE usercode,party.REMARKS remarks,party_parent.NAME name_parent,party_parent.USERNAME username_parent ");
+				"SELECT agent.UUID id,party.NAME name,party.USERNAME username,party.USERCODE usercode,party.ROLENAME rolename,party.LOGINAUTHORITY login_authority,party.USERCODE usercode,party.REMARKS remarks,party_parent.NAME name_parent,party_parent.USERNAME username_parent ,party.call_flag callFlag ");
 		queryString.append(
 				" FROM T_AGENT agent LEFT JOIN PAT_PARTY party ON agent.PARTY_ID = party.UUID  LEFT JOIN PAT_PARTY party_parent ON agent.PARENT_PARTY_ID = party_parent.UUID  WHERE 1 = 1 ");
 
@@ -88,18 +88,24 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 		queryString.append(" order by party.CREATE_TIME desc ");
 
 		Page page = this.pagedQueryDao.pagedQuerySQL(pageNo, pageSize, queryString.toString(), parameters);
-		
-		
-		
-		
+
+		//skyxx
+		for (int i = 0; i < page.getElements().size(); i++) {
+			Map<String, Object> map_party = (Map<String, Object>) page.getElements().get(i);
+			if(map_party.get("callFlag")!=null &&  map_party.get("callFlag").toString().equals("Y")){
+				map_party.put("callFlagName", "有");
+			}
+		}
+
+
 
 		return page;
 	}
-	
-	
-	
+
+
+
 	public Page pagedQueryNetwork(int pageNo, int pageSize, String loginPartyId,
-			String roleName, String usernameOrUid, String targetPartyId) {
+								  String roleName, String usernameOrUid, String targetPartyId) {
 		Page page = getPageList(pageNo, pageSize, loginPartyId, usernameOrUid, roleName,
 				targetPartyId);// 获取当前页的用户相关
 		/**
@@ -138,47 +144,54 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 
 			}
 			Map<String, Object> item_result = new HashMap<String, Object>() ;
-			
-			
+
+
 			Party party = partyService.cachePartyBy(list_partyId.get(i),false);
-			
+
 			UserRecom userRecom = this.userRecomService.findByPartyId(party.getId());
 			if(userRecom != null && !"".equals(userRecom.getReco_id()) ) {
 				Party party_parent = partyService.cachePartyBy(userRecom.getReco_id(),true);
 				item_result.put("username_parent", party_parent.getUsername());
-				
+
 			}
 			Agent agent = this.findByPartyId(party.getId());
 			item_result.put("reco_agent", reco_agent);
 			item_result.put("reco_member", children_member.size());
 			item_result.put("partyId", list_partyId.get(i));
-			
+
 			item_result.put("username", party.getUsername());
 			item_result.put("usercode", party.getUsercode());
 			item_result.put("remarks", party.getRemarks());
+			//skyxx
+			if(party.getCallFlag()){
+				item_result.put("callFlagName", "有");
+				item_result.put("callFlag", "Y");
+			}else {
+				item_result.put("callFlag", "N");
+			}
 			if(agent != null) {
 				item_result.put("id", agent.getId());
 			}
-			
-			
+
+
 			result.add(item_result);
 		}
 		Page page_result = Page.EMPTY_PAGE;
-		
+
 		page_result.setElements(result);
 		return page_result;
 
 	}
-	
 
-	
-	
+
+
+
 	private Page getPageList(int pageNo, int pageSize,  String loginPartyId,
-			String roleName, String usernameOrUid, String targetPartyId) {
+							 String roleName, String usernameOrUid, String targetPartyId) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		StringBuffer queryString = new StringBuffer();
 		queryString.append(
-				"SELECT party.ROLENAME AS rolename,party.USERNAME AS username,party.USERCODE AS UID,party.UUID AS partyId ");// 用户
+				"SELECT party.ROLENAME AS rolename,party.USERNAME AS username,party.USERCODE AS UID,party.UUID AS partyId,party.call_flag as callFlag ");// 用户
 		queryString.append("FROM PAT_PARTY party ");
 		queryString.append("LEFT JOIN PAT_USER_RECOM ur ON party.UUID = ur.PARTY_ID ");// 推荐人 根目录判定
 		queryString.append("WHERE 1=1 ");
@@ -200,7 +213,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 			parameters.put("children", children);
 		}
 		if (StringUtils.isNullOrEmpty(targetPartyId) && StringUtils.isNullOrEmpty(usernameOrUid)) {// 目标partyId为空
-																									// ，username参数为空，的情况下，如果是视图，显示根目录
+			// ，username参数为空，的情况下，如果是视图，显示根目录
 			queryString.append(" and ur.RECO_ID is NULL ");
 		}
 		if (!StringUtils.isNullOrEmpty(usernameOrUid)) {
@@ -212,7 +225,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 		return page;
 	}
 
-	
+
 	public List<AgentNodes> findAgentNodes(String loginPartyId, String checkedPartyId, String url) {
 		Map<String, String> map_checked = new HashMap();
 
@@ -229,7 +242,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 		root.setHref(url);
 		List party_list;
 		if (StringUtils.isNullOrEmpty(loginPartyId)) {// " FROM Party WHERE reco_id IS NULL or reco_id = '' and
-														// managerlevel !=0"
+			// managerlevel !=0"
 			party_list = getHibernateTemplate()
 					.find(" FROM Agent WHERE parent_partyId IS NULL or parent_partyId = '' ");
 			root.setText("所有代理商");
@@ -239,6 +252,9 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 			 * 将自己放入列表中
 			 */
 			Party party = this.partyService.cachePartyBy(loginPartyId,true);
+			if (party.getCallFlag()){
+
+			}
 			Agent agent=findByPartyId(party.getId());
 			party_list = new ArrayList();
 			party_list.add(agent);
@@ -246,7 +262,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 			 * 将子代理放入列表中
 			 */
 			for (int i = 0; i < recom_list.size(); i++) {
-				 party = this.partyService.cachePartyBy(((UserRecom) recom_list.get(i)).getPartyId(),true);
+				party = this.partyService.cachePartyBy(((UserRecom) recom_list.get(i)).getPartyId(),true);
 				agent=findByPartyId(party.getId());
 				if(agent != null)
 					party_list.add(agent);
@@ -255,7 +271,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 		}
 
 		for (int i = 0; i < party_list.size(); i++) {
-			
+
 			Agent agent = (Agent) party_list.get(i);
 			AgentNodes nodes = new AgentNodes();
 			nodes.setTags(agent.getPartyId().toString());
@@ -274,7 +290,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 				state.put("expanded", Boolean.valueOf(true));
 				root.setState(state);
 			}
-			
+
 			nodes.setText(username);
 			findAgentNodesLoop(loginPartyId, nodes, map_checked, url);
 			list.add(nodes);
@@ -291,12 +307,12 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 			Party party = this.partyService.cachePartyBy(((UserRecom) recom_list.get(i)).getPartyId(),true);
 			/**
 			 * 如果rolename不是代理商则不添加
-			 * 
+			 *
 			 */
 			if(party == null) {
 				continue;
 			}
-			
+
 			if(!Constants.SECURITY_ROLE_AGENT.equals(party.getRolename())||!Constants.SECURITY_ROLE_AGENTLOW.equals(party.getRolename())) {
 				continue;
 			}
@@ -324,10 +340,10 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 	}
 
 	@Override
-	public void save(String name, String username, String password, boolean login_authority,String remarks, String parents_usercode,boolean opera_authority) {
+	public void save(String name, String username, String password, boolean login_authority, boolean call_flag,String remarks, String parents_usercode,boolean opera_authority) {
 		username = username.trim();
 		password = password.trim();
-		
+
 		if (secUserService.findUserByLoginName(username) != null) {
 			throw new BusinessException("用户名重复");
 		}
@@ -335,11 +351,11 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 		 * 用户code
 		 */
 		String usercode = getUsercode();
-		
+
 		if (!StringUtils.isNullOrEmpty(parents_usercode)) {
 			Party party_parents=partyService.findPartyByUsercode(parents_usercode);
 			if (party_parents==null ) {
-			throw new BusinessException("推荐码不正确");
+				throw new BusinessException("推荐码不正确");
 			}
 			if (!Constants.SECURITY_ROLE_AGENT.equals(party_parents.getRolename()) && !Constants.SECURITY_ROLE_AGENTLOW.equals(party_parents.getRolename())) {
 				throw new BusinessException("推荐码不正确");
@@ -354,23 +370,24 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 		party.setUsercode(usercode);
 		party.setName(name);
 		party.setLogin_authority(login_authority);
+		party.setCallFlag(call_flag);
 		party.setRemarks(remarks);
 		party.setSafeword(passwordEncoder.encodePassword("000000", party.getUsername()));
 
 		party.setRolename(opera_authority?Constants.SECURITY_ROLE_AGENT:Constants.SECURITY_ROLE_AGENTLOW);
 
 		party = partyService.save(party);
-		
-		
+
+
 		if (!StringUtils.isNullOrEmpty(parents_usercode)) {
 			Party party_parents=partyService.findPartyByUsercode(parents_usercode);
-			
+
 			if (party_parents==null ) {
 				throw new BusinessException("推荐码不正确");
-				}
-				if (!Constants.SECURITY_ROLE_AGENT.equals(party_parents.getRolename()) && !Constants.SECURITY_ROLE_AGENTLOW.equals(party_parents.getRolename())) {
-					throw new BusinessException("推荐码不正确");
-				}
+			}
+			if (!Constants.SECURITY_ROLE_AGENT.equals(party_parents.getRolename()) && !Constants.SECURITY_ROLE_AGENTLOW.equals(party_parents.getRolename())) {
+				throw new BusinessException("推荐码不正确");
+			}
 			UserRecom userRecom = new UserRecom();
 			userRecom.setPartyId(party.getId());
 			userRecom.setReco_id(party_parents.getId().toString());// 父类partyId
@@ -416,7 +433,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 		/**
 		 * 以上复制到演示用户
 		 */
-		
+
 
 		/**
 		 * usdt账户
@@ -435,8 +452,8 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 //			this.walletService.save(wallet_coin);
 //		}
 
-		
-		
+
+
 		Agent  agent=new Agent();
 		agent.setPartyId(party.getId());
 		if (!StringUtils.isNullOrEmpty(parents_usercode)) {
@@ -444,8 +461,8 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 			agent.setParent_partyId(party_parents.getId().toString());
 		}
 		this.getHibernateTemplate().save(agent);
-		
-		
+
+
 	}
 
 	private String getUsercode() {
@@ -463,7 +480,7 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 
 		return usercode;
 	}
-	
+
 	public Agent findByPartyId(Serializable partyId) {
 		List list = getHibernateTemplate().find("FROM Agent WHERE partyId=?0 ",
 				new Object[] { partyId });
@@ -477,36 +494,37 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 	public Agent get(String id) {
 		return this.getHibernateTemplate().get(Agent.class, id);
 	}
-	
+
 	@Override
-	public void update(String id, String name, boolean login_authority, String remarks,boolean opera_authority) {
+	public void update(String id, String name, boolean login_authority, boolean call_flag, String remarks,boolean opera_authority) {
 		Agent agent=	this.get(id);
 		Party party = this.partyService.cachePartyBy(agent.getPartyId(),false);
 		party.setRolename(opera_authority?Constants.SECURITY_ROLE_AGENT:Constants.SECURITY_ROLE_AGENTLOW);
 		party.setName(name);
 		party.setRemarks(remarks);
 		party.setLogin_authority(login_authority);
+		party.setCallFlag(call_flag);
 		this.partyService.update(party);
-		
-		SecUser secUser=	secUserService.findUserByPartyId(agent.getPartyId());
-		Role role = this.roleService.findRoleByName(opera_authority?Constants.SECURITY_ROLE_AGENT:Constants.SECURITY_ROLE_AGENTLOW);
 
-		Set<Role> roles = secUser.getRoles();
-		roles.clear();
-		roles.add(role);
-		secUser.setRoles(roles);
-		secUser.setEnabled(login_authority);
+//		SecUser secUser=	secUserService.findUserByPartyId(agent.getPartyId());
+//		Role role = this.roleService.findRoleByName(opera_authority?Constants.SECURITY_ROLE_AGENT:Constants.SECURITY_ROLE_AGENTLOW);
+//
+//		Set<Role> roles = secUser.getRoles();
+//		roles.clear();
+//		roles.add(role);
+//		secUser.setRoles(roles);
+//		secUser.setEnabled(login_authority);
+//
+//		this.secUserService.update(secUser);
 
-		this.secUserService.update(secUser);
-		
 	}
 	@Override
 	public void update(Agent agent) {
-		
+
 		this.getHibernateTemplate().update(agent);
-		
+
 	}
-	
+
 
 	public void setPagedQueryDao(PagedQueryDao pagedQueryDao) {
 		this.pagedQueryDao = pagedQueryDao;
@@ -566,9 +584,9 @@ public class AdminAgentServiceImpl extends HibernateDaoSupport implements AdminA
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
 	}
-	
 
-	
+
+
 
 
 }

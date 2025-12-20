@@ -25,6 +25,11 @@
 		<property name="status" type="java.lang.Integer">
 			<column name="STATUS" />
 		</property>
-
+		<property name="storeAccount" type="java.lang.String">
+			<column name="STORE_ACCOUNT" />
+		</property>
+		<property name="storeUuid" type="java.lang.String">
+			<column name="STORE_UUID" />
+		</property>
 	</class>
 </hibernate-mapping>

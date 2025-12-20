@@ -73,7 +73,7 @@ public class AdminAgentController extends PageActionSupport {
 		modelAndView.setViewName("agent_list");
 
 		try {
-			
+
 			this.checkAndSetPageNo(pageNo);
 
 			this.pageSize = 20;
@@ -93,7 +93,7 @@ public class AdminAgentController extends PageActionSupport {
 				this.page = this.adminAgentService.pagedQueryNetwork(this.pageNo, this.pageSize, this.getLoginPartyId(), name_para,
 						Constants.SECURITY_ROLE_AGENT, para_party_id);
 			}
-			
+
 //			String webUrl = Constants.WEB_URL;
 //			webUrl = webUrl.substring(0, webUrl.length() - 4);
 			String webUrl = AutoConfig.getBaseUrl();
@@ -107,7 +107,7 @@ public class AdminAgentController extends PageActionSupport {
 			String result = JsonUtils.getJsonString(this.adminAgentService.findAgentNodes(this.getLoginPartyId(), checkedPartyId, url));
 
 			modelAndView.addObject("result", result);
-			
+
 		} catch (BusinessException e) {
 			modelAndView.addObject("error", e.getMessage());
 			return modelAndView;
@@ -131,22 +131,22 @@ public class AdminAgentController extends PageActionSupport {
 	 * 新增代理商 页面
 	 */
 	@RequestMapping(action + "toAdd.action")
-	public ModelAndView toAdd(HttpServletRequest request) {	
+	public ModelAndView toAdd(HttpServletRequest request) {
 
 		ModelAndView modelAndView = new ModelAndView();
 
 		try {
-			
+
 			String parents_usercode = "";
-			
+
 			if (!StringUtils.isNullOrEmpty(this.getLoginPartyId())) {
 				String loginPartyId = this.getLoginPartyId();
 				Party party = this.partyService.cachePartyBy(loginPartyId, true);
 				parents_usercode = party.getUsercode();
 			}
-			
+
 			modelAndView.addObject("parents_usercode", parents_usercode);
-			
+
 		} catch (BusinessException e) {
 			modelAndView.addObject("error", e.getMessage());
 			modelAndView.setViewName("redirect:/" + action + "list.action");
@@ -157,7 +157,7 @@ public class AdminAgentController extends PageActionSupport {
 			modelAndView.setViewName("redirect:/" + action + "list.action");
 			return modelAndView;
 		}
-		
+
 		modelAndView.setViewName("agent_add");
 		return modelAndView;
 	}
@@ -168,38 +168,40 @@ public class AdminAgentController extends PageActionSupport {
 	@RequestMapping(action + "add.action")
 	public ModelAndView add(HttpServletRequest request) {
 		String username = request.getParameter("username");
-		String password = request.getParameter("password");		
-		String login_safeword = request.getParameter("login_safeword");		
+		String password = request.getParameter("password");
+		String login_safeword = request.getParameter("login_safeword");
 		String name = request.getParameter("name");
 		String remarks = request.getParameter("remarks");
 		String parents_usercode = request.getParameter("parents_usercode");
 		boolean login_authority = Boolean.valueOf(request.getParameter("login_authority")).booleanValue();
 		boolean opera_authority = Boolean.valueOf(request.getParameter("opera_authority")).booleanValue();
+		//skyxx
+		boolean call_flag = Boolean.valueOf(request.getParameter("call_flag")).booleanValue();
 
 		ModelAndView modelAndView = new ModelAndView();
-		
+
 		try {
-			
+
 			String error = this.verification(username, password);
 			if (!StringUtils.isNullOrEmpty(error)) {
 				throw new BusinessException(error);
 			}
-			
+
 			String username_login = this.getUsername_login();
-			
+
 			SecUser sec = this.secUserService.findUserByLoginName(username_login);
 			this.checkLoginSafeword(sec, this.getUsername_login(), login_safeword);
-			
+
 			username = username.replace(" ", "");
 			password = password.replace(" ", "");
-			
-			this.adminAgentService.save(name, username, password, login_authority, remarks, parents_usercode, opera_authority);
-			
+
+			this.adminAgentService.save(name, username, password, login_authority, call_flag,remarks, parents_usercode, opera_authority);
+
 			String log = MessageFormat.format(
 					"ip:" + this.getIp() + ",管理员新增代理商，名称:{0},用户名:{1},登录权限:{2},备注:{3},推荐人uid:{4},操作权限:{5}", name,
 					username, login_authority, remarks, parents_usercode, opera_authority);
 			this.saveLog(sec, username_login, log);
-			
+
 		} catch (BusinessException e) {
 			modelAndView.addObject("error", e.getMessage());
 			modelAndView.addObject("username", username);
@@ -238,9 +240,9 @@ public class AdminAgentController extends PageActionSupport {
 		ModelAndView modelAndView = new ModelAndView();
 
 		try {
-			
+
 			Agent agent = adminAgentService.get(id);
-			
+
 			Party party = this.partyService.cachePartyBy(agent.getPartyId(), false);
 
 			modelAndView.addObject("id", id);
@@ -248,7 +250,7 @@ public class AdminAgentController extends PageActionSupport {
 			modelAndView.addObject("remarks", party.getRemarks());
 			modelAndView.addObject("login_authority", party.getLogin_authority());
 			modelAndView.addObject("opera_authority", Constants.SECURITY_ROLE_AGENT.equals(party.getRolename()));
-			
+
 		} catch (BusinessException e) {
 			modelAndView.addObject("error", e.getMessage());
 			modelAndView.setViewName("redirect:/" + action + "list.action");
@@ -259,7 +261,7 @@ public class AdminAgentController extends PageActionSupport {
 			modelAndView.setViewName("redirect:/" + action + "list.action");
 			return modelAndView;
 		}
-		
+
 		modelAndView.setViewName("agent_update");
 		return modelAndView;
 	}
@@ -269,30 +271,31 @@ public class AdminAgentController extends PageActionSupport {
 	 */
 	@RequestMapping(action + "update.action")
 	public ModelAndView update(HttpServletRequest request) {
-		String id = request.getParameter("id");	
+		String id = request.getParameter("id");
 		String name = request.getParameter("name");
 		String remarks = request.getParameter("remarks");
 		boolean login_authority = Boolean.valueOf(request.getParameter("login_authority")).booleanValue();
 		boolean opera_authority = Boolean.valueOf(request.getParameter("opera_authority")).booleanValue();
+		boolean call_flag = Boolean.valueOf(request.getParameter("call_flag")).booleanValue();
 
 		ModelAndView modelAndView = new ModelAndView();
-		
+
 		try {
-			
+
 			Agent agent = this.adminAgentService.get(id);
-			
+
 			Party party = this.partyService.cachePartyBy(agent.getPartyId(), false);
-			
+
 			SecUser secUser = this.secUserService.findUserByPartyId(agent.getPartyId());
-			String log = MessageFormat.format("ip:" + this.getIp() + ",管理员修改代理商，用户名:{0},原登录权限:{1},原备注:{2},原操作权限:{3}",
-					secUser.getUsername(), secUser.getEnabled(), party.getRemarks(),
-					Constants.SECURITY_ROLE_AGENT.equals(party.getRolename()));
+			//String log = MessageFormat.format("ip:" + this.getIp() + ",管理员修改代理商，用户名:{0},原登录权限:{1},原备注:{2},原操作权限:{3}",
+			//		secUser.getUsername(), secUser.getEnabled(), party.getRemarks(),
+			//		Constants.SECURITY_ROLE_AGENT.equals(party.getRolename()));
 
-			this.adminAgentService.update(id, name, login_authority, remarks, opera_authority);
+			this.adminAgentService.update(id, name, login_authority, call_flag,remarks, opera_authority);
 
-			log += MessageFormat.format(",新登录权限:{0},新备注:{1},新操作权限:{2}", login_authority, remarks, opera_authority);
-			this.saveLog(secUser, this.getUsername_login(), log);
-			
+			//log += MessageFormat.format(",新登录权限:{0},新备注:{1},新操作权限:{2}", login_authority, remarks, opera_authority);
+			//this.saveLog(secUser, this.getUsername_login(), log);
+
 		} catch (BusinessException e) {
 			modelAndView.addObject("error", e.getMessage());
 			modelAndView.addObject("id", id);
@@ -313,7 +316,7 @@ public class AdminAgentController extends PageActionSupport {
 			modelAndView.setViewName("agent_update");
 			return modelAndView;
 		}
-		
+
 		modelAndView.addObject("message", "操作成功");
 		modelAndView.setViewName("redirect:/" + action + "list.action");
 		return modelAndView;
@@ -329,11 +332,11 @@ public class AdminAgentController extends PageActionSupport {
 		String safeword = request.getParameter("safeword");
 
 		ModelAndView modelAndView = new ModelAndView();
-		
+
 		try {
-			
+
 			if (!StringUtils.isNullOrEmpty(password) || !StringUtils.isNullOrEmpty(safeword)) {
-				
+
 				SecUser sec = this.secUserService.findUserByLoginName(this.getUsername_login());
 				String sysSafeword = sec.getSafeword();
 				String safeword_md5 = passwordEncoder.encodePassword(safeword, this.getUsername_login());
@@ -342,10 +345,10 @@ public class AdminAgentController extends PageActionSupport {
 				}
 
 				password = password.replace(" ", "");
-				
+
 				Agent agent = this.adminAgentService.get(id);
 				Party party = this.partyService.cachePartyBy(agent.getPartyId(), true);
-				
+
 				this.secUserService.updatePassword(party.getUsername(), password);
 
 				Log log = new Log();
@@ -365,7 +368,7 @@ public class AdminAgentController extends PageActionSupport {
 			modelAndView.setViewName("redirect:/" + action + "list.action");
 			return modelAndView;
 		}
-		
+
 		modelAndView.addObject("message", "操作成功");
 		modelAndView.setViewName("redirect:/" + action + "list.action");
 		return modelAndView;
@@ -393,7 +396,7 @@ public class AdminAgentController extends PageActionSupport {
 		log.setCreateTime(new Date());
 		this.logService.saveSync(log);
 	}
-	
+
 	private String verification(String username, String password) {
 //		if (StringUtils.isEmptyString(this.name)) {
 //			return "请输入姓名";

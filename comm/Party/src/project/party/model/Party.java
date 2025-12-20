@@ -182,6 +182,16 @@ public class Party extends EntityObject<String> {
 
 	private String whatsApp;
 
+	private boolean callFlag;
+
+	//生成getset 方法
+	public boolean getCallFlag() {
+		return callFlag;
+	}
+	public void setCallFlag(boolean callFlag) {
+		this.callFlag = callFlag;
+	}
+
 	public String getAvatar() {
 		return avatar;
 	}

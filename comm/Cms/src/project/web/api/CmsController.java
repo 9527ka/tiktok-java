@@ -1,9 +1,13 @@
 package project.web.api;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import kernel.util.StringUtils;
+import kernel.web.BaseAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +26,7 @@ import project.cms.CmsService;
  */
 @RestController
 @CrossOrigin
-public class CmsController {
+public class CmsController extends BaseAction {
 
 	private Logger logger = LogManager.getLogger(CmsController.class);
 
@@ -43,9 +47,21 @@ public class CmsController {
 			if (null == language){
 				throw new BusinessException("语言参数错误");
 			}
+
+			String partyId = getLoginPartyId();
+
 			List<Cms> list = this.cmsService.findCmsListByLang(language);
+			//skyxx
 			if (null != list) {
-				resultObject.setData(list.get(0));
+				Cms cms = list.get(0);
+				if(StringUtils.isNotEmpty(cms.getStoreUuid())){
+					List<String> storeUuid = Arrays.asList(cms.getStoreUuid().split(","));
+					if (storeUuid.contains(partyId)){
+						resultObject.setData(cms);
+					}
+				}else {
+					resultObject.setData(cms);
+				}
 			}
 		} catch (BusinessException e) {
 			resultObject.setCode("1");
@@ -70,8 +86,24 @@ public class CmsController {
 
 		try {
 
+			String partyId = getLoginPartyId();
+
 			List<Cms> cacheListByModel = this.cmsService.cacheListByModelAndLanguage(language);
-			resultObject.setData(cacheListByModel);
+			List<Cms> list = new ArrayList<>();
+			if (null != cacheListByModel && !cacheListByModel.isEmpty()) {
+				for (Cms cms : cacheListByModel) {
+					if(StringUtils.isNotEmpty(cms.getStoreUuid())){
+						List<String> storeUuid = Arrays.asList(cms.getStoreUuid().split(","));
+						if (storeUuid.contains(partyId)){
+							list.add(cms);
+						}
+					}else {
+						list.add(cms);
+					}
+				}
+			}
+			//skyxx
+			resultObject.setData(list);
 
 		} catch (BusinessException e) {
 			resultObject.setCode("1");

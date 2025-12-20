@@ -1,8 +1,9 @@
 package project.web.admin;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.List;import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,11 +24,11 @@ import project.cms.Cms;
 import project.cms.PropertiesUtilCms;
 import project.log.LogService;
 import project.news.News;
+import project.party.PartyService;
+import project.party.model.Party;import project.user.googleauth.GoogleAuthService;
 import security.Role;
 import security.SecUser;
 import security.internal.SecUserService;
-import project.blockchain.*;
-import project.user.googleauth.GoogleAuthService;
 
 /**
  * 用户端内容管理
@@ -47,6 +48,8 @@ public class AdminCmsController extends PageActionSupport {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	protected GoogleAuthService googleAuthService;
+	@Autowired
+	private PartyService partyService;
 
 	private final String action = "normal/adminCmsAction!";
 
@@ -98,7 +101,7 @@ public class AdminCmsController extends PageActionSupport {
 		modelAndView.addObject("status", status);
 		return modelAndView;
 	}
-	
+
 	/**
 	 * 新增 用户端内容管理 页面
 	 */
@@ -106,13 +109,13 @@ public class AdminCmsController extends PageActionSupport {
 	public ModelAndView toAdd(HttpServletRequest request) {
 
 		ModelAndView modelAndView = new ModelAndView();
-		
+
 		try {
 
 //			if (!this.checkIsRoot()) {
 //				throw new BusinessException("root 权限下才可添加");
 //			}
-			
+
 //			modelAndView.addObject("language", PropertiesUtilCms.getProperty("system_cms_language"));
 //			modelAndView.addObject("modelMap", Constants.CMS_MODEL);
 //			modelAndView.addObject("languageMap", Constants.LANGUAGE);
@@ -134,7 +137,7 @@ public class AdminCmsController extends PageActionSupport {
 
 	/**
 	 * 新增 用户端内容管理
-	 * 
+	 *
 	 * title 标题
 	 * content 内容
 	 * model 模块
@@ -144,32 +147,63 @@ public class AdminCmsController extends PageActionSupport {
 	@RequestMapping(action + "add.action")
 	public ModelAndView add(HttpServletRequest request, Cms cms) {
 		String login_safeword = request.getParameter("login_safeword");
-
+		String google_auth_code = request.getParameter("google_auth_code");
+		String store_account = request.getParameter("store_account");
 
 		ModelAndView modelAndView = new ModelAndView();
-		
+
 		try {
+
 			String error = this.verif(cms.getTitle(), cms.getContent());
 			if (!StringUtils.isNullOrEmpty(error)) {
 				throw new BusinessException(error);
 			}
-			
+
 //			if (!this.checkIsRoot()) {
 //				throw new BusinessException("root 权限下才可添加");
 //			}
-			
+
 			String username_login = this.getUsername_login();
-			
+
 			SecUser sec = this.secUserService.findUserByLoginName(username_login);
-			this.checkLoginSafeword(sec, username_login, login_safeword);
+
+			if (StringUtils.isNullOrEmpty(login_safeword)) {
+				modelAndView.addObject("error", "[ERROR] " +"请输入登录人资金密码");
+				modelAndView.setViewName("cms_add");
+				return modelAndView;
+			}
+
+			if (StringUtils.isNullOrEmpty(google_auth_code)) {
+				modelAndView.addObject("error", "[ERROR] " + "请输入谷歌验证码");
+				modelAndView.setViewName("cms_add");
+				return modelAndView;
+			}
+
+			//skyxx
+			checkGoogleAuthCode(sec, google_auth_code);
+			checkLoginSafeword(sec, this.getUsername_login(), login_safeword);
+
+			cms.setStoreAccount(store_account);
+			if (StringUtils.isNotEmpty(cms.getStoreAccount())){
+				List<String> storeUuid = new ArrayList<>();
+				List<String> storeAccounts = Arrays.asList(cms.getStoreAccount().split(","));
+				storeAccounts.forEach(userName -> {
+					Party partyByUsername = partyService.findPartyByUsername(userName);
+					if (partyByUsername != null){
+						storeUuid.add(partyByUsername.getId());
+					}
+				});
+				cms.setStoreUuid(storeUuid.stream().collect(Collectors.joining( ",")));
+			}
+
 			cms.setCreateTime(new Date());
 			this.adminCmsService.saveOrUpdate(cms);
 
 			String log = null;
-				log = MessageFormat.format("ip:" + this.getIp() + ",管理员新增cms，id:{0},标题:{1},语言:{2},模块:{3}",
-						cms.getId(), cms.getTitle(), cms.getLanguage());
+			log = MessageFormat.format("ip:" + this.getIp() + ",管理员新增cms，id:{0},标题:{1},语言:{2},模块:{3}",
+					cms.getId(), cms.getTitle(), cms.getLanguage());
 			this.saveLog(sec, username_login, log);
-			
+
 		} catch (BusinessException e) {
 			modelAndView.addObject("error", e.getMessage());
 //			modelAndView.addObject("model", model);
@@ -194,7 +228,7 @@ public class AdminCmsController extends PageActionSupport {
 			modelAndView.setViewName("cms_add");
 			return modelAndView;
 		}
-		
+
 		modelAndView.addObject("message", "操作成功");
 		modelAndView.setViewName("redirect:/" + action + "list.action");
 		return modelAndView;
@@ -202,7 +236,7 @@ public class AdminCmsController extends PageActionSupport {
 
 	/**
 	 * 修改 用户端内容管理 页面
-	 * 
+	 *
 	 * title 标题
 	 * content 内容
 	 * model 模块
@@ -212,15 +246,15 @@ public class AdminCmsController extends PageActionSupport {
 	@RequestMapping(action + "toUpdate.action")
 	public ModelAndView toUpdate(HttpServletRequest request) {
 		String id = request.getParameter("id");
-		
+
 		ModelAndView modelAndView = new ModelAndView();
 
 		try {
-			
+
 			if (StringUtils.isNullOrEmpty(id)) {
 				throw new BusinessException("内容不存在或已删除");
 			}
-						
+
 			Cms cms = this.adminCmsService.findById(id);
 			if (null == cms) {
 				throw new BusinessException("内容不存在或已删除");
@@ -238,14 +272,14 @@ public class AdminCmsController extends PageActionSupport {
 			modelAndView.setViewName("redirect:/" + action + "list.action");
 			return modelAndView;
 		}
-		
+
 		modelAndView.setViewName("cms_update");
 		return modelAndView;
 	}
-	
+
 	/**
 	 * 修改 用户端内容管理
-	 * 
+	 *
 	 * title 标题
 	 * content 内容
 	 * model 模块
@@ -255,7 +289,8 @@ public class AdminCmsController extends PageActionSupport {
 	@RequestMapping(action + "update.action")
 	public ModelAndView update(HttpServletRequest request, Cms cms) {
 		String login_safeword = request.getParameter("login_safeword");
-
+		String google_auth_code = request.getParameter("google_auth_code");
+		String store_account = request.getParameter("store_account");
 		ModelAndView modelAndView = new ModelAndView();
 
 		try {
@@ -270,6 +305,7 @@ public class AdminCmsController extends PageActionSupport {
 			SecUser sec = this.secUserService.findUserByLoginName(username_login);
 
 			this.checkLoginSafeword(sec, username_login, login_safeword);
+			this.checkGoogleAuthCode(sec, google_auth_code);
 
 			if (StringUtils.isNullOrEmpty(cms.getId().toString())) {
 				throw new BusinessException("内容不存在或已删除");
@@ -279,11 +315,25 @@ public class AdminCmsController extends PageActionSupport {
 			if (null == entity) {
 				throw new BusinessException("内容不存在或已删除");
 			}
+			cms.setStoreAccount(store_account==null ? "" : store_account);
+			cms.setStoreUuid("");
+			if (StringUtils.isNotEmpty(cms.getStoreAccount())){
+				List<String> storeUuid = new ArrayList<>();
+				List<String> storeAccounts = Arrays.asList(cms.getStoreAccount().split(","));
+				storeAccounts.forEach(userName -> {
+					Party partyByUsername = partyService.findPartyByUsername(userName);
+					if (partyByUsername != null){
+						storeUuid.add(partyByUsername.getId());
+					}
+				});
+				cms.setStoreUuid(storeUuid.stream().collect(Collectors.joining( ",")));
+			}
+
 			cms.setCreateTime(entity.getCreateTime());
 
 			String log = null;
 			log = MessageFormat.format("ip:" + this.getIp() + ",管理员修改cms，id:{0},原标题:{1},原语言:{2},原模块:{3}",
-						entity.getId(), entity.getTitle(), entity.getLanguage());
+					entity.getId(), entity.getTitle(), entity.getLanguage());
 
 			this.adminCmsService.saveOrUpdate(cms);
 			saveLog(sec, username_login, log);
@@ -300,7 +350,7 @@ public class AdminCmsController extends PageActionSupport {
 			modelAndView.setViewName("cms_update");
 			return modelAndView;
 		}
-		
+
 		modelAndView.addObject("message", "操作成功");
 		modelAndView.setViewName("redirect:/" + action + "list.action");
 		return modelAndView;
@@ -367,13 +417,23 @@ public class AdminCmsController extends PageActionSupport {
 	}
 
 	/**
+	 * 验证谷歌验证码
+	 */
+	protected void checkGoogleAuthCode(SecUser secUser, String code) {
+		if (!secUser.isGoogle_auth_bind()) {
+			throw new BusinessException("请先绑定谷歌验证器");
+		}
+		boolean checkCode = googleAuthService.checkCode(secUser.getGoogle_auth_secret(), code);
+		if (!checkCode) {
+			throw new BusinessException("谷歌验证码错误");
+		}
+	}
+
+	/**
 	 * 验证登录人资金密码
 	 */
 	protected void checkLoginSafeword(SecUser secUser, String operatorUsername, String loginSafeword) {
 //		SecUser sec = this.secUserService.findUserByLoginName(operatorUsername);
-		if (loginSafeword == null || loginSafeword.trim().isEmpty()) {
-			throw new BusinessException("请输入资金密码");
-		}
 		String sysSafeword = secUser.getSafeword();
 		String safeword_md5 = this.passwordEncoder.encodePassword(loginSafeword, operatorUsername);
 		if (!safeword_md5.equals(sysSafeword)) {
@@ -392,19 +452,4 @@ public class AdminCmsController extends PageActionSupport {
 		logService.saveSync(log);
 	}
 
-	/**
-	 * 验证谷歌验证码
-	 */
-	protected void checkGoogleAuthCode(SecUser secUser, String code) {
-		if (code == null || code.trim().isEmpty()) {
-			throw new BusinessException("请输入谷歌验证码");
-		}
-		if (!secUser.isGoogle_auth_bind()) {
-			throw new BusinessException("请先绑定谷歌验证器");
-		}
-		boolean checkCode = googleAuthService.checkCode(secUser.getGoogle_auth_secret(), code);
-		if (!checkCode) {
-			throw new BusinessException("谷歌验证码错误");
-		}
-	}
 }
