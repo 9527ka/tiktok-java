@@ -466,7 +466,7 @@ public class AdminSellerServiceImpl extends HibernateDaoSupport implements Admin
             //得到目标等级的下一个等级信息 list下标从0开始
             QueryMallLevelDTO nextMallLevelDto = levelInfoList.get(nextLevelIndex - 1);
             Long nextMallLevelDtoPopularizeUserCount = nextMallLevelDto.getPopularizeUserCount();
-            if (rechargeAmount>0 && currentChildNum >= nextMallLevelDtoPopularizeUserCount) {
+            if (currentChildNum >= nextMallLevelDtoPopularizeUserCount) {
                 throw new BusinessException("当前会员通过推广升级，无法操作降级");
             }
             if (rechargeAmount>0 && (rechargeAmount < currentMallLevelDto.getRechargeAmount() || rechargeAmount > nextMallLevelDto.getRechargeAmount())) {
