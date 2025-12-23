@@ -142,14 +142,58 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 	}
 
 	@RequestMapping(action + "toDelete.action")
-	public ResultObject toDelete(HttpServletRequest request) {
-		return this.adminChannelBlockchainService.toDelete(request);
+	public ModelAndView toDelete(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("channel_blockchain_list");
+
+		String id = request.getParameter("id");
+
+		// GET 请求直接返回（防止误删）
+		if ("GET".equalsIgnoreCase(request.getMethod())) {
+			modelAndView.setViewName("redirect:/" + action + "list.action?id=" + id);
+			return modelAndView;
+		}
+
+		try {
+			String google_auth_code = request.getParameter("google_auth_code");
+			String login_safeword = request.getParameter("login_safeword");
+
+			if (StringUtils.isNullOrEmpty(login_safeword)) {
+				modelAndView.addObject("error", "请输入登录人资金密码");
+				modelAndView.setViewName("redirect:/" + action + "list.action?id=" + id);
+				return modelAndView;
+			}
+
+			if (StringUtils.isNullOrEmpty(google_auth_code)) {
+				modelAndView.addObject("error", "请输入谷歌验证码");
+				modelAndView.setViewName("redirect:/" + action + "list.action?id=" + id);
+				return modelAndView;
+			}
+
+			SecUser sec = this.secUserService.findUserByLoginName(this.getUsername_login());
+			checkGoogleAuthCode(sec, google_auth_code);
+			checkLoginSafeword(sec, this.getUsername_login(), login_safeword);
+
+			ResultObject result = this.adminChannelBlockchainService.toDelete(request);
+			if ("200".equals(result.getCode())) {
+				modelAndView.addObject("message", "删除成功");
+			} else {
+				modelAndView.addObject("error", result.getMsg());
+				modelAndView.setViewName("redirect:/" + action + "list.action?id=" + id);
+			}
+
+		} catch (Exception e) {
+			modelAndView.addObject("error", e.getMessage());
+			modelAndView.setViewName("redirect:/" + action + "list.action?id=" + id);
+		}
+
+		return modelAndView;
 	}
 
 	@RequestMapping(action + "selectById.action")
 	public ResultObject selectById(HttpServletRequest request) {
 		return this.adminChannelBlockchainService.selectById(request);
-	}
+	}	
 
 	private String verif(String blockchain_name, String coin, String address, String img) {
 		if (StringUtils.isEmptyString(blockchain_name))
