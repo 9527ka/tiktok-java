@@ -68,7 +68,10 @@
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 		<property name="secUserService" ref="secUserService" />
 		<property name="walletLogService" ref="walletLogService" />
-		<property name="tipService" ref="tipService" />		
+		<property name="tipService" ref="tipService" />
+		<property name="walletService" ref="walletService" />
+		<property name="adminSellerService" ref="adminSellerService" />
+		<property name="userMetricsService" ref="userMetricsService" />
 	</bean>
 	
 	<bean id="adminChannelBlockchainService"
