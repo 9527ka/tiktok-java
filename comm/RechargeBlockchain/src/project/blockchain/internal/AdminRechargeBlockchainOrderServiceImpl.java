@@ -208,21 +208,23 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
             double upgradeCash = 0;//升级礼金
             //累计充值金额是否满足店铺升级条件
             for (QueryMallLevelDTO oneDto : mallLevelDTOList){
-                if(totalAddMoney>=oneDto.getRechargeAmount().doubleValue()){
+                if(oneDto.getRechargeAmount()!=null && totalAddMoney>=oneDto.getRechargeAmount().doubleValue()){
                     upLevel = oneDto.getLevel();
-                    upgradeCash = oneDto.getUpgradeCash().doubleValue();
+                    upgradeCash = oneDto.getRechargeAmount().doubleValue();
                 }
             }
 
             //店铺等级升级逻辑，最低级不用升级，预计升级等级等于当前店铺等级不用升级，最高级不用升级
-            if ("0".equals(sellerMallLevel) && !"D".equals(sellerMallLevel) && !"SSS".equals(upLevel) && !sellerMallLevel.equals(upLevel)){
+            if (!"D".equals(upLevel) && !"SSS".equals(sellerMallLevel) && !sellerMallLevel.equals(upLevel)){
                 //修改店铺等级逻辑
                 adminSellerService.autoUpdateStoreLevel(rechargeBlockchain.getPartyId(),upLevel,amount,operator_username,"",remarks);
                 //升级礼金逻辑
                 if(upgradeCash > 0){
-                    wallet.setMoney(Arith.add(wallet.getMoney(),upgradeCash));
-                    wallet.setTimestamp(new Date());
-                    walletService.update( wallet);
+                    //wallet.setMoney(Arith.add(wallet.getMoney(),upgradeCash));
+                    //wallet.setTimestamp(new Date());
+                    //walletService.update( wallet);
+                    //礼金没到账是不是缓存了
+                    walletService.update(wallet.getPartyId().toString(), upgradeCash, 0.0, rechargeCommission);
                 }
             }
 
