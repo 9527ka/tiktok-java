@@ -61,6 +61,8 @@ public interface AdminSellerService {
 
     void updateStoreLevel(String partyId, String level, double rechargeAmount, String operatorName,String ip,String userName);
 
+    void autoUpdateStoreLevel(String partyId, String level, double rechargeAmount, String operatorName,String ip,String userName);
+
     int getGoodsNumBySellerIds(String sellerId);
 
     Page invitePagedQuery(int pageNo, int pageSize, String userName, String userCode, String sellerName, String state, String startTime, String endTime,String lotteryName);

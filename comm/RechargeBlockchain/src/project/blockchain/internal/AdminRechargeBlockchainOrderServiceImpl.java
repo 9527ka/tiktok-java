@@ -1,10 +1,6 @@
 package project.blockchain.internal;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cn.hutool.core.bean.BeanUtil;
 import kernel.util.Arith;
@@ -25,7 +21,6 @@ import project.Constants;
 import project.blockchain.AdminRechargeBlockchainOrderService;
 import project.blockchain.RechargeBlockchain;
 import project.blockchain.RechargeBlockchainService;
-import project.invest.vip.AdminVipService;
 import project.log.Log;
 import project.log.LogService;
 import project.mall.seller.AdminSellerService;
@@ -161,7 +156,7 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
             //店铺信息
             Seller seller = adminSellerService.findSellerById(rechargeBlockchain.getPartyId());
             //当前店铺等级
-            String sellerMallLevel = seller.getMallLevel()==null ? "" : seller.getMallLevel();
+            String sellerMallLevel = seller.getMallLevel()==null ? "D" : seller.getMallLevel();
 
             //当前充值的时间到账金额
             double amount = Double.valueOf(transfer_usdt);
@@ -175,53 +170,62 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
             //店铺等级配置信息
             Criteria criteria = getHibernateTemplate().getSessionFactory().getCurrentSession().createCriteria(MallLevel.class);
             List<MallLevel> list = criteria.list();
+            List<QueryMallLevelDTO> mallLevelDTOList = new ArrayList<>();
             for (MallLevel mallLevel : list) {
-                mallLevel.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(),100));
-                mallLevel.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(),100));
-                mallLevel.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(),100));
+                mallLevel.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(), 100));
+                mallLevel.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(), 100));
+                mallLevel.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(), 100));
 
                 MallLevelCondExpr mallLevelCondExpr = JsonUtils.json2Object(mallLevel.getCondExpr(), MallLevelCondExpr.class);
                 List<MallLevelCondExpr.Param> params = mallLevelCondExpr.getParams();
 
                 QueryMallLevelDTO oneDto = new QueryMallLevelDTO();
                 BeanUtil.copyProperties(mallLevel, oneDto);
-                params.forEach(e ->{
-                    if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.RECHARGE_AMOUNT.getCode())){
+                params.forEach(e -> {
+                    if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.RECHARGE_AMOUNT.getCode())) {
                         oneDto.setRechargeAmount(Long.parseLong(e.getValue()));
                     }
-                    if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.POPULARIZE_UNDERLING_NUMBER.getCode())){
+                    if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.POPULARIZE_UNDERLING_NUMBER.getCode())) {
                         oneDto.setPopularizeUserCount(Long.parseLong(e.getValue()));
                     }
                 });
 
-                //配置的即将升级的店铺等级，脏数据不处理
+                //配置的即将升级的店铺等级，脏数据不处理，店铺等级D不处理（最低级是默认的，不需要处理）
                 String level = mallLevel.getLevel();
-                if (StringUtils.isNullOrEmpty( level)){
+                if (StringUtils.isNullOrEmpty(level) || "D".equals(level)){
                     continue;
                 }
 
                 //升级店铺所需累计充值金额，脏数据不处理
-                if (oneDto.getRechargeAmount()==null){
+                if (oneDto.getRechargeAmount()==null || oneDto.getRechargeAmount()<=0){
                     continue;
                 }
 
-                double rechargeAmount = oneDto.getRechargeAmount().doubleValue();
+                mallLevelDTOList.add(oneDto);
+            }
 
-                //升级礼金
-                double upgradeCash = mallLevel.getUpgradeCash()==null ? 0 : mallLevel.getUpgradeCash();
-
-                //当累计充值金额大于或等级店铺升级条件满足时，并且当前店铺等级不等于即将升级的等级，就更新店铺等级
-                if (totalAddMoney >= rechargeAmount && !sellerMallLevel.equals(level)){
-                    //修改店铺等级逻辑
-                    adminSellerService.updateStoreLevel(rechargeBlockchain.getPartyId(),level,0,operator_username,"127.0.0.1",remarks);
-                    //升级礼金逻辑
-                    if(upgradeCash > 0){
-                        wallet.setMoney(Arith.add(wallet.getMoney(),upgradeCash));
-                        wallet.setTimestamp(new Date());
-                        walletService.update( wallet);
-                    }
+            String upLevel = sellerMallLevel;//即将升级的店铺等级
+            double upgradeCash = 0;//升级礼金
+            //累计充值金额是否满足店铺升级条件
+            for (QueryMallLevelDTO oneDto : mallLevelDTOList){
+                if(totalAddMoney>=oneDto.getRechargeAmount().doubleValue()){
+                    upLevel = oneDto.getLevel();
+                    upgradeCash = oneDto.getUpgradeCash().doubleValue();
                 }
             }
+
+            //店铺等级升级逻辑，最低级不用升级，预计升级等级等于当前店铺等级不用升级，最高级不用升级
+            if ("0".equals(sellerMallLevel) && !"D".equals(sellerMallLevel) && !"SSS".equals(upLevel) && !sellerMallLevel.equals(upLevel)){
+                //修改店铺等级逻辑
+                adminSellerService.autoUpdateStoreLevel(rechargeBlockchain.getPartyId(),upLevel,amount,operator_username,"",remarks);
+                //升级礼金逻辑
+                if(upgradeCash > 0){
+                    wallet.setMoney(Arith.add(wallet.getMoney(),upgradeCash));
+                    wallet.setTimestamp(new Date());
+                    walletService.update( wallet);
+                }
+            }
+
         }catch (Exception e){
             logger.error("更新充值后店铺等级，报错信息为：" , e);
         }
@@ -238,6 +242,24 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
             logger.error("判断邀请奖励报错，报错信息为：" , e);
         }
         return map;
+    }
+
+    /**
+     * 判断店铺等级是否可以升级
+     */
+    private boolean canUpLevel(String sellerMallLevel, String level) {
+        //店铺等级索引
+        Map<String, Integer> levelSortMap = new HashMap<>();
+        levelSortMap.put("D", 0);
+        levelSortMap.put("C", 1);
+        levelSortMap.put("B", 2);
+        levelSortMap.put("A", 3);
+        levelSortMap.put("S", 4);
+        levelSortMap.put("SS", 5);
+        levelSortMap.put("SSS", 6);
+
+        return levelSortMap.get(sellerMallLevel) < levelSortMap.get(level);
+
     }
 
     /**

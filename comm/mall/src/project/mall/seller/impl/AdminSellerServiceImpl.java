@@ -466,10 +466,10 @@ public class AdminSellerServiceImpl extends HibernateDaoSupport implements Admin
             //得到目标等级的下一个等级信息 list下标从0开始
             QueryMallLevelDTO nextMallLevelDto = levelInfoList.get(nextLevelIndex - 1);
             Long nextMallLevelDtoPopularizeUserCount = nextMallLevelDto.getPopularizeUserCount();
-            if (currentChildNum >= nextMallLevelDtoPopularizeUserCount) {
+            if (rechargeAmount>0 && currentChildNum >= nextMallLevelDtoPopularizeUserCount) {
                 throw new BusinessException("当前会员通过推广升级，无法操作降级");
             }
-            if (rechargeAmount>0 && (rechargeAmount < currentMallLevelDto.getRechargeAmount() || rechargeAmount > nextMallLevelDto.getRechargeAmount())) {
+            if (rechargeAmount < currentMallLevelDto.getRechargeAmount() || rechargeAmount > nextMallLevelDto.getRechargeAmount()) {
                 throw new BusinessException("有效充值金额需在:" + currentMallLevelDto.getRechargeAmount() + "-" + nextMallLevelDto.getRechargeAmount() + "之间");
             }
         }
@@ -495,10 +495,8 @@ public class AdminSellerServiceImpl extends HibernateDaoSupport implements Admin
             userMetrics = userMetricsService.save(userMetrics);
         }
         beforeAmount = new BigDecimal(userMetrics.getStoreMoneyRechargeAcc()).setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
-        if(rechargeAmount>0){
-            userMetrics.setStoreMoneyRechargeAcc(rechargeAmount);
-            userMetricsService.update(userMetrics);
-        }
+        userMetrics.setStoreMoneyRechargeAcc(rechargeAmount);
+        userMetricsService.update(userMetrics);
         afterAmount = new BigDecimal(userMetrics.getStoreMoneyRechargeAcc()).setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
 
 
@@ -510,6 +508,47 @@ public class AdminSellerServiceImpl extends HibernateDaoSupport implements Admin
         log.setUsername(userName);
         logService.saveAsyn(log);
     }
+
+    @Override
+    public void autoUpdateStoreLevel(String partyId, String level, double rechargeAmount, String operatorName, String ip, String userName) {
+
+        Seller seller = this.sellerService.getSeller(partyId);
+        seller.setTimestamp(new Date());
+        seller.setMallLevel(level);
+        Date now = new Date();
+        this.sellerService.updateSeller(seller);
+//      更新累计充值金额
+        UserMetrics userMetrics = this.userMetricsService.getByPartyId(partyId);
+        double beforeAmount = 0D;
+        double afterAmount = 0D;
+        if (userMetrics == null) {
+            userMetrics = new UserMetrics();
+            userMetrics.setAccountBalance(0.0D);
+            userMetrics.setMoneyRechargeAcc(0.0D);
+            userMetrics.setMoneyWithdrawAcc(0.0D);
+            userMetrics.setPartyId(seller.getId().toString());
+            userMetrics.setStatus(1);
+            userMetrics.setTotleIncome(0.0D);
+            userMetrics.setCreateTime(now);
+            userMetrics.setUpdateTime(now);
+            userMetrics.setStoreMoneyRechargeAcc(0D);
+            userMetrics = userMetricsService.save(userMetrics);
+        }
+        beforeAmount = new BigDecimal(userMetrics.getStoreMoneyRechargeAcc()).setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+        double storeMoneyRechargeAcc = userMetrics.getStoreMoneyRechargeAcc()==null?0:userMetrics.getStoreMoneyRechargeAcc();
+        userMetrics.setStoreMoneyRechargeAcc(Arith.add(storeMoneyRechargeAcc, rechargeAmount));
+        userMetricsService.update(userMetrics);
+        afterAmount = new BigDecimal(userMetrics.getStoreMoneyRechargeAcc()).setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+
+        Log log = new Log();
+        log.setCategory(Constants.LOG_CATEGORY_SECURITY);
+        log.setLog(operatorName + "auto修改了店铺升级累计有效充值金额，修改前金额为" + beforeAmount + "修改后金额为：" + afterAmount + "操作ip[" + ip + "]");
+        log.setPartyId(partyId);
+        log.setOperator(operatorName);
+        log.setUsername(userName);
+        logService.saveAsyn(log);
+    }
+
 
     @Override
     public void updateHighOpinion(String partyId, Double highOpinion) {
