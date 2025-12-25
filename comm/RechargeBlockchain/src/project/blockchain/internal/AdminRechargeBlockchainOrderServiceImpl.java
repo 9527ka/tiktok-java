@@ -3,6 +3,7 @@ package project.blockchain.internal;
 import java.util.*;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import kernel.util.Arith;
 import kernel.util.JsonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -152,11 +153,10 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
             RechargeBlockchain rechargeBlockchain = findByOrderNo(order_no);
             //钱包信息
             Wallet wallet = walletService.saveWalletByPartyId(rechargeBlockchain.getPartyId());
-
             //店铺信息
             Seller seller = adminSellerService.findSellerById(rechargeBlockchain.getPartyId());
             //当前店铺等级
-            String sellerMallLevel = seller.getMallLevel()==null ? "D" : seller.getMallLevel();
+            final String sellerMallLevel = seller.getMallLevel()==null || seller.getMallLevel().equals("0") ? "D" : seller.getMallLevel();
 
             //当前充值的时间到账金额
             double amount = Double.valueOf(transfer_usdt);
@@ -204,13 +204,34 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
                 mallLevelDTOList.add(oneDto);
             }
 
-            String upLevel = sellerMallLevel;//即将升级的店铺等级
+            Map<String, Integer> levelSortMap = new HashMap<>();
+            levelSortMap.put("D", 0);
+            levelSortMap.put("C", 1);
+            levelSortMap.put("B", 2);
+            levelSortMap.put("A", 3);
+            levelSortMap.put("S", 4);
+            levelSortMap.put("SS", 5);
+            levelSortMap.put("SSS", 6);
+
+            //按level排序levelInfoList
+            CollUtil.sort(mallLevelDTOList, new Comparator<QueryMallLevelDTO>() {
+                @Override
+                public int compare(QueryMallLevelDTO o1, QueryMallLevelDTO o2) {
+                    Integer seq1 = levelSortMap.get(o1.getLevel());
+                    Integer seq2 = levelSortMap.get(o2.getLevel());
+                    seq1 = seq1 == null ? 0 : seq1;
+                    seq2 = seq2 == null ? 0 : seq2;
+                    return seq1 - seq2;
+                }
+            });
+
+            String upLevel = seller.getMallLevel()==null || seller.getMallLevel().equals("0") ? "D" : seller.getMallLevel();//即将升级的店铺等级
             double upgradeCash = 0;//升级礼金
             //累计充值金额是否满足店铺升级条件
             for (QueryMallLevelDTO oneDto : mallLevelDTOList){
                 if(oneDto.getRechargeAmount()!=null && totalAddMoney>=oneDto.getRechargeAmount().doubleValue()){
                     upLevel = oneDto.getLevel();
-                    upgradeCash = oneDto.getRechargeAmount().doubleValue();
+                    upgradeCash = oneDto.getUpgradeCash()==null ? 0d : oneDto.getUpgradeCash().doubleValue();
                 }
             }
 
