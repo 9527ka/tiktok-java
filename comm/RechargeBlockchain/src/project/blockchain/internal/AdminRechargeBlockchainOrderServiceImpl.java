@@ -1,29 +1,31 @@
 package project.blockchain.internal;
 
-import java.util.*;
-
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSONObject;
+import kernel.exception.BusinessException;
 import kernel.util.Arith;
+import kernel.util.DateUtils;
 import kernel.util.JsonUtils;
+import kernel.util.StringUtils;
+import kernel.web.Page;
+import kernel.web.PagedQueryDao;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.security.providers.encoding.PasswordEncoder;
-
-import kernel.util.DateUtils;
-import kernel.exception.BusinessException;
-import kernel.util.StringUtils;
-import kernel.web.Page;
-import kernel.web.PagedQueryDao;
 import project.Constants;
 import project.blockchain.AdminRechargeBlockchainOrderService;
 import project.blockchain.RechargeBlockchain;
 import project.blockchain.RechargeBlockchainService;
 import project.log.Log;
 import project.log.LogService;
+import project.mall.goods.model.Evaluation;
 import project.mall.seller.AdminSellerService;
 import project.mall.seller.constant.UpgradeMallLevelCondParamTypeEnum;
 import project.mall.seller.dto.MallLevelCondExpr;
@@ -40,6 +42,8 @@ import project.wallet.WalletLogService;
 import project.wallet.WalletService;
 import security.SecUser;
 import security.internal.SecUserService;
+
+import java.util.*;
 
 public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
         implements AdminRechargeBlockchainOrderService {
@@ -147,28 +151,44 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
             throw new BusinessException("资金密码错误");
         }
         Map map = rechargeBlockchainService.saveSucceeded(order_no, operator_username, transfer_usdt, success_amount, rechargeCommission,remarks);
-
         try {
+
+            System.out.println("更新充值后店铺等级，逻辑开始" + "");
+
             //订单详情
             RechargeBlockchain rechargeBlockchain = findByOrderNo(order_no);
             //钱包信息
-            Wallet wallet = walletService.saveWalletByPartyId(rechargeBlockchain.getPartyId());
+            Wallet wallet = rechargeBlockchainService.saveWalletByPartyId(rechargeBlockchain.getPartyId());
             //店铺信息
-            Seller seller = adminSellerService.findSellerById(rechargeBlockchain.getPartyId());
+            Seller seller = getHibernateTemplate().get(Seller.class, rechargeBlockchain.getPartyId());
             //当前店铺等级
-            final String sellerMallLevel = seller.getMallLevel()==null || seller.getMallLevel().equals("0") ? "D" : seller.getMallLevel();
+            final String sellerMallLevel = seller==null || seller.getMallLevel()==null || seller.getMallLevel().equals("0") ? "D" : seller.getMallLevel();
 
             //当前充值的时间到账金额
             double amount = Double.valueOf(transfer_usdt);
-            UserMetrics userMetrics = userMetricsService.getByPartyId(rechargeBlockchain.getPartyId());
-            userMetrics.setUpdateTime(new Date());
-            Double storeMoneyRechargeAcc = userMetrics.getStoreMoneyRechargeAcc()==null ? 0d : userMetrics.getStoreMoneyRechargeAcc();
+            UserMetrics userMetrics = getByPartyId(rechargeBlockchain.getPartyId());
+            if (userMetrics == null) {
+                userMetrics = new UserMetrics();
+                userMetrics.setAccountBalance(0.0D);
+                userMetrics.setMoneyRechargeAcc(0.0D);
+                userMetrics.setMoneyWithdrawAcc(0.0D);
+                userMetrics.setPartyId(seller.getId().toString());
+                userMetrics.setStatus(1);
+                userMetrics.setTotleIncome(0.0D);
+                userMetrics.setCreateTime(new Date());
+                userMetrics.setUpdateTime(new Date());
+                userMetrics.setStoreMoneyRechargeAcc(amount);
+                this.getHibernateTemplate().save(userMetrics);
+            }else {
+                double storeMoneyRechargeAccAdd = userMetrics.getStoreMoneyRechargeAcc()==null?0:userMetrics.getStoreMoneyRechargeAcc();
+                userMetrics.setStoreMoneyRechargeAcc(Arith.add(storeMoneyRechargeAccAdd, amount));
+                this.getHibernateTemplate().update(userMetrics);
+            }
+            Double storeMoneyRechargeAcc = userMetrics==null || userMetrics.getStoreMoneyRechargeAcc()==null ? 0d : userMetrics.getStoreMoneyRechargeAcc();
             double totalAddMoney = Arith.add(storeMoneyRechargeAcc, amount);
-            userMetrics.setStoreMoneyRechargeAcc(totalAddMoney);//更新累计充值金额
-            userMetricsService.update(userMetrics);
 
             //店铺等级配置信息
-            Criteria criteria = getHibernateTemplate().getSessionFactory().getCurrentSession().createCriteria(MallLevel.class);
+            Criteria criteria = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createCriteria(MallLevel.class);
             List<MallLevel> list = criteria.list();
             List<QueryMallLevelDTO> mallLevelDTOList = new ArrayList<>();
             for (MallLevel mallLevel : list) {
@@ -183,10 +203,18 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
                 BeanUtil.copyProperties(mallLevel, oneDto);
                 params.forEach(e -> {
                     if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.RECHARGE_AMOUNT.getCode())) {
-                        oneDto.setRechargeAmount(Long.parseLong(e.getValue()));
+                     try {
+                            oneDto.setRechargeAmount(Long.parseLong(e.getValue()));
+                        } catch (Exception ex) {
+                            logger.error("充值金额转换异常", ex);
+                        }
                     }
                     if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.POPULARIZE_UNDERLING_NUMBER.getCode())) {
-                        oneDto.setPopularizeUserCount(Long.parseLong(e.getValue()));
+                        try {
+                            oneDto.setPopularizeUserCount(Long.parseLong(e.getValue()));
+                        } catch (Exception ex) {
+                            logger.error("团队人数转换异常", ex);
+                        }
                     }
                 });
 
@@ -227,27 +255,36 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
 
             String upLevel = seller.getMallLevel()==null || seller.getMallLevel().equals("0") ? "D" : seller.getMallLevel();//即将升级的店铺等级
             double upgradeCash = 0;//升级礼金
+            double profitRationMax = 0;
             //累计充值金额是否满足店铺升级条件
             for (QueryMallLevelDTO oneDto : mallLevelDTOList){
-                if(oneDto.getRechargeAmount()!=null && totalAddMoney>=oneDto.getRechargeAmount().doubleValue()){
+                double rechargeAmount = oneDto.getRechargeAmount().doubleValue();
+                if(rechargeAmount>0 && totalAddMoney>=rechargeAmount){
                     upLevel = oneDto.getLevel();
                     upgradeCash = oneDto.getUpgradeCash()==null ? 0d : oneDto.getUpgradeCash().doubleValue();
+                    profitRationMax = oneDto.getProfitRationMax();
                 }
             }
 
             //店铺等级升级逻辑，最低级不用升级，预计升级等级等于当前店铺等级不用升级，最高级不用升级
             if (!"D".equals(upLevel) && !"SSS".equals(sellerMallLevel) && !sellerMallLevel.equals(upLevel)){
                 //修改店铺等级逻辑
-                adminSellerService.autoUpdateStoreLevel(rechargeBlockchain.getPartyId(),upLevel,amount,operator_username,"",remarks);
+                if(seller!=null){
+                    seller.setTimestamp(new Date());
+                    seller.setMallLevel(upLevel);
+                    this.getHibernateTemplate().update( seller);
+                }
+                //adminSellerService.autoUpdateStoreLevel(rechargeBlockchain.getPartyId(),upLevel,amount,operator_username,"",remarks);
+
                 //升级礼金逻辑
                 if(upgradeCash > 0){
-                    //wallet.setMoney(Arith.add(wallet.getMoney(),upgradeCash));
-                    //wallet.setTimestamp(new Date());
-                    //walletService.update( wallet);
-                    //礼金没到账是不是缓存了
-                    walletService.update(wallet.getPartyId().toString(), upgradeCash, 0.0, rechargeCommission);
+                    wallet.setMoney(Arith.add(wallet.getMoney(),upgradeCash));
+                    wallet.setTimestamp(new Date());
+                    rechargeBlockchainService.updateWallet(wallet,upgradeCash,order_no,rechargeBlockchain.getPartyId(),upLevel,profitRationMax,"升级礼金");
                 }
             }
+
+            System.out.println("更新充值后店铺等级，逻辑结束" + "");
 
         }catch (Exception e){
             logger.error("更新充值后店铺等级，报错信息为：" , e);
@@ -267,24 +304,17 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
         return map;
     }
 
-    /**
-     * 判断店铺等级是否可以升级
-     */
-    private boolean canUpLevel(String sellerMallLevel, String level) {
-        //店铺等级索引
-        Map<String, Integer> levelSortMap = new HashMap<>();
-        levelSortMap.put("D", 0);
-        levelSortMap.put("C", 1);
-        levelSortMap.put("B", 2);
-        levelSortMap.put("A", 3);
-        levelSortMap.put("S", 4);
-        levelSortMap.put("SS", 5);
-        levelSortMap.put("SSS", 6);
+    public UserMetrics getByPartyId(String partyId) {
+        DetachedCriteria query = DetachedCriteria.forClass(UserMetrics.class);
+        query.add(Restrictions.eq("partyId", partyId));
+        query.add(Restrictions.eq("status", 1));
 
-        return levelSortMap.get(sellerMallLevel) < levelSortMap.get(level);
-
+        List<UserMetrics> list = (List<UserMetrics>) this.getHibernateTemplate().findByCriteria(query);
+        if (CollectionUtil.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
     }
-
     /**
      * 某个时间后未处理订单数量,没有时间则全部
      *

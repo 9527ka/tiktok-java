@@ -1,5 +1,7 @@
 package project.blockchain;
 
+import project.wallet.Wallet;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -71,4 +73,8 @@ public interface RechargeBlockchainService {
 	 * @param order_no
 	 */
     void updateFirstSuccessInviteReward(String order_no);
+
+	Wallet saveWalletByPartyId(String partyId);
+
+	void updateWallet(Wallet wallet ,double  amount,String order_no, String partyId, String upLevel,double profitRationMax,String remark);
 }

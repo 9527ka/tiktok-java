@@ -9,6 +9,7 @@ import kernel.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoader;
@@ -900,6 +901,55 @@ public class RechargeBlockchainServiceImpl extends HibernateDaoSupport implement
 				logger.error("mall_first_invite_recharge_rewards 系统参数配置不正确！");
 			}
 		}
+	}
+
+	@Override
+	public Wallet saveWalletByPartyId(String partyId) {
+		return walletService.saveWalletByPartyId(partyId);
+	}
+
+	@Override
+	public void updateWallet(Wallet wallet,double  amount ,String order_no ,String partyId, String upLevel ,double profitRationMax ,String remark) {
+
+		getHibernateTemplate().merge(wallet);
+
+		// 保存钱包
+		MoneyLog moneyLog = new MoneyLog();
+		moneyLog.setFreeze(0);
+		/*
+		 * 保存资金日志
+		 */
+		moneyLog.setCategory(Constants.MONEYLOG_CATEGORY_REWARD);
+		moneyLog.setAmount_before(Arith.sub(wallet.getMoney(), amount));
+		moneyLog.setAmount(amount);
+		moneyLog.setAmount_after(wallet.getMoney());
+
+		moneyLog.setLog("充值订单订单[" + order_no + "]，店铺升级["+upLevel+"]");
+		moneyLog.setPartyId(partyId);
+		moneyLog.setWallettype(Constants.WALLET);
+		moneyLog.setContent_type(Constants.MONEYLOG_CONTENT_REWARD);
+		moneyLog.setCreateTime(new Date());
+		if (StringUtils.isNotEmpty(remark)){
+			moneyLog.setRemarks(remark);
+		}
+		moneyLogService.save(moneyLog);
+
+		// 更新店铺的利润比例
+		if (profitRationMax > 0){
+			try {
+				NamedParameterJdbcTemplate nameJdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
+				Map<String, Object> params = new HashMap<>();
+				params.put("sellerId", partyId);
+				params.put("profitRatio", profitRationMax);
+
+				String sql = "update T_MALL_SELLER_GOODS set PROFIT_RATIO = :profitRatio where SELLER_ID = :sellerId";
+				nameJdbc.update(sql, params);
+			}catch (Exception e){
+				logger.error("保存钱包日志失败！", e);
+			}
+		}
+
+
 	}
 
 	public List<RechargeBlockchain> findSuccessByPartyId(String partyId) {
