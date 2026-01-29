@@ -361,35 +361,35 @@
 
 								<div class="customerItem">
 									姓名
-									<input id="username" class="form-control" type="text" disabled>
+									<input id="username" class="form-control" type="text">
 								</div>
 								<div class="customerItem">
 									电子邮件
-									<input id="email" class="form-control" type="text" disabled>
+									<input id="email" class="form-control" type="text">
 								</div>
 								<div class="customerItem">
 									手机号
-									<input id="mobile" class="form-control" type="text" disabled>
+									<input id="mobile" class="form-control" type="text">
 								</div>
 								<div class="customerItem">
 									国家
-									<input id="country" class="form-control" type="text" disabled>
+									<input id="country" class="form-control" type="text">
 								</div>
 								<div class="customerItem">
 									州
-									<input class="form-control" id="province" type="text" disabled>
+									<input class="form-control" id="province" type="text">
 								</div>
 								<div class="customerItem">
 									城市
-									<input class="form-control" id="city" type="text" disabled>
+									<input class="form-control" id="city" type="text">
 								</div>
 								<div class="customerItem">
 									邮政编码
-									<input class="form-control" id="zipcode" type="number" disabled>
+									<input class="form-control" id="zipcode" type="number">
 								</div>
 								<div class="customerItem">
 									地址
-									<textarea class="form-control" id="homeaddress" cols="25" rows="4" disabled></textarea>
+									<textarea class="form-control" id="homeaddress" cols="25" rows="4"></textarea>
 								</div>
 							</div>
 						</div>
@@ -413,7 +413,7 @@
 
 							<div class="methodText" style="margin-left: 20px;">订单数量: </div>
 							<div>
-								<input class="form-control" id="orderCount" type="number" disabled>
+								<input class="form-control" id="orderCount" type="number">
 							</div>
 
 						</div>

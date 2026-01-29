@@ -79,15 +79,15 @@ public class AdminVipController extends PageActionSupport {
         List<QueryMallLevelDTO> levelInfoList = new ArrayList();
         List<MallLevel> list = page.getElements();
         for (MallLevel mallLevel : list) {
-            mallLevel.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(),100));
-            mallLevel.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(),100));
-            mallLevel.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(),100));
-
             MallLevelCondExpr mallLevelCondExpr = JsonUtils.json2Object(mallLevel.getCondExpr(), MallLevelCondExpr.class);
             List<MallLevelCondExpr.Param> params = mallLevelCondExpr.getParams();
 
             QueryMallLevelDTO oneDto = new QueryMallLevelDTO();
             BeanUtil.copyProperties(mallLevel, oneDto);
+            // 在DTO上进行百分比转换，避免修改原始实体对象导致Hibernate脏检查误写入数据库
+            oneDto.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(),100));
+            oneDto.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(),100));
+            oneDto.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(),100));
             params.forEach(e ->{
                 if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.RECHARGE_AMOUNT.getCode())){
                     oneDto.setRechargeAmount(Long.parseLong(e.getValue()));
@@ -112,20 +112,23 @@ public class AdminVipController extends PageActionSupport {
     public ModelAndView toUpdate(HttpServletRequest request) {
 
         ModelAndView model = new ModelAndView();
-        MallLevel mallLevel;
+        QueryMallLevelDTO mallLevelDTO;
         model.setViewName("admin_vip_update");
         try {
             String id = request.getParameter("id");
             if( id == null ){
                 throw new BusinessException("系统错误");
             }
-            mallLevel = adminVipService.findById(id);
+            MallLevel mallLevel = adminVipService.findById(id);
             if(mallLevel == null) {
                 throw new BusinessException("刷新重试");
             }
-            mallLevel.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(),100));
-            mallLevel.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(),100));
-            mallLevel.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(),100));
+            // 使用DTO避免直接修改实体对象导致Hibernate脏检查误写入数据库
+            mallLevelDTO = new QueryMallLevelDTO();
+            BeanUtil.copyProperties(mallLevel, mallLevelDTO);
+            mallLevelDTO.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(),100));
+            mallLevelDTO.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(),100));
+            mallLevelDTO.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(),100));
             if (null !=mallLevel.getCondExpr()){
                 MallLevelCondExpr mallLevelCondExpr = JsonUtils.json2Object(mallLevel.getCondExpr(), MallLevelCondExpr.class);
                 List<MallLevelCondExpr.Param> params = mallLevelCondExpr.getParams();
@@ -149,7 +152,7 @@ public class AdminVipController extends PageActionSupport {
             model.addObject("error", "[ERROR] " + t.getMessage());
             return model;
         }
-        model.addObject("mallLevel",mallLevel);
+        model.addObject("mallLevel",mallLevelDTO);
         return model;
     }
 

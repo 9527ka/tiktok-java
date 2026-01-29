@@ -1189,15 +1189,6 @@ public class AdminSellersController extends PageActionSupport {
                 throw new BusinessException("商铺记录不存在");
             }
 
-//            Integer oldFakeSoldNum = seller.getFakeSoldNum();
-//            if (oldFakeSoldNum == null) {
-//                oldFakeSoldNum = 0;
-//            }
-//
-//            if (oldFakeSoldNum > fakeSoldNum) {
-//                throw new BusinessException("商铺的虚假销量值不能比以前的小，旧的虚假销量值为:" + oldFakeSoldNum);
-//            }
-
             sellerService.updateFakeSoldNum(sellerId, fakeSoldNum);
         } catch (BusinessException e) {
             model.addObject("error", e.getMessage());

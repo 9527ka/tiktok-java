@@ -184,17 +184,15 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
                 userMetrics.setStoreMoneyRechargeAcc(Arith.add(storeMoneyRechargeAccAdd, amount));
                 this.getHibernateTemplate().update(userMetrics);
             }
-            Double storeMoneyRechargeAcc = userMetrics==null || userMetrics.getStoreMoneyRechargeAcc()==null ? 0d : userMetrics.getStoreMoneyRechargeAcc();
-            double totalAddMoney = Arith.add(storeMoneyRechargeAcc, amount);
+            // userMetrics.storeMoneyRechargeAcc 已经在上面更新过（包含本次充值amount），无需再次累加
+            double totalAddMoney = userMetrics.getStoreMoneyRechargeAcc() == null ? 0d : userMetrics.getStoreMoneyRechargeAcc();
 
             //店铺等级配置信息
             Criteria criteria = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createCriteria(MallLevel.class);
             List<MallLevel> list = criteria.list();
             List<QueryMallLevelDTO> mallLevelDTOList = new ArrayList<>();
             for (MallLevel mallLevel : list) {
-                mallLevel.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(), 100));
-                mallLevel.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(), 100));
-                mallLevel.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(), 100));
+                // 使用DTO避免直接修改实体对象导致Hibernate脏检查误写入数据库
 
                 MallLevelCondExpr mallLevelCondExpr = JsonUtils.json2Object(mallLevel.getCondExpr(), MallLevelCondExpr.class);
                 List<MallLevelCondExpr.Param> params = mallLevelCondExpr.getParams();

@@ -469,8 +469,8 @@ public class AdminSellerServiceImpl extends HibernateDaoSupport implements Admin
             if (rechargeAmount>0 && currentChildNum >= nextMallLevelDtoPopularizeUserCount) {
                 throw new BusinessException("当前会员通过推广升级，无法操作降级");
             }
-            if (rechargeAmount < currentMallLevelDto.getRechargeAmount() || rechargeAmount > nextMallLevelDto.getRechargeAmount()) {
-                throw new BusinessException("有效充值金额需在:" + currentMallLevelDto.getRechargeAmount() + "-" + nextMallLevelDto.getRechargeAmount() + "之间");
+            if (rechargeAmount < currentMallLevelDto.getRechargeAmount()) {
+                throw new BusinessException("有效充值金额不能低于当前等级门槛:" + currentMallLevelDto.getRechargeAmount());
             }
         }
 

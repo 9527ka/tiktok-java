@@ -72,4 +72,14 @@ public class QueryMallLevelDTO {
      */
     private int teamNum;
 
+    /**
+     * 等级售价
+     */
+    private Double price;
+
+    /**
+     * 可售商品数量
+     */
+    private int goodsNum;
+
 }
