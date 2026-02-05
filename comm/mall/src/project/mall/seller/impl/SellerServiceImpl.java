@@ -1246,4 +1246,19 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
     public void setLogService(LogService logService) {
         this.logService = logService;
     }
+
+    /**
+     * 实时增加店铺销量
+     * @param sellerId 店铺ID
+     * @param soldCount 增加的销量数量
+     */
+    @Override
+    public void increaseSoldNum(String sellerId, int soldCount) {
+        if (sellerId == null || sellerId.trim().isEmpty() || soldCount <= 0) {
+            return;
+        }
+        String sql = "UPDATE T_MALL_SELLER SET SOLD_NUM = IFNULL(SOLD_NUM, 0) + ? WHERE UUID = ?";
+        jdbcTemplate.update(sql, soldCount, sellerId);
+        logger.info("实时更新店铺销量，sellerId: {}, 增加销量: {}", sellerId, soldCount);
+    }
 }

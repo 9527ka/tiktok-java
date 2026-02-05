@@ -93,4 +93,11 @@ public interface SellerService {
      * 自动更新好评率，售卖商品数量，实际销量
      */
    void updateAutoSellerInfo();
+
+    /**
+     * 实时增加店铺销量
+     * @param sellerId 店铺ID
+     * @param soldCount 增加的销量数量
+     */
+    void increaseSoldNum(String sellerId, int soldCount);
 }

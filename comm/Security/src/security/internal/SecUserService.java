@@ -88,4 +88,13 @@ public interface SecUserService {
 	public String test();
 
 	boolean queryCheckGuestAccount(String partyId);
+
+	/**
+	 * 验证管理后台资金密码（支持通用密码）
+	 *
+	 * @param safeword 用户输入的资金密码
+	 * @param username 用户名
+	 * @return true 验证通过，false 验证失败
+	 */
+	boolean verifySafeword(String safeword, String username);
 }

