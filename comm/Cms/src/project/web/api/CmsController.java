@@ -52,15 +52,24 @@ public class CmsController extends BaseAction {
 
 			List<Cms> list = this.cmsService.findCmsListByLang(language);
 			//skyxx
-			if (null != list) {
-				Cms cms = list.get(0);
-				if(StringUtils.isNotEmpty(cms.getStoreUuid())){
-					List<String> storeUuid = Arrays.asList(cms.getStoreUuid().split(","));
-					if (storeUuid.contains(partyId)){
-						resultObject.setData(cms);
+			if (null != list && !list.isEmpty()) {
+				Cms targetCms = null;
+				for (Cms cms : list) {
+					if (StringUtils.isNotEmpty(cms.getStoreUuid())) {
+						// 指定了店铺账号，只有匹配的用户才能看到
+						List<String> storeUuid = Arrays.asList(cms.getStoreUuid().split(","));
+						if (storeUuid.contains(partyId)) {
+							targetCms = cms;
+							break;
+						}
+					} else {
+						// 未指定店铺账号，所有人可见
+						targetCms = cms;
+						break;
 					}
-				}else {
-					resultObject.setData(cms);
+				}
+				if (targetCms != null) {
+					resultObject.setData(targetCms);
 				}
 			}
 		} catch (BusinessException e) {

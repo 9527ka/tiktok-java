@@ -147,6 +147,23 @@ public class MallOrdersJob {
     }
 
     /**
+     * 24 小时店铺浏览量自动增加: 每天 00:05 触发一次
+     * 调用现有 updateAutoIncreaseViewCount(), 给所有上架商品按规则虚增 VIRTUAL_VIEWS_NUM,
+     * 店铺级浏览数 = 该店铺所有商品 (VIEWS_NUM + VIRTUAL_VIEWS_NUM) 之和
+     */
+    @Scheduled(cron = "0 5 0 * * ?")
+    public void autoDailyShopViewIncreaseJob() {
+        long start = System.currentTimeMillis();
+        logger.info("**********24h 店铺浏览数自动增加开始**********");
+        try {
+            goodsOrdersService.updateAutoIncreaseViewCount();
+        } catch (Exception e) {
+            logger.error("店铺浏览数自增异常", e);
+        }
+        logger.info("24h 店铺浏览数自动增加完成, 花费时间:" + (System.currentTimeMillis() - start) + "ms");
+    }
+
+    /**
      * 自动评价
      */
     public void autoCommentJob() {

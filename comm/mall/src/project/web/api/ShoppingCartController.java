@@ -122,10 +122,28 @@ public class ShoppingCartController extends BaseAction {
                 // 取代 TODO
                 SellerGoodsSkuInfoVO sellerGoodSku = sellerGoodsService.findSellerGoodSku(sellerGoods, skuId);
                 //SellerGoodsSku sellerGoodSku = sellerGoodsService.findSellerGoodSku(sellerGoods, skuId);
-                Double sellingPrice = sellerGoodSku.getSellingPrice();
-                Double discountPrice = sellerGoodSku.getDiscountPrice();
-                //            这里返回的价格要跟生成订单的价格一致
-                o.put("sellingPrice", Arith.roundDown(Objects.isNull(discountPrice) || discountPrice == 0.0D ? sellingPrice : discountPrice, 2));
+                //            使用与商品列表相同的价格逻辑，确保购物车价格与列表一致
+                Double baseSellingPrice = sellerGoods.getSellingPrice();
+                Double resolvedDiscountPrice = null;
+                Date now = new Date();
+                Date dStart = sellerGoods.getDiscountStartTime();
+                Date dEnd = sellerGoods.getDiscountEndTime();
+                if (dStart != null && dEnd != null && dStart.before(now) && dEnd.after(now)) {
+                    resolvedDiscountPrice = sellerGoods.getDiscountPrice();
+                    // 如果数据库没有预存折扣价但有折扣比例，则动态计算
+                    if ((resolvedDiscountPrice == null || resolvedDiscountPrice == 0.0D) && sellerGoods.getDiscountRatio() != null) {
+                        resolvedDiscountPrice = Arith.mul(baseSellingPrice, Arith.sub(1.00D, sellerGoods.getDiscountRatio()));
+                    }
+                }
+                // sellingPrice：最终显示价格（有折扣用折扣价，无折扣用售价）
+                o.put("sellingPrice", Arith.roundDown(
+                        Objects.nonNull(resolvedDiscountPrice) && resolvedDiscountPrice > 0.0D ? resolvedDiscountPrice : baseSellingPrice, 2));
+                // 同时返回折扣信息供前端展示原价和折扣
+                if (Objects.nonNull(resolvedDiscountPrice) && resolvedDiscountPrice > 0.0D) {
+                    o.put("discountPrice", Arith.roundDown(resolvedDiscountPrice, 2));
+                    o.put("originalSellingPrice", Arith.roundDown(baseSellingPrice, 2));
+                }
+                o.put("discountRatio", sellerGoods.getDiscountRatio());
                 o.put("isShelf", sellerGoods.getIsShelf());//是否上架(上架1  不上架0)
                 o.put("isValid", sellerGoods.getIsValid());//是否删除(有效1  无效0)
                 SystemGoods systemGoods = sellerGoods.getSystemGoods();

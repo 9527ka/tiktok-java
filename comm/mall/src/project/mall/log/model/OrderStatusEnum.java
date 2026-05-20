@@ -32,6 +32,8 @@ public enum OrderStatusEnum implements Serializable {
     REFUND(8, "发起退款申请"),
     REFUND_SUCCESS(9, "退款成功"),
     REFUND_FAIL(10, "退款失败"),
+    ORDER_EVALUATION(11, "订单已评价"),
+    ORDER_TRACKING(12, "物流轨迹更新"),
     ;
 
     private Integer code;

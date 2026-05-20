@@ -302,6 +302,7 @@
 												<ul class="dropdown-menu" role="menu" style="overflow:scroll;height:240px;">
 													<li><a href="javascript:reject('${item.sellerId}','${item.remarks}')">备注</a></li>
 													<li><a href="javascript:setUp('${item.sellerId}','${item.baseTraffic}','${item.autoStart}','${item.autoEnd}')">设置访问量</a></li>
+													<li><a href="javascript:addShopViews('${item.sellerId}')">立即增加浏览数</a></li>
 													<li><a href="javascript:setAttention('${item.sellerId}','${item.reals}','${item.fake}')">设置关注人数</a></li>
 													<c:choose>
 														<c:when test="${item.recTime == '0'}">
@@ -561,19 +562,16 @@
 </div>
 
 <div class="form-group">
-
-	<form action="<%=basePath%>mall/seller/updateAttention.action"
-		  method="post" id="succeededForm">
-
-		<input type="hidden" name="pageNo" id="pageNo" value="${pageNo}">
-		<input type="hidden" name="seller_Ids" id="seller_Ids" value="${seller_Ids}">
-
 		<div class="col-sm-1">
 			<!-- 模态框（Modal） -->
 			<div class="modal fade" id="modal_set1" tabindex="-1" role="dialog"
 				 aria-labelledby="myModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
+						<form action="<%=basePath%>mall/seller/updateAttention.action"
+							  method="post" id="attentionForm">
+						<input type="hidden" name="pageNo" value="${pageNo}">
+						<input type="hidden" name="seller_Ids" id="seller_Ids" value="${seller_Ids}">
 
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal"
@@ -615,18 +613,16 @@
 
 						<div class="modal-footer" style="margin-top: 0;">
 							<button type="button" class="btn " data-dismiss="modal">关闭</button>
-							<button id="sub" type="submit" class="btn btn-default">确认</button>
+							<button type="button" class="btn btn-default" onclick="submitAttention(this);">确认</button>
 						</div>
 
+						</form>
 					</div>
 					<!-- /.modal-content -->
 				</div>
 				<!-- /.modal -->
 			</div>
 		</div>
-
-	</form>
-
 </div>
 <div class="form-group">
 
@@ -1145,6 +1141,34 @@
 		</div>
 	</div>
 </div>
+
+<!-- 模态框（Modal）: 立即增加店铺浏览数 -->
+<div class="modal fade" id="modal_add_views" tabindex="-1" role="dialog"
+	 aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content" style="width: 500px;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">立即增加店铺浏览数</h4>
+			</div>
+			<div class="modal-body">
+				<input id="addViews_sellerId" type="hidden" />
+				<div class="form-group">
+					<label>增加数量</label>
+					<input id="addViews_num" type="number" min="1" class="form-control"
+						   placeholder="输入正整数, 将自动平摊到该店铺所有上架商品" />
+				</div>
+				<div style="color:#888; font-size:12px; line-height:1.6;">
+					说明: 总浏览数将平均分摊到该店铺所有上架商品的虚拟浏览数 (VIRTUAL_VIEWS_NUM).
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" onclick="submitAddShopViews()">确认增加</button>
+			</div>
+		</div>
+	</div>
+</div>
 <!-- End Content -->
 <!-- //////////////////////////////////////////////////////////////////////////// -->
 
@@ -1185,6 +1209,36 @@
 		$("#auto_start").val(autoStart);
 		$("#auto_end").val(autoEnd);
 		$('#modal_set').modal("show");
+	}
+	function addShopViews(sellerId){
+		$("#addViews_sellerId").val(sellerId);
+		$("#addViews_num").val("");
+		$('#modal_add_views').modal("show");
+	}
+	function submitAddShopViews(){
+		var sellerId = $("#addViews_sellerId").val();
+		var num = $("#addViews_num").val();
+		if (!num || isNaN(num) || parseInt(num) <= 0) {
+			swal({title:"请输入有效的浏览数 (正整数)", type:"warning"});
+			return;
+		}
+		$.ajax({
+			url: '/wap/seller/goods!sellerViewsAdd.action',
+			type: 'POST',
+			data: {sellerId: sellerId, num: num},
+			success: function(res){
+				if (res && (res.code == '0' || res.code === 0)) {
+					var detail = res.data ? ("已分摊到 " + res.data.updatedGoods + " 件商品") : "";
+					swal({title:"操作成功", text:"店铺浏览数 +" + num + " " + detail, type:"success"},
+						function(){ $('#modal_add_views').modal("hide"); });
+				} else {
+					swal({title:"操作失败", text:(res && res.msg) || "", type:"error"});
+				}
+			},
+			error: function(){
+				swal({title:"操作失败", text:"网络异常", type:"error"});
+			}
+		});
 	}
 	function setCreditScore(sellerId,creditScore){
 		$("#sellerId1").val(sellerId);
@@ -1339,6 +1393,22 @@
 		$("#fakeAttention").val(fake);
 		$("#allAttention").val(allAttention);
 		$('#modal_set1').modal("show");
+	}
+
+	function submitAttention(btn){
+		var sellerId = $("#seller_Ids").val();
+		var fakeAttention = $("#fakeAttention").val();
+		if(!sellerId){
+			swal({title:"系统错误", timer:2000, showConfirmButton:false});
+			return;
+		}
+		btn.disabled = true;
+		btn.innerText = '提交中...';
+		$.post('<%=basePath%>mall/seller/updateAttention.action',
+			{seller_Ids: sellerId, fakeAttention: fakeAttention, pageNo: '${pageNo}'}
+		).always(function(){
+			location.reload();
+		});
 	}
 
 	function updateStatus(sellerId){

@@ -16,6 +16,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.hibernate.query.NativeQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,8 +105,14 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
         query.add(Property.forName("black").eq(0));
 //        query.addOrder(Order.desc("createTime"));
         if (isRec != null) {
-            query.add(Restrictions.gt("recTime", new Long(0)));
-            query.addOrder(Order.desc("recTime"));
+            // 推荐店铺 = 店铺下有任意 IS_PROMOTE=1 上架商品的店铺
+            DetachedCriteria sub = DetachedCriteria.forClass(project.mall.goods.model.SellerGoods.class)
+                    .add(Property.forName("isPromote").eq(1))
+                    .add(Property.forName("isShelf").eq(1))
+                    .add(Property.forName("isValid").eq(1))
+                    .setProjection(Projections.distinct(Projections.property("sellerId")));
+            query.add(Subqueries.propertyIn("id", sub));
+            query.addOrder(Order.desc("createTime"));
         }
 
         // 查询总条数

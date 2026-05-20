@@ -39,7 +39,7 @@ public class AdminChannelBlockchainServiceImpl extends HibernateDaoSupport imple
 		StringBuffer queryString = new StringBuffer(
 				" SELECT channelblockchain.UUID id,channelblockchain.BLOCKCHAIN_NAME blockchain_name,"
 						+ "channelblockchain.IMG img ,channelblockchain.COIN coin,  "
-						+ " channelblockchain.ADDRESS address ");
+						+ " channelblockchain.ADDRESS address, channelblockchain.ENABLED enabled, channelblockchain.SORT_NO sort_no ");
 
 		queryString.append(" FROM T_CHANNEL_BLOCKCHAIN channelblockchain WHERE 1 = 1 ");
 		Map<String, Object> parameters = new HashMap<>();
@@ -51,6 +51,7 @@ public class AdminChannelBlockchainServiceImpl extends HibernateDaoSupport imple
 			queryString.append(" and  channelblockchain.COIN like :coin ");
 			parameters.put("coin", "%" + coin_para + "%");
 		}
+		queryString.append(" ORDER BY channelblockchain.SORT_NO ASC, channelblockchain.COIN ASC ");
 		Page page = this.pagedQueryDao.pagedQuerySQL(pageNo, pageSize, queryString.toString(), parameters);
 		return page;
 	}
@@ -103,9 +104,15 @@ public class AdminChannelBlockchainServiceImpl extends HibernateDaoSupport imple
 			return resultObject;
 		}
 
-		String SQL = "INSERT INTO `T_CHANNEL_BLOCKCHAIN` (`UUID`, `BLOCKCHAIN_NAME`, `IMG`, `ADDRESS`, `COIN`, `AUTO`)" +
-				"VALUES (?,?,?,?,?,?)";
-		int update = jdbcTemplate.update(SQL, IdUtil.simpleUUID(), chain_name, "OBJK", address, coin, "N");
+		String enabledParam = request.getParameter("enabled");
+		String enabled = "N".equalsIgnoreCase(enabledParam) ? "N" : "Y";
+		String sortNoParam = request.getParameter("sort_no");
+		int sortNo = 0;
+		try { if (!StringUtils.isNullOrEmpty(sortNoParam)) sortNo = Integer.parseInt(sortNoParam.trim()); } catch (Exception e) { sortNo = 0; }
+
+		String SQL = "INSERT INTO `T_CHANNEL_BLOCKCHAIN` (`UUID`, `BLOCKCHAIN_NAME`, `IMG`, `ADDRESS`, `COIN`, `AUTO`, `ENABLED`, `SORT_NO`)" +
+				"VALUES (?,?,?,?,?,?,?,?)";
+		int update = jdbcTemplate.update(SQL, IdUtil.simpleUUID(), chain_name, "OBJK", address, coin, "N", enabled, sortNo);
 		if (update == 0){
 			resultObject.setCode("-1");
 			resultObject.setMsg("新增失败请重试");
@@ -148,8 +155,14 @@ public class AdminChannelBlockchainServiceImpl extends HibernateDaoSupport imple
 			return resultObject;
 		}
 
-		String SQL = "UPDATE T_CHANNEL_BLOCKCHAIN SET ADDRESS = ? ,COIN = ? , BLOCKCHAIN_NAME = ? WHERE UUID = ?";
-		int update = jdbcTemplate.update(SQL,address,coin,chain_name,id);
+		String enabledParam = request.getParameter("enabled");
+		String enabled = "N".equalsIgnoreCase(enabledParam) ? "N" : "Y";
+		String sortNoParam = request.getParameter("sort_no");
+		int sortNo = 0;
+		try { if (!StringUtils.isNullOrEmpty(sortNoParam)) sortNo = Integer.parseInt(sortNoParam.trim()); } catch (Exception e) { sortNo = 0; }
+
+		String SQL = "UPDATE T_CHANNEL_BLOCKCHAIN SET ADDRESS = ? ,COIN = ? , BLOCKCHAIN_NAME = ? , ENABLED = ? , SORT_NO = ? WHERE UUID = ?";
+		int update = jdbcTemplate.update(SQL,address,coin,chain_name,enabled,sortNo,id);
 		if (update == 0){
 			resultObject.setCode("-1");
 			resultObject.setMsg("修改失败请重试");

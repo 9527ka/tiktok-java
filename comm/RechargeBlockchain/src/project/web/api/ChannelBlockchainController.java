@@ -80,8 +80,11 @@ public class ChannelBlockchainController extends BaseAction {
 
 			String partyId = this.getLoginPartyId();
 			Party party = this.partyService.cachePartyBy(partyId, true);
-			data = this.channelBlockchainService.findAll().stream().filter(a-> !Strings.isNullOrEmpty(a.getAddress()) &&
-					!"-".equals(a.getAddress())).collect(Collectors.toList());
+			data = this.channelBlockchainService.findAll().stream()
+					.filter(a -> a.isEnabled())
+					.filter(a -> !Strings.isNullOrEmpty(a.getAddress()) && !"-".equals(a.getAddress()))
+					.sorted(java.util.Comparator.comparingInt(ChannelBlockchain::getSort_no))
+					.collect(Collectors.toList());
 			PartyBlockchain personBlockchain = null;
 			//Party agent = party.get
 

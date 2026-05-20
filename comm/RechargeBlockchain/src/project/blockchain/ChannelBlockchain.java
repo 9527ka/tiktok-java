@@ -45,6 +45,16 @@ public class ChannelBlockchain extends EntityObject<String> {
 	 */
 	private boolean auto = false;
 
+	/**
+	 * 显示开关 Y=显示 N=隐藏
+	 */
+	private boolean enabled = true;
+
+	/**
+	 * 排序值, 数值小的在前
+	 */
+	private int sort_no = 0;
+
 	public String getImg() {
 		return img;
 	}
@@ -115,5 +125,21 @@ public class ChannelBlockchain extends EntityObject<String> {
 
 	public void setRecharge_limit_max(double recharge_limit_max) {
 		this.recharge_limit_max = recharge_limit_max;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public int getSort_no() {
+		return sort_no;
+	}
+
+	public void setSort_no(int sort_no) {
+		this.sort_no = sort_no;
 	}
 }

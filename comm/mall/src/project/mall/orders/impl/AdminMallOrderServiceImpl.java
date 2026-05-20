@@ -19,6 +19,7 @@ import project.mall.log.OrderLogService;
 import project.mall.log.model.OrderLog;
 import project.mall.log.model.OrderStatusEnum;
 import project.mall.orders.AdminMallOrderService;
+import project.mall.orders.GoodsOrdersService;
 import project.mall.orders.model.MallOrdersPrize;
 import project.mall.seller.AdminSellerService;
 import project.party.PartyService;
@@ -51,6 +52,11 @@ public class AdminMallOrderServiceImpl extends HibernateDaoSupport implements Ad
     private SysparaService sysParaService;
     private AdminSellerService adminSellerService;
     private UserRecomService userRecomService;
+    private GoodsOrdersService goodsOrdersService;
+
+    public void setGoodsOrdersService(GoodsOrdersService goodsOrdersService) {
+        this.goodsOrdersService = goodsOrdersService;
+    }
 
     @Override
     public Page pagedQuery(int pageNo, int pageSize, String id, String contacts, String loginPartyId, String sellerName, String phone, Integer payStatus, String startTime,
@@ -424,6 +430,14 @@ public class AdminMallOrderServiceImpl extends HibernateDaoSupport implements Ad
                 orders.setUpTime(System.currentTimeMillis());
                 this.getHibernateTemplate().update(orders);
                 this.saveOrderLog(orders.getPartyId(), orders.getId().toString(), OrderStatusEnum.ORDER_SEND_CONFIRM, "订单" + orders.getId() + "订单已签收");
+                // admin 后台批量确认收货后, 自动好评 (与 portal 端确认收货行为一致)
+                if (goodsOrdersService != null) {
+                    try {
+                        goodsOrdersService.autoCommentOnReceipt(orders);
+                    } catch (Exception ex) {
+                        logger.error("自动好评失败 orderId=" + orders.getId() + " : " + ex.getMessage());
+                    }
+                }
             } else {
                 throw new BusinessException("订单：" + orders.getId() + "未在待收货状态(" + orders.getStatus() + ")，无法收货");
             }

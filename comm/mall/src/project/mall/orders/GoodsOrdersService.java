@@ -45,6 +45,11 @@ public interface GoodsOrdersService {
 
     void updateReceiptOrders(String partyId,String orderId);
 
+    /**
+     * 收货成功后自动生成好评. 供 admin 批量确认 / cron 自动收货等场景复用.
+     */
+    void autoCommentOnReceipt(MallOrdersPrize order);
+
     void updateReturnsOrdersByAdmin(String orderId,boolean agree,String reason);
 
     void updateReturnsOrders(String partyId,String orderId,String returnReason,String returnDetail);

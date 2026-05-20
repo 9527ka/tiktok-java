@@ -190,6 +190,14 @@ public class SellerGoodsController extends BaseAction {
         if (isHotStr != null) {
             isHot = Integer.valueOf(isHotStr);
         }
+        Integer isPromote = null;
+        String isPromoteStr = request.getParameter("isPromote");
+        if (isPromoteStr != null) {
+            try {
+                isPromote = Integer.valueOf(isPromoteStr);
+            } catch (Exception ignored) {
+            }
+        }
 
         if (StrUtil.isNotBlank(categoryId) && !Objects.equals(categoryId, "0")) {
             Category category = categoryService.getById(categoryId);
@@ -206,7 +214,7 @@ public class SellerGoodsController extends BaseAction {
         }
 
         MallPageInfo mallPageInfo = sellerGoodsService.listGoodsSell(pageInfo.getPageNum(), pageInfo.getPageSize(),
-                sellerId, categoryId, secondaryCategoryId, isNew, rec, isRec, isHot, isPrice, lang, is_discount);
+                sellerId, categoryId, secondaryCategoryId, isNew, rec, isRec, isHot, isPrice, lang, is_discount, isPromote);
 
         List<SellerGoods> list = mallPageInfo.getElements();
         JSONArray jsonArray = this.assemble(list, lang, partyId);
@@ -825,6 +833,39 @@ public class SellerGoodsController extends BaseAction {
         return resultObject;
     }
 
+
+    /**
+     * 获取某店铺的"本店推广流量商品" (IS_PROMOTE = 1)
+     * 用在商品详情页底部, 展示当前店铺勾选了推广位的商品.
+     *
+     * 入参: sellerId 必填, excludeGoodsId (排除当前正在浏览的商品), pageSize 默认 10
+     */
+    @PostMapping(action + "shopPromote.action")
+    public Object shopPromote(HttpServletRequest request) {
+        ResultObject resultObject = new ResultObject();
+        String sellerId = request.getParameter("sellerId");
+        if (StrUtil.isBlank(sellerId)) {
+            resultObject.setCode("1");
+            resultObject.setMsg("sellerId 不能为空");
+            return resultObject;
+        }
+        String excludeId = request.getParameter("excludeGoodsId");
+        int pageSize = 10;
+        try {
+            String ps = request.getParameter("pageSize");
+            if (ps != null && !ps.isEmpty()) pageSize = Integer.parseInt(ps);
+        } catch (Exception ignored) {
+        }
+
+        List<SellerGoods> promoteList = sellerGoodsService.listPromoteGoods(sellerId, excludeId, pageSize);
+        String lang = this.getLanguage(request);
+        String partyId = getLoginPartyId();
+        JSONArray jsonArray = this.assemble(promoteList, lang, partyId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("pageList", jsonArray);
+        resultObject.setData(data);
+        return resultObject;
+    }
 
     /**
      * 获取分类下的商品

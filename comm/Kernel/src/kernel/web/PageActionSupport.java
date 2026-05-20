@@ -69,28 +69,29 @@ public class PageActionSupport extends BaseSecurityAction {
         if (page == null) {
             return tabs;
         }
-        int pageCount = 10;
-
-        int thisPageNumber = page.getThisPageNumber();
-        for (int i = 5; i > 0; i--) {
-            if ((thisPageNumber - i) > 0) {
-                tabs.add(thisPageNumber - i);
-                pageCount--;
-            }
+        int total = page.getTotalPage();
+        int cur = page.getThisPageNumber();
+        if (total <= 1) {
+            if (total == 1) tabs.add(1);
+            return tabs;
         }
-        tabs.add(thisPageNumber);
-        for (int i = pageCount; i > 0; i--) {
-            if ((thisPageNumber + i) <= page.getTotalPage()) {
-                tabs.add(thisPageNumber + i);
-            }
-
+        if (total <= 10) {
+            for (int i = 1; i <= total; i++) tabs.add(i);
+            return tabs;
         }
-        Collections.sort(tabs, new Comparator<Integer>() {
-            public int compare(Integer arg0, Integer arg1) {
-                return arg0.compareTo(arg1);
+        // total > 10: 头 5 + 当前 ±1 + 尾 3, 之间用 -1 占位省略号
+        java.util.TreeSet<Integer> set = new java.util.TreeSet<Integer>();
+        for (int i = 1; i <= 5; i++) set.add(i);
+        for (int i = Math.max(1, total - 2); i <= total; i++) set.add(i);
+        for (int i = Math.max(1, cur - 1); i <= Math.min(total, cur + 1); i++) set.add(i);
+        Integer prev = null;
+        for (Integer p : set) {
+            if (prev != null && p - prev > 1) {
+                tabs.add(-1);
             }
-        });
-
+            tabs.add(p);
+            prev = p;
+        }
         return tabs;
     }
 

@@ -254,7 +254,6 @@ public class PosController  extends PageActionSupport {
             orderReq.setCreateUser(orderTaskVo.getCreateUser());
             orderReq.setPartyId(partyId);
             response = HttpUtil.post("http://127.0.0.1:8010/api/item/order/single", JSONUtil.toJsonStr(orderReq));
-            //插入task
 
         }else {
             BatchOrderReq batchOrderReq = new BatchOrderReq();
@@ -267,7 +266,37 @@ public class PosController  extends PageActionSupport {
             batchOrderReq.setPrice_limit(new BigDecimal[]{orderItems.get(0).getPrice(),orderItems.get(orderItems.size()-1).getPrice()});
             batchOrderReq.setItems(orderItems.stream().map(ItemReq::getItemId).collect(Collectors.toList()));
             response = HttpUtil.post("http://127.0.0.1:8010/api/item/order", JSONUtil.toJsonStr(batchOrderReq));
+        }
 
+        // 记录 POS 日志到 t_mall_order_task (供 admin 历史列表展示)
+        try {
+            String goodInfo = orderItems.stream().map(ItemReq::getItemId).collect(Collectors.joining(","));
+            if (goodInfo.length() > 120) {
+                goodInfo = goodInfo.substring(0, 120);
+            }
+            int totalCount = orderItems.stream().mapToInt(i -> i.getCount() == null ? 1 : i.getCount()).sum();
+            BigDecimal amount = orderItems.stream()
+                    .map(i -> (i.getPrice() == null ? BigDecimal.ZERO : i.getPrice())
+                            .multiply(BigDecimal.valueOf(i.getCount() == null ? 1 : i.getCount())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            // 解析 mall-tools 返回的 orderId (如有)
+            String orderId = null;
+            try {
+                cn.hutool.json.JSONObject json = JSONUtil.parseObj(response);
+                if (json != null && json.containsKey("data")) {
+                    Object data = json.get("data");
+                    if (data instanceof cn.hutool.json.JSONObject) {
+                        Object oid = ((cn.hutool.json.JSONObject) data).get("orderId");
+                        if (oid == null) oid = ((cn.hutool.json.JSONObject) data).get("id");
+                        if (oid != null) orderId = oid.toString();
+                    } else if (data != null) {
+                        orderId = data.toString();
+                    }
+                }
+            } catch (Exception ignore) {}
+            posService.saveOrderTaskLog(partyId, null, goodInfo, totalCount, amount, 1, orderId);
+        } catch (Exception ex) {
+            log.error("POS 日志写入失败: {}", ex.getMessage());
         }
 
         return response;

@@ -52,8 +52,28 @@ public interface SellerGoodsService {
 
     List<SellerGoods> getCategoryGoodList(int pageNum, int pageSize, String sellerId, String categoryId);
 
+    /**
+     * 查询某店铺勾选了"推广流量"的商品 (IS_PROMOTE=1, 已上架, 有效).
+     * @param sellerId 必填
+     * @param excludeGoodsId 排除的商品 id (通常是当前商品详情自己), 可为 null
+     * @param pageSize 取多少条
+     */
+    List<SellerGoods> listPromoteGoods(String sellerId, String excludeGoodsId, int pageSize);
+
+    /**
+     * 给指定店铺虚增 totalViews 的浏览数, 平均分摊到该店铺所有上架商品.
+     * 用于后台管理员"为加盟用户浏览人数 +N"操作.
+     * @param sellerId 商家 id
+     * @param totalViews 总共要加的浏览数
+     * @return 实际更新涉及的商品数
+     */
+    int addSellerVirtualViews(String sellerId, long totalViews);
+
     MallPageInfo listGoodsSell(int pageNum, int pageSize, String sellerId, String categoryId, String secondaryCategoryId, Integer isNew,
                                Integer rec, Integer isRec, Integer isHot, Integer isPrice, String lang, Integer discount);
+
+    MallPageInfo listGoodsSell(int pageNum, int pageSize, String sellerId, String categoryId, String secondaryCategoryId, Integer isNew,
+                               Integer rec, Integer isRec, Integer isHot, Integer isPrice, String lang, Integer discount, Integer isPromote);
 
     MallPageInfo listGoodsSellAdmin(int pageNum, int pageSize, SellerGoodsQuery sellerGoodsQuery, Integer isNew, Integer isRec, Integer isHot, Integer isPrice);
 //    MallPageInfo listGoodsSellAdmin1(int pageNum, int pageSize, SellerGoodsQuery sellerGoodsQuery, Integer isNew, Integer isRec, Integer isHot, Integer isPrice);

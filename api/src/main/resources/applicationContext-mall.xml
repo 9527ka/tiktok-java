@@ -72,6 +72,9 @@
 		<property name="goodsOrdersService" ref="goodsOrdersService" />
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
+	<bean id="orderTrackingService" class="project.mall.orders.impl.OrderTrackingServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
 	<bean id="fundChangeService" class="project.blockchain.internal.FundChangeService">
 		<property name="walletService" ref="walletService"/>
 		<property name="walletLogService" ref="walletLogService"/>

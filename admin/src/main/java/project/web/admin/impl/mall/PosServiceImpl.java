@@ -172,6 +172,40 @@ public class PosServiceImpl  extends HibernateDaoSupport implements PosService {
         namedParameterJdbcTemplate.update("delete from T_MALL_ORDER_TASK where id = :id", MapUtil.of("id", id));
     }
 
+    @Override
+    public void saveOrderTaskLog(String partyId, String sellerId, String goodInfo, int count, java.math.BigDecimal amount, int status, String orderId) {
+        try {
+            // 若未传 sellerId, 用第一个商品反查 T_MALL_SELLER_GOODS.SELLER_ID
+            if (StrUtil.isBlank(sellerId) && StrUtil.isNotBlank(goodInfo)) {
+                String firstGoodId = goodInfo.split(",")[0];
+                try {
+                    List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(
+                            "SELECT SELLER_ID FROM T_MALL_SELLER_GOODS WHERE UUID = :uuid LIMIT 1",
+                            MapUtil.of("uuid", firstGoodId));
+                    if (!rows.isEmpty()) {
+                        Object sid = rows.get(0).get("SELLER_ID");
+                        if (sid != null) sellerId = sid.toString();
+                    }
+                } catch (Exception ignore) {}
+            }
+
+            String sql = "INSERT INTO t_mall_order_task (ID, ORDER_ID, DELAY, PARTY_ID, GOOD_INFO, SELLER_ID, COUNT, AMOUNT, STATUS, create_time) " +
+                    "VALUES (:id, :orderId, NULL, :partyId, :goodInfo, :sellerId, :cnt, :amt, :status, NOW())";
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", cn.hutool.core.util.IdUtil.simpleUUID());
+            params.put("orderId", orderId);
+            params.put("partyId", partyId);
+            params.put("goodInfo", goodInfo);
+            params.put("sellerId", sellerId);
+            params.put("cnt", count);
+            params.put("amt", amount);
+            params.put("status", status);
+            namedParameterJdbcTemplate.update(sql, params);
+        } catch (Exception ex) {
+            logger.error("POS 日志写入失败: {}", ex.getMessage());
+        }
+    }
+
     public PagedQueryDao getPagedQueryDao() {
         return pagedQueryDao;
     }

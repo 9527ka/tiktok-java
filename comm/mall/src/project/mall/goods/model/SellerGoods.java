@@ -129,6 +129,12 @@ public class SellerGoods extends EntityObject<String> {
      * 下架审核字段 1审核通过 0未审核
      */
     private String checkFlag ;
+
+    /**
+     * 是否本店推广流量商品 1=是 0/null=否
+     * 商品详情页底部"本店推广"模块将筛选 isPromote=1 的商品
+     */
+    private Integer isPromote;
 //    /**
 //     * caster 2023-12-15 新增字段
 //     * 基于 SellerGoodsSkuInfoVO 类序列化和反序列化，是个 json 对象集合结构体

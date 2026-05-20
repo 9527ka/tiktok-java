@@ -238,6 +238,7 @@
 				<value>sellerGoodsService</value>
 				<value>mallBannerService</value>
 				<value>evaluationService</value>
+				<value>orderTrackingService</value>
 				<value>goodsAttributeCategoryService</value>
                 <value>sellerGoodsService</value>
 				<value>focusSellerService</value>

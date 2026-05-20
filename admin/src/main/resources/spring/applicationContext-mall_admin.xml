@@ -78,6 +78,7 @@
 		<property name="userRecomService" ref="userRecomService" />
 		<property name="adminSellerService" ref="adminSellerService" />
 		<property name="sysParaService" ref="sysparaService"/>
+		<property name="goodsOrdersService" ref="goodsOrdersService" />
 	</bean>
 
 	<bean id="goodsSkuAtrributionService"
@@ -135,6 +136,14 @@
 		<property name="partyService" ref="partyService" />
 		<property name="goodsOrdersService" ref="goodsOrdersService" />
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="orderTrackingService" class="project.mall.orders.impl.OrderTrackingServiceImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<!-- Admin module init: root context 启动时为 AutoConfig 注入 sysparaService,
+	     防止用户未登录访问 admin JSP 时报 "not initialize syspara service" -->
+	<bean id="adminInit" class="project.web.admin.config.AdminInit">
+		<property name="sysparaService" ref="sysparaService" />
 	</bean>
 	<bean id="comboService" class="project.mall.combo.impl.ComboServiceImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />

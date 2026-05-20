@@ -53,7 +53,13 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label form-label">币种</label>
 									<div class="col-sm-3">
-										<input id="coin" name="coin" cssClass="form-control"/>
+										<select id="coin" name="coin" class="form-control">
+											<option value="">请选择</option>
+											<option value="USDT">USDT</option>
+											<option value="BTC">BTC</option>
+											<option value="ETH">ETH</option>
+											<option value="USDC">USDC</option>
+										</select>
 									</div>
 								</div>
 
@@ -84,10 +90,24 @@
 										<input id="address" name="address" cssClass="form-control"/>
 									</div>
 								</div>
-								
-								
-								
-								
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">显示开关</label>
+									<div class="col-sm-3">
+										<select id="enabled" name="enabled" class="form-control">
+											<option value="Y" selected>显示 (商家可见)</option>
+											<option value="N">隐藏 (商家不可见)</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">排序</label>
+									<div class="col-sm-3">
+										<input id="sort_no" name="sort_no" type="number" value="0" class="form-control" placeholder="数值小的排前面"/>
+									</div>
+								</div>
+
 								<div class="form-group">
 									<div class="col-sm-offset-2 col-sm-10">
 										<a href="javascript:goUrl(-1)"

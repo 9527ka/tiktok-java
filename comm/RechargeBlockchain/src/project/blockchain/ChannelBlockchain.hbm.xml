@@ -23,5 +23,11 @@
 		<property generated="never"  name="auto" type="yes_no">
 			<column name="AUTO" />
 		</property>
+		<property name="enabled" type="yes_no">
+			<column name="ENABLED" />
+		</property>
+		<property name="sort_no" type="java.lang.Integer">
+			<column name="SORT_NO" />
+		</property>
 	</class>
 </hibernate-mapping>

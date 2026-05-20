@@ -142,11 +142,13 @@ public class SellerPromotionalController extends BaseAction {
         if(StringUtils.isEmptyString(partySafeword)){
             resultObject.setCode("999");
             resultObject.setMsg("请设置资金密码");
+            return resultObject;
         }
 
         if (!this.partyService.checkSafeword(safeword, partyId)) {
             resultObject.setCode("1");
             resultObject.setMsg("资金密码错误");
+            return resultObject;
         }
 
         if (!party.getEnabled()) {
@@ -161,11 +163,13 @@ public class SellerPromotionalController extends BaseAction {
         if(StringUtils.isEmptyString(js)){
             resultObject.setCode("1");
             resultObject.setMsg("商品不存在或者已下架");
+            return resultObject;
         }
         ComboLang pLang = JSONArray.parseObject(js, ComboLang.class);
         if(pLang==null){
             resultObject.setCode("1");
             resultObject.setMsg("商品不存在或者已下架");
+            return resultObject;
         }
         try {
             comboService.updateBuy(partyId,orderId,pLang.getName());

@@ -54,15 +54,17 @@
 										<td>币种_链入名称</td>
 										<!--<td>链入名称</td>
 										 <td>图片</td> -->
-										<td>地址</td>	
-													
+										<td>地址</td>
+										<td width="80px">显示</td>
+										<td width="80px">排序</td>
+
 										<c:if test="${security.isRolesAccessible('ROLE_ROOT')}">
 											<td width="130px"></td>
-										</c:if>		
-																		
+										</c:if>
+
 									</tr>
 								</thead>
-								
+
 								<tbody style="font-size: 13px;">
 									<!-- <s:iterator value="page.elements" status="stat"> -->
 									<c:forEach items="${page.getElements()}" var="item" varStatus="stat">
@@ -72,7 +74,18 @@
 											 <td> <a href="<%=base%>wap/public/showimg!showImg.action?imagePath=<s:property value="img" />" target="_blank">查看照片</a>
 											</td> -->
 											<td>${item.address}</td>
-											
+											<td>
+												<c:choose>
+													<c:when test="${item.enabled eq 'Y' || item.enabled == true || item.enabled eq '1'}">
+														<span style="color:#5cb85c;">●显示</span>
+													</c:when>
+													<c:otherwise>
+														<span style="color:#999;">○隐藏</span>
+													</c:otherwise>
+												</c:choose>
+											</td>
+											<td>${item.sort_no}</td>
+
 											<td>
 
 												<c:if test="${security.isRolesAccessible('ROLE_ROOT')}">
@@ -86,7 +99,6 @@
 														<ul class="dropdown-menu" role="menu">
 
 															<li><a href="<%=basePath%>normal/adminChannelBlockchainAction!toUpdate.action?id=${item.id}">修改</a></li>
-															<li><a href="<%=basePath%>normal/adminChannelBlockchainAction!toDelete.action?id=${item.id}">删除</a></li>
 															<li><a href="javascript:todelete('${item.id}')">删除</a></li>
 
 														</ul>
@@ -233,7 +245,7 @@
 							<div class="form-group">
 								<label for="input002" class="col-sm-3 control-label form-label">登录人资金密码</label>
 								<div class="col-sm-4">
-									<input id="safeword" type="password" name="safeword"
+									<input id="login_safeword" type="password" name="login_safeword"
 										class="safeword" placeholder="请输入登录人资金密码">
 								</div>
 							</div>
@@ -252,7 +264,7 @@
 							<div class="form-group">
 								<label for="input002" class="col-sm-3 control-label form-label">超级谷歌验证码</label>
 								<div class="col-sm-4">
-									<input id="super_google_auth_code" name="super_google_auth_code" placeholder="请输入超级谷歌验证码">
+									<input id="google_auth_code" name="google_auth_code" placeholder="请输入谷歌验证码">
 								</div>
 							</div>
 							
@@ -274,18 +286,9 @@
 	<script type="text/javascript">
 		function todelete(id) {
 			$("#id_delete").val(id);
+			$("#login_safeword").val("");
+			$("#google_auth_code").val("");
 			$('#modal_succeeded').modal("show");
-			 swal({
-				title : "是否确认删除充值链地址?",
-				text : "",
-				type : "warning",
-				showCancelButton : true,
-				confirmButtonColor : "#DD6B55",
-				confirmButtonText : "确认",
-				closeOnConfirm : false
-			}, function() {
-				document.getElementById("deleteForm").submit();
-			});
 		}
 	</script>
 	

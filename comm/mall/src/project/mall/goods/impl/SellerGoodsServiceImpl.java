@@ -217,9 +217,19 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
     @Override
     public MallPageInfo listGoodsSell(int pageNum, int pageSize, String sellerId, String categoryId, String secondaryCategoryId, Integer isNew,
                                       Integer rec, Integer isRec, Integer isHot, Integer isPrice, String lang, Integer discount) {
+        return listGoodsSell(pageNum, pageSize, sellerId, categoryId, secondaryCategoryId, isNew, rec, isRec, isHot, isPrice, lang, discount, null);
+    }
+
+    @Override
+    public MallPageInfo listGoodsSell(int pageNum, int pageSize, String sellerId, String categoryId, String secondaryCategoryId, Integer isNew,
+                                      Integer rec, Integer isRec, Integer isHot, Integer isPrice, String lang, Integer discount, Integer isPromote) {
         // 是否采用综合排序来展示商品
         boolean isOrderByWeight = true;
         DetachedCriteria query = DetachedCriteria.forClass(SellerGoods.class);
+        if (isPromote != null && isPromote == 1) {
+            // 仅显示 IS_PROMOTE=1 的本店推广商品
+            query.add(Property.forName("isPromote").eq(1));
+        }
         if (null != discount && discount == 1) {
             query.add(Restrictions.gt("discountRatio", 0.0D));
             query.add(Restrictions.le("discountStartTime", new Date()));
@@ -343,6 +353,58 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
         query.add(Property.forName("categoryId").eq(categoryId));
         query.add(Property.forName("sellerId").eq(sellerId));
         return (List<SellerGoods>) getHibernateTemplate().findByCriteria(query, (pageNum - 1) * pageSize, pageSize);
+    }
+
+    @Override
+    public int addSellerVirtualViews(String sellerId, long totalViews) {
+        if (StrUtil.isBlank(sellerId) || totalViews <= 0) {
+            return 0;
+        }
+        List<String> goodsIds = getSellerGoodsId(sellerId, null);
+        if (goodsIds == null || goodsIds.isEmpty()) {
+            return 0;
+        }
+        long perGoods = totalViews / goodsIds.size();
+        long remainder = totalViews % goodsIds.size();
+        if (perGoods <= 0 && remainder <= 0) {
+            return 0;
+        }
+        String dateStr = DateUtil.now().split(":")[0] + ":00";
+        String sql = "INSERT INTO T_MALL_SELLER_GOODS_STATISTICS ( UUID, SELLER_ID, GOODS_ID, VIEWS_NUM, VIRTUAL_VIEWS_NUM, CREATE_TIME, DATE_STR )"
+                + " VALUES ( ?, ?, ?, 0, ?, NOW(), ?)"
+                + " ON DUPLICATE KEY UPDATE VIRTUAL_VIEWS_NUM = VIRTUAL_VIEWS_NUM + ?;";
+        int updated = 0;
+        for (int i = 0; i < goodsIds.size(); i++) {
+            long add = perGoods + (i < remainder ? 1 : 0);
+            if (add <= 0) continue;
+            try {
+                jdbcTemplate.update(sql, IdUtil.simpleUUID(), sellerId, goodsIds.get(i), add, dateStr, add);
+                updated++;
+            } catch (Exception ex) {
+                log.error("addSellerVirtualViews sellerId={} goodsId={} 失败: {}", sellerId, goodsIds.get(i), ex.getMessage());
+            }
+        }
+        return updated;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<SellerGoods> listPromoteGoods(String sellerId, String excludeGoodsId, int pageSize) {
+        if (StrUtil.isBlank(sellerId)) {
+            return java.util.Collections.emptyList();
+        }
+        DetachedCriteria query = DetachedCriteria.forClass(SellerGoods.class);
+        query.add(Property.forName("sellerId").eq(sellerId));
+        query.add(Property.forName("isPromote").eq(1));
+        // 已上架 isShelf=1 (与 listGoodsSell 行 134/181/187/307 一致)
+        query.add(Property.forName("isShelf").eq(1));
+        query.add(Restrictions.or(Property.forName("isValid").isNull(), Property.forName("isValid").eq(1)));
+        if (StrUtil.isNotBlank(excludeGoodsId)) {
+            query.add(Property.forName("id").ne(excludeGoodsId));
+        }
+        query.addOrder(Order.desc("upTime"));
+        int limit = pageSize > 0 ? pageSize : 10;
+        return (List<SellerGoods>) getHibernateTemplate().findByCriteria(query, 0, limit);
     }
 
     @Override
@@ -2356,6 +2418,14 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
 
         if (goodsSku == null) {
             BeanUtil.copyProperties(sellerGoods, sellerGoodsSku, "id");
+            // 与有SKU的逻辑保持一致：如果存在折扣比例，基于售价重新计算折扣价
+            // BeanUtil复制的discountPrice可能为null（数据库未预存），需要从discountRatio动态计算
+            if (sellerGoods.getDiscountRatio() != null && sellerGoodsSku.getSellingPrice() != null) {
+                Double discountRatio = sellerGoods.getDiscountRatio();
+                double sellingPrice = sellerGoodsSku.getSellingPrice();
+                sellerGoodsSku.setDiscountPrice(Arith.mul(sellingPrice, Arith.sub(1.00D, discountRatio)));
+                sellerGoodsSku.setDiscountRatio(discountRatio);
+            }
         } else {
             double systemPrice = sellerGoods.getSystemPrice();
             // sku 系统价格

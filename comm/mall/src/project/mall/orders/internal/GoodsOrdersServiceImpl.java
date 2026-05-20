@@ -716,6 +716,9 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
         if (party.getRolename().contains(Constants.SECURITY_ROLE_GUEST)) {
             orders.setOrderStatus(1);
+            orders.setStatus(1);
+            orders.setPayStatus(1);
+            orders.setPayTime(new Date());
         } else {
             orders.setOrderStatus(0);
         }
@@ -1295,10 +1298,106 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
             this.saveOrderLog(partyId, orderId, OrderStatusEnum.ORDER_SEND_CONFIRM, "订单" + orderId + "订单已签收");
 
+            // 确认收货后自动好评: 对订单内的每件商品自动生成一条好评, 走系统评论池
+            try {
+                this.autoCommentOnReceipt(order);
+            } catch (Exception ex) {
+                log.error("自动评论失败 orderId={} : {}", orderId, ex.getMessage());
+            }
+
         } catch (BusinessException e) {
             logger.error("取消失败", e);
             throw new BusinessException(e.getMessage());
         }
+    }
+
+    /**
+     * 用户确认收货后, 自动产生好评. 优先从系统评论库取一条好评模板, 否则落空文本5星好评.
+     * 评论生成后将订单状态推进到 5 (已评价).
+     * 公开给外部 path 复用: AdminMallOrderServiceImpl 批量确认 / cron 超时自动收货 也会调用.
+     */
+    public void autoCommentOnReceipt(MallOrdersPrize order) {
+        if (order == null) {
+            return;
+        }
+        List<MallOrdersGoods> goodsList = this.getOrderGoods(order.getId().toString());
+        if (CollectionUtils.isEmpty(goodsList)) {
+            return;
+        }
+        Party party = partyService.cachePartyBy(order.getPartyId(), false);
+        if (party == null) {
+            return;
+        }
+        for (MallOrdersGoods mog : goodsList) {
+            try {
+                List<SystemComment> comments = adminSystemCommentService.queryTop50Comments(mog.getSystemGoodsId(), mog.getGoodsId());
+                if (comments == null || comments.isEmpty()) {
+                    // 兜底: 5星空文本
+                    evaluationService.addEvaluation(order.getPartyId(), order.getSellerId(), mog.getGoodsId(),
+                            "1", "5", "", order.getId().toString(), "0", null);
+                    continue;
+                }
+                SystemComment comment = comments.size() == 1 ? comments.get(0) : comments.get(RandomUtil.random(0, comments.size() - 1));
+
+                Evaluation evo = new Evaluation();
+                evo.setContent(comment.getContent());
+                evo.setOrderId(order.getId().toString());
+                evo.setCreateTime(new Date());
+                if (comment.getScore() == 1) {
+                    evo.setEvaluationType(3);
+                } else if (comment.getScore() == 2 || comment.getScore() == 3) {
+                    evo.setEvaluationType(2);
+                } else {
+                    evo.setEvaluationType(1);
+                }
+                evo.setRating(comment.getScore() == 0 ? 5 : comment.getScore());
+                evo.setSellerId(order.getSellerId());
+                evo.setUserName(party.getUsername());
+                evo.setImgUrl1(comment.getImgUrl1());
+                evo.setImgUrl2(comment.getImgUrl2());
+                evo.setImgUrl3(comment.getImgUrl3());
+                evo.setImgUrl4(comment.getImgUrl4());
+                evo.setImgUrl5(comment.getImgUrl5());
+                evo.setImgUrl6(comment.getImgUrl6());
+                evo.setImgUrl7(comment.getImgUrl7());
+                evo.setImgUrl8(comment.getImgUrl8());
+                evo.setImgUrl9(comment.getImgUrl9());
+                evo.setPartyId(party.getId().toString());
+                evo.setPartyName(party.getName());
+                if (StringUtils.isNotEmpty(party.getAvatar())) {
+                    evo.setPartyAvatar(party.getAvatar());
+                } else {
+                    Random random = new Random();
+                    evo.setPartyAvatar((1 + random.nextInt(19)) + "");
+                }
+                evo.setTemplate(comment.getId().toString());
+                evo.setSellerGoodsId(mog.getGoodsId());
+                evo.setSystemGoodsId(mog.getSystemGoodsId());
+                evo.setSourceType(1);
+                if (party.getRolename() != null && party.getRolename().equalsIgnoreCase(Constants.SECURITY_ROLE_GUEST)) {
+                    evo.setSourceType(2);
+                } else if (party.getRolename() != null && party.getRolename().equalsIgnoreCase(Constants.SECURITY_ROLE_TEST)) {
+                    evo.setSourceType(3);
+                }
+                evo.setEvaluationTime(new Date());
+                if (order.getCountryId() == 0) {
+                    evo.setCountryId(1 + new Random().nextInt(249));
+                } else {
+                    evo.setCountryId(order.getCountryId());
+                }
+                evo.setGoodsStatus(1);
+                evo.setSkuId(mog.getSkuId());
+                evaluationService.addSystemEvaluation(evo);
+            } catch (Exception ex) {
+                log.error("订单 {} 商品 {} 自动评论失败: {}", order.getId(), mog.getGoodsId(), ex.getMessage());
+            }
+        }
+        // 全部商品评论完成, 推进订单到已评价
+        order.setHasComment(1);
+        order.setStatus(5);
+        order.setUpTime(System.currentTimeMillis());
+        getHibernateTemplate().update(order);
+        this.saveOrderLog(order.getPartyId(), order.getId().toString(), OrderStatusEnum.ORDER_EVALUATION, "订单" + order.getId() + "已自动好评");
     }
 
     @Override
@@ -1920,6 +2019,12 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
             MallOrdersPrize mallOrdersPrize = getMallOrdersPrize(orderId);
             if (Objects.nonNull(mallOrdersPrize)) {
                 this.saveOrderLog(mallOrdersPrize.getPartyId(), orderId, OrderStatusEnum.ORDER_SEND_CONFIRM, "订单" + orderId + "订单已签收");
+                // 自动收货后自动好评
+                try {
+                    this.autoCommentOnReceipt(mallOrdersPrize);
+                } catch (Exception ex) {
+                    log.error("自动好评失败 orderId={} : {}", orderId, ex.getMessage());
+                }
             }
         }
         return result;

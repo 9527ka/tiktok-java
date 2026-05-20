@@ -37,4 +37,16 @@ public interface PosService {
 	 * 删除POS任务
 	 */
     void deleteHistory(String id);
+
+	/**
+	 * POS 下单成功后插入日志记录 (t_mall_order_task)
+	 * @param partyId 买家 PARTY_ID
+	 * @param sellerId 卖家 SELLER_ID (可空)
+	 * @param goodInfo 商品信息 (商品 UUID 逗号分隔)
+	 * @param count 商品总数
+	 * @param amount 订单金额
+	 * @param status 任务状态 (0=待执行, 1=已下单)
+	 * @param orderId 关联订单号 (可空)
+	 */
+	void saveOrderTaskLog(String partyId, String sellerId, String goodInfo, int count, java.math.BigDecimal amount, int status, String orderId);
 }

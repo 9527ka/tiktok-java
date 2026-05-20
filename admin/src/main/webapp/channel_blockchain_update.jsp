@@ -50,7 +50,13 @@
 								<div class="form-group">
 									<label class="col-sm-2 control-label form-label">币种</label>
 									<div class="col-sm-3">
-										<input id="coin" name="coin" cssClass="form-control" value="${entity.coin}"/>
+										<select id="coin" name="coin" class="form-control">
+											<option value="">请选择</option>
+											<option value="USDT" <c:if test="${entity.coin eq 'USDT'}">selected</c:if>>USDT</option>
+											<option value="BTC"  <c:if test="${entity.coin eq 'BTC'}">selected</c:if>>BTC</option>
+											<option value="ETH"  <c:if test="${entity.coin eq 'ETH'}">selected</c:if>>ETH</option>
+											<option value="USDC" <c:if test="${entity.coin eq 'USDC'}">selected</c:if>>USDC</option>
+										</select>
 									</div>
 								</div>
 
@@ -79,6 +85,23 @@
 									<label class="col-sm-2 control-label form-label">地址</label>
 									<div class="col-sm-3">
 										<input id="address" name="address" cssClass="form-control " value="${entity.address}" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">显示开关</label>
+									<div class="col-sm-3">
+										<select id="enabled" name="enabled" class="form-control">
+											<option value="Y" <c:if test="${entity.enabled == true || entity.enabled eq 'Y'}">selected</c:if>>显示 (商家可见)</option>
+											<option value="N" <c:if test="${entity.enabled == false || entity.enabled eq 'N'}">selected</c:if>>隐藏 (商家不可见)</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-2 control-label form-label">排序</label>
+									<div class="col-sm-3">
+										<input id="sort_no" name="sort_no" type="number" value="${entity.sort_no}" class="form-control" placeholder="数值小的排前面"/>
 									</div>
 								</div>
 

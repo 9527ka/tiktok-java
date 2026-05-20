@@ -146,6 +146,8 @@ public class GoodsVo extends EntityObject<String> {
     private Integer isKeep;
     //是否开通直通车
     private Integer isCombo;
+    //是否本店推广 (1=是 0/null=否)
+    private Integer isPromote;
     // 商品属性值
     private List<GoodsAttributeVo> attributes;
     // 商品属性值

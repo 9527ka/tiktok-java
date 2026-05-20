@@ -30,15 +30,18 @@
 	 <!-- <s:iterator value="tabs" var="item"> -->
 	 <c:forEach items="${tabs}" var="item">
 	 	<c:choose>
+		<c:when test="${item == -1}">
+		 	<li><a style="color: #ddd; cursor: default;">...</a></li>
+		</c:when>
 		<c:when test="${item == page.thisPageNumber}">
 		 	<li><a style="color: #ddd">${item}</a></li>
 		</c:when>
 		<c:otherwise>
 		 	<li><a href="javascript:goUrl('${item}')">${item}</a></li>
-		</c:otherwise>	
+		</c:otherwise>
 		</c:choose>
      <!-- </s:iterator> -->
-     </c:forEach>    
+     </c:forEach>
 	<!-- 分页数字标签结束 -->
 	
 	<c:choose>

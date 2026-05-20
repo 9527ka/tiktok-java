@@ -231,6 +231,7 @@ public class AdminSellerGoodsController extends BaseAction {
                 goodsVo.setCategoryName(cLang.getName());
                 goodsVo.setIsShelf(pl.getIsShelf());
                 goodsVo.setIsCombo(pl.getIsCombo());
+                goodsVo.setIsPromote(pl.getIsPromote());
                 Long time = pl.getRecTime();
                 goodsVo.setRecTime(time);
                 goodsVo.setNewTime(pl.getNewTime());
@@ -585,6 +586,42 @@ public class AdminSellerGoodsController extends BaseAction {
         return resultObject;
     }
 
+    /**
+     * 后台管理员手动给指定加盟用户的店铺浏览数 +N.
+     * 调用 sellerGoodsService.addSellerVirtualViews 把 N 平摊到该店铺所有上架商品.
+     * 入参: sellerId 必填, num 必填(正整数)
+     */
+    @PostMapping(action + "sellerViewsAdd.action")
+    public Object sellerViewsAdd(HttpServletRequest request) {
+        ResultObject resultObject = new ResultObject();
+        String sellerId = request.getParameter("sellerId");
+        String numStr = request.getParameter("num");
+        if (StrUtil.isBlank(sellerId) || StrUtil.isBlank(numStr)) {
+            resultObject.setCode("1");
+            resultObject.setMsg("sellerId 和 num 必填");
+            return resultObject;
+        }
+        long num;
+        try {
+            num = Long.parseLong(numStr);
+        } catch (NumberFormatException e) {
+            resultObject.setCode("1");
+            resultObject.setMsg("num 必须为整数");
+            return resultObject;
+        }
+        if (num <= 0) {
+            resultObject.setCode("1");
+            resultObject.setMsg("num 必须大于 0");
+            return resultObject;
+        }
+        int updated = sellerGoodsService.addSellerVirtualViews(sellerId, num);
+        Map<String, Object> data = new HashMap<>();
+        data.put("updatedGoods", updated);
+        data.put("addedViews", num);
+        resultObject.setData(data);
+        return resultObject;
+    }
+
 
     @PostMapping(action + "update.action")
     public Object update(HttpServletRequest request) {
@@ -599,6 +636,7 @@ public class AdminSellerGoodsController extends BaseAction {
         String isShelfStr = request.getParameter("isShelf");
         String recTimeStr = request.getParameter("recTime");
         String isCombo = request.getParameter("isCombo");
+        String isPromoteStr = request.getParameter("isPromote");
         String discount_str = request.getParameter("discount");
         String percent_str = request.getParameter("percent");
         String profit_str = request.getParameter("profit");
@@ -699,6 +737,12 @@ public class AdminSellerGoodsController extends BaseAction {
             sellerGoods.setCreateTime(new Date());
         }
         sellerGoods.setIsCombo(Integer.valueOf(isCombo));
+        if (StrUtil.isNotBlank(isPromoteStr)) {
+            try {
+                sellerGoods.setIsPromote(Integer.valueOf(isPromoteStr));
+            } catch (NumberFormatException ignored) {
+            }
+        }
 
         Integer isShelf = sellerGoods.getIsShelf();
         if (shelf == 0 && null != isShelf && isShelf.intValue() == 1) {

@@ -111,6 +111,9 @@
 		<property name="checkFlag"  type="java.lang.String">
 			<column name="CHECK_FLAG" />
 		</property>
+		<property name="isPromote"  type="java.lang.Integer">
+			<column name="IS_PROMOTE" />
+		</property>
 		<!--
 		<property name="skuInfo"  type="java.lang.String">
 			<column name="SKU_INFO" />
