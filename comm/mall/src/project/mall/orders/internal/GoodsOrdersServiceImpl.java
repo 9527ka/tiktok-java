@@ -1353,15 +1353,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                 evo.setRating(comment.getScore() == 0 ? 5 : comment.getScore());
                 evo.setSellerId(order.getSellerId());
                 evo.setUserName(party.getUsername());
-                evo.setImgUrl1(comment.getImgUrl1());
-                evo.setImgUrl2(comment.getImgUrl2());
-                evo.setImgUrl3(comment.getImgUrl3());
-                evo.setImgUrl4(comment.getImgUrl4());
-                evo.setImgUrl5(comment.getImgUrl5());
-                evo.setImgUrl6(comment.getImgUrl6());
-                evo.setImgUrl7(comment.getImgUrl7());
-                evo.setImgUrl8(comment.getImgUrl8());
-                evo.setImgUrl9(comment.getImgUrl9());
+                // 自动评论不带图片
                 evo.setPartyId(party.getId().toString());
                 evo.setPartyName(party.getName());
                 if (StringUtils.isNotEmpty(party.getAvatar())) {
@@ -2266,9 +2258,10 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
             Party party = partyService.cachePartyBy(orders.getPartyId(), false);
 
-            //虚拟用户，并且开启虚拟自动评价功能
-
-            if (party.getRolename().contains(Constants.SECURITY_ROLE_GUEST) && party.isAutoComment()) {
+            // 兜底自动评论: GUEST+autoComment 或 MEMBER（autoCommentOnReceipt 漏掉的订单）
+            boolean shouldAutoComment = (party.getRolename().contains(Constants.SECURITY_ROLE_GUEST) && party.isAutoComment())
+                    || party.getRolename().contains(Constants.SECURITY_ROLE_MEMBER);
+            if (shouldAutoComment) {
                 List<SystemComment> comments = adminSystemCommentService.queryTop50Comments(mallOrdersGoods.getSystemGoodsId(), mallOrdersGoods.getGoodsId());
                 if (comments == null || comments.size() == 0) {
                     log.info("系统评论库好评记录为空订单id{}", orderId);
@@ -2300,15 +2293,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                     evo.setRating(comment.getScore());
                     evo.setSellerId(orders.getSellerId());
                     evo.setUserName(party.getUsername());
-                    evo.setImgUrl1(comment.getImgUrl1());
-                    evo.setImgUrl2(comment.getImgUrl2());
-                    evo.setImgUrl3(comment.getImgUrl3());
-                    evo.setImgUrl4(comment.getImgUrl4());
-                    evo.setImgUrl5(comment.getImgUrl5());
-                    evo.setImgUrl6(comment.getImgUrl6());
-                    evo.setImgUrl7(comment.getImgUrl7());
-                    evo.setImgUrl8(comment.getImgUrl8());
-                    evo.setImgUrl9(comment.getImgUrl9());
+                    // 自动评论不带图片
 
                     // 额外增加冗余字段
                     evo.setPartyId(party.getId().toString());
@@ -2344,16 +2329,17 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                     evo.setGoodsStatus(1);
                     evo.setSkuId(mallOrdersGoods.getSkuId());
 
+                    // 先存评价，成功后再更新订单状态（防止评价失败但订单已标记已评论）
+                    evaluationService.addSystemEvaluation(evo);
+
                     orders.setHasComment(1);
                     orders.setStatus(5);
                     orders.setUpTime(System.currentTimeMillis());
-
                     getHibernateTemplate().update(orders);
-                    evaluationService.addSystemEvaluation(evo);
                 }
             }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("updateAutoComment failed orderId={}: {}", orderId, e.getMessage(), e);
         } finally {
             redisHandler.remove(lockKey);
         }

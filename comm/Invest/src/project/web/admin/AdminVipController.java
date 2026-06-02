@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import kernel.exception.BusinessException;
 import kernel.util.Arith;
 import kernel.util.JsonUtils;
+import kernel.web.Page;
 import kernel.web.PageActionSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
@@ -98,7 +99,12 @@ public class AdminVipController extends PageActionSupport {
             });
             levelInfoList.add(oneDto);
         }
-        model.addObject("page", levelInfoList);
+        Page resultPage = new Page();
+        resultPage.setElements(levelInfoList);
+        resultPage.setTotalElements(levelInfoList.size());
+        resultPage.setThisPageNumber(1);
+        resultPage.setPageSize(Math.max(levelInfoList.size(), 1));
+        model.addObject("page", resultPage);
         model.addObject("message", message);
         model.addObject("error", error);
         model.setViewName("admin_vip_list");

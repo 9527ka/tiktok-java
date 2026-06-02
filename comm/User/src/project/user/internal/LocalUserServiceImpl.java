@@ -1268,4 +1268,29 @@ public class LocalUserServiceImpl extends HibernateDaoSupport implements LocalUs
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+
+	@Override
+	public void deleteByPartyId(String partyId) {
+		if (StringUtils.isEmptyString(partyId)) {
+			return;
+		}
+		// 按依赖顺序删除：先子表后主表
+		jdbcTemplate.update("DELETE FROM t_wallet_extend WHERE PARTY_ID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM t_wallet WHERE PARTY_ID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM t_userdata WHERE PARTY_ID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM t_userdatasum WHERE PARTY_ID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM t_token WHERE PARTY_ID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM t_kyc WHERE PARTY_ID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM t_mall_seller WHERE UUID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM pat_user_recom WHERE UUID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM pat_user_map WHERE UUID = ?", partyId);
+		// 获取 sct_user UUID
+		List<String> secUserIds = jdbcTemplate.queryForList(
+			"SELECT UUID FROM sct_user WHERE PARTY_UUID = ?", String.class, partyId);
+		for (String secUserId : secUserIds) {
+			jdbcTemplate.update("DELETE FROM sct_user_role WHERE USER_UUID = ?", secUserId);
+		}
+		jdbcTemplate.update("DELETE FROM sct_user WHERE PARTY_UUID = ?", partyId);
+		jdbcTemplate.update("DELETE FROM pat_party WHERE UUID = ?", partyId);
+	}
 }

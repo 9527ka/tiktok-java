@@ -63,6 +63,11 @@ public interface LocalUserService {
     void checkRegister(String type, String username, String userCode);
 
     /**
+     * 根据partyId删除用户相关数据（用于注册失败时补偿清理）
+     */
+    void deleteByPartyId(String partyId);
+
+    /**
 	 * 获取图片
 	 */
 //	public List<ImageQr> findImageByUsercode(String usercode, String image_language, String image_type);

@@ -224,7 +224,7 @@
     </form>
 </div>
 <div class="footer">
-Copyright © 2018-2025 ${siteOwner} All Rights Reserved.
+Copyright © 2018-2026 ${siteOwner} All Rights Reserved.
 
 <c:if test="${showMallCopyright}">
     <div style="font-size:12px;color:#F7F7F7">

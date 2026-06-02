@@ -132,19 +132,14 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
 	}
 
 
-	private static Boolean _enableGoogleAuth;
-
 	/**
 	 * 是否开启谷歌验证码
 	 * @return 验证码
 	 */
 	@Override
 	public boolean isEnableGoogleAuth(){
-		if(_enableGoogleAuth == null) {
-			Syspara para = sysparaService.findFromDB("open_google_auth_code");
-			_enableGoogleAuth = null == para || Objects.equals(para.getValue(), "true");
-		}
-		return _enableGoogleAuth;
+		Syspara para = sysparaService.findFromDB("open_google_auth_code");
+		return null != para && Objects.equals(para.getValue(), "true");
 	}
 	
 	/**

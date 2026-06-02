@@ -438,6 +438,37 @@ public class AdminSellersController extends PageActionSupport {
         return modelAndView;
     }
     /**
+     * 修改综合评分（手动设置）
+     */
+    @RequestMapping(value = "/updateManualRating.action")
+    public ModelAndView updateManualRating(HttpServletRequest request) {
+        String partyId = request.getParameter("id");
+        String ratingStr = request.getParameter("manualRating");
+        ModelAndView model = new ModelAndView();
+        try {
+            Float manualRating = null;
+            if (ratingStr != null && !ratingStr.trim().isEmpty()) {
+                manualRating = Float.valueOf(ratingStr.trim());
+            }
+            adminSellerService.updateManualRating(partyId, manualRating);
+        } catch (BusinessException e) {
+            model.addObject("error", e.getMessage());
+            model.setViewName("redirect:/" + "mall/seller/list.action");
+            return model;
+        } catch (Throwable t) {
+            logger.error("updateManualRating error ", t);
+            model.addObject("error", "程序错误");
+            model.setViewName("redirect:/" + "mall/seller/list.action");
+            return model;
+        }
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("message", "操作成功");
+        modelAndView.addObject("pageNo", pageNo);
+        modelAndView.setViewName("redirect:/" + "mall/seller/list.action");
+        return modelAndView;
+    }
+
+    /**
      * 访问量系数
      * @param request
      * @return

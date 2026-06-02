@@ -1690,8 +1690,18 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
         Map<String, Object> params = new HashMap<>();
         params.put("systemGoodIds", systemGoodIds);
 
+        // 先查受影响的卖家
+        List<String> affectedSellerIds = nameJdbc.queryForList(
+            "SELECT DISTINCT SELLER_ID FROM T_MALL_SELLER_GOODS WHERE GOODS_ID = :systemGoodIds AND IS_VALID = 1",
+            params, String.class);
+
         String sql = "update T_MALL_SELLER_GOODS set IS_SHELF = 0, IS_VALID = 0 where GOODS_ID = :systemGoodIds";
         nameJdbc.update(sql, params);
+
+        // 同步更新受影响店铺的商品数
+        for (String sid : affectedSellerIds) {
+            syncSellerGoodsNum(sid);
+        }
     }
 
     @Override
@@ -1735,6 +1745,9 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
 
         deleteCachedSellerGoodSku1(sellerGoods);
 
+        // 同步更新店铺商品数
+        syncSellerGoodsNum(sellerId);
+
         // 取代 TODO
 //        if (Objects.nonNull(sellerGoodsSkuList) && !sellerGoodsSkuList.isEmpty()) {
 //            this.getHibernateTemplate().deleteAll(sellerGoodsSkuList);
@@ -1753,6 +1766,9 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
 
         String sql = "update T_MALL_SELLER_GOODS set IS_SHELF = 0, IS_VALID = 0 where SELLER_ID = :sellerId";
         nameJdbc.update(sql, params);
+
+        // 同步更新店铺商品数
+        syncSellerGoodsNum(sellerId);
     }
 
     @Transactional
@@ -1770,6 +1786,28 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
 
         String sql = "update T_MALL_SELLER_GOODS set IS_SHELF = :isShelf where UUID in (:sellerGoodsIdList) and SELLER_ID = :sellerId";
         nameJdbc.update(sql, params);
+
+        // 同步更新店铺商品数
+        String syncSql = "UPDATE T_MALL_SELLER SET SELLER_GOODS_NUM = " +
+            "(SELECT COUNT(*) FROM T_MALL_SELLER_GOODS WHERE SELLER_ID = :sellerId AND IS_SHELF = 1 AND IS_VALID = 1) " +
+            "WHERE UUID = :sellerId";
+        Map<String, Object> syncParams = new HashMap<>();
+        syncParams.put("sellerId", sellerId);
+        nameJdbc.update(syncSql, syncParams);
+    }
+
+    @Override
+    public void syncSellerGoodsNum(String sellerId) {
+        if (StringUtils.isEmptyString(sellerId)) {
+            return;
+        }
+        NamedParameterJdbcTemplate nameJdbc = new NamedParameterJdbcTemplate(jdbcTemplate);
+        String syncSql = "UPDATE T_MALL_SELLER SET SELLER_GOODS_NUM = " +
+            "(SELECT COUNT(*) FROM T_MALL_SELLER_GOODS WHERE SELLER_ID = :sellerId AND IS_SHELF = 1 AND IS_VALID = 1) " +
+            "WHERE UUID = :sellerId";
+        Map<String, Object> syncParams = new HashMap<>();
+        syncParams.put("sellerId", sellerId);
+        nameJdbc.update(syncSql, syncParams);
     }
 
     @Override

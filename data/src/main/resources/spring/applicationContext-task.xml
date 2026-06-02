@@ -146,6 +146,9 @@
 
         <task:scheduled ref="dataTask" method="autoSellerInfo" cron="25 35 * * * ?"/>
 
+        <!-- 每日商品销量随机增加 10~100，同步店铺虚假销量 -->
+        <task:scheduled ref="dataTask" method="autoFakeSales" cron="0 0 3 * * ?"/>
+
         <!--自动释放佣金-->
         <!--		<task:scheduled ref="dataTask" method="autoProfit" cron="0 0/2 * * * ?"/>-->
 

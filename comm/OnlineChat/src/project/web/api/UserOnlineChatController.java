@@ -551,7 +551,11 @@ public class UserOnlineChatController extends PageActionSupport {
      * 检验游客ip是否是黑名单，true：是，false：否
      */
     private boolean checkVisitorIp() {
-        String blackMenu = sysparaService.find("online_visitor_black_ip_menu").getValue();
+        project.syspara.Syspara syspara = sysparaService.find("online_visitor_black_ip_menu");
+        if (syspara == null) {
+            return false;
+        }
+        String blackMenu = syspara.getValue();
         if (StringUtils.isNullOrEmpty(blackMenu)) {
             return false;
         }
@@ -560,7 +564,11 @@ public class UserOnlineChatController extends PageActionSupport {
     }
 
     private boolean checkUserBlack(String loginPartyId) {
-        String blackMenu = sysparaService.find("online_username_black_menu").getValue();
+        project.syspara.Syspara syspara = sysparaService.find("online_username_black_menu");
+        if (syspara == null) {
+            return false;
+        }
+        String blackMenu = syspara.getValue();
         if (StringUtils.isNullOrEmpty(blackMenu)) {
             return false;
         }

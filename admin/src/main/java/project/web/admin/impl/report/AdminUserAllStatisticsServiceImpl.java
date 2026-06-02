@@ -255,14 +255,17 @@ public class AdminUserAllStatisticsServiceImpl extends HibernateDaoSupport  impl
 	public Page exchangePagedQuery(int pageNo, int pageSize,String startTime,String endTime,String loginPartyId,String usernameOrUid,String roleName,String targetPartyId,
 								   boolean isAgentView,String sortColumn,String sortType, String sellerId ,String sellerName, String all_para_party_id) {
 		Map<String,Object> parameters = new HashMap<String,Object>();
+
+		// ---- 先构建 WHERE 条件参数（count 和 data 查询共用） ----
+
 		StringBuffer queryString = new StringBuffer();
 		queryString.append("SELECT party.ROLENAME AS rolename,party.USERNAME AS username,party.REMARKS AS remarks, party.USERCODE AS UID,IFNULL(uds.RECO_NUM,0) AS reco_num,party.UUID AS partyId,IFNULL(wallet.MONEY,0) AS money, ");//用户
-		queryString.append("IFNULL(SUM(ud.RECHARGE),0) AS recharge,IFNULL(SUM(ud.RECHARGE_USDT),0) AS recharge_usdt,IFNULL(SUM(ud.RECHARGE_ETH),0) AS recharge_eth,IFNULL(SUM(ud.RECHARGE_BTC),0) AS recharge_btc,IFNULL(SUM(ud.RECHARGE_USDC),0) AS recharge_usdc,IFNULL(SUM(ud.RECHARGE_LTC),0) AS recharge_ltc,IFNULL(SUM(ud.RECHARGE_USDT),0) AS recharge_usdt,"
+		queryString.append("IFNULL(SUM(ud.RECHARGE),0) AS recharge,IFNULL(SUM(ud.RECHARGE_USDT),0) AS recharge_usdt,IFNULL(SUM(ud.RECHARGE_ETH),0) AS recharge_eth,IFNULL(SUM(ud.RECHARGE_BTC),0) AS recharge_btc,IFNULL(SUM(ud.RECHARGE_USDC),0) AS recharge_usdc,IFNULL(SUM(ud.RECHARGE_LTC),0) AS recharge_ltc,"
 				+ "IFNULL(SUM(ud.WITHDRAW),0) AS withdraw,IFNULL(SUM(ud.WITHDRAW_ETH),0) AS withdraw_eth,IFNULL(SUM(ud.WITHDRAW_BTC),0) AS withdraw_btc,"
 				+ "IFNULL(SUM(ud.WITHDRAW_USDT),0) AS withdraw_usdt,IFNULL(SUM(ud.WITHDRAW_USDC),0) AS withdraw_usdc,"
 				+ "IFNULL(SUM(ud.RECHARGE_WITHDRAWAL_FEE),0) AS recharge_withdrawal_fee,IFNULL(SUM(ud.GIFT_MONEY),0) AS gift_money,IFNULL(SUM(ud.RECHARGE)-SUM(ud.WITHDRAW),0) AS balance_amount, ");//充提
 		queryString.append("IFNULL(SUM(ud.AMOUNT),0) AS amount,IFNULL(SUM(ud.FEE),0) AS fee,IFNULL(SUM(ud.ORDER_INCOME),0) AS order_income, IFNULL(SUM(ud.RECHARGE_COMMISSION),0) AS rechargeCommission,");//永续
-		queryString.append("IFNULL(SUM(ud.FINANCE_AMOUNT),0) AS finance_amount,IFNULL(SUM(ud.FINANCE_INCOME),0) AS finance_income, IFNULL(SUM(ud.RECHARGE_COMMISSION),0) AS rechargeCommission, IFNULL(SUM(ud.WITHDRAW_COMMISSION),0) AS withdrawCommission,");//理财
+		queryString.append("IFNULL(SUM(ud.FINANCE_AMOUNT),0) AS finance_amount,IFNULL(SUM(ud.FINANCE_INCOME),0) AS finance_income, IFNULL(SUM(ud.WITHDRAW_COMMISSION),0) AS withdrawCommission,");//理财
 		queryString.append("IFNULL(SUM(ud.EXCHANGE_AMOUNT),0) AS exchange_amount,IFNULL(SUM(ud.EXCHANGE_FEE),0) AS exchange_fee,IFNULL(SUM(ud.EXCHANGE_INCOME),0) AS exchange_income,IFNULL(SUM(ud.COIN_INCOME),0) AS coin_income, ");//币币
 		queryString.append("IFNULL(SUM(ud.FURTURES_AMOUNT),0) AS furtures_amount,IFNULL(SUM(ud.FURTURES_FEE),0) AS furtures_fee,IFNULL(SUM(ud.FURTURES_INCOME),0) AS furtures_income, ");//交割
 		queryString.append("IFNULL(SUM(ud.MINER_AMOUNT),0) AS miner_amount,IFNULL(SUM(ud.MINER_INCOME),0) AS miner_income, ");//矿机
@@ -351,12 +354,47 @@ public class AdminUserAllStatisticsServiceImpl extends HibernateDaoSupport  impl
 //		queryString.append("GROUP BY ud.PARTY_ID ");
 		queryString.append("GROUP BY party.UUID ");
 		queryString.append("ORDER BY "+sortHandle(sortColumn, sortType)+" DATE(ud.CREATE_TIME) DESC ");
+
+		// 单独算 count，避免 pagedQuerySQL 把带 GROUP BY 的复杂 SQL 包成子查询后失败
+		int customTotal = 0;
+		try {
+			StringBuffer countSql = new StringBuffer("SELECT COUNT(DISTINCT party.UUID) FROM PAT_PARTY party ");
+			countSql.append("LEFT JOIN T_MALL_SELLER s ON s.UUID = party.UUID ");
+			countSql.append("WHERE 1=1 AND party.ROLENAME IN('" + Constants.SECURITY_ROLE_MEMBER + "') ");
+			if (!StringUtils.isNullOrEmpty(usernameOrUid)) {
+				countSql.append("AND (party.USERNAME like:username OR party.USERCODE like:username) ");
+			}
+			if (!StringUtils.isNullOrEmpty(roleName)) {
+				countSql.append("AND party.ROLENAME =:roleName ");
+			}
+			if (!StringUtils.isNullOrEmpty(sellerId)) {
+				countSql.append("AND s.UUID =:sellerId ");
+			}
+			if (!StringUtils.isNullOrEmpty(sellerName)) {
+				countSql.append("AND s.NAME =:sellerName ");
+			}
+			if (parameters.containsKey("children")) {
+				countSql.append("AND party.UUID in (:children) ");
+			}
+			Integer cnt = namedParameterJdbcTemplate.queryForObject(countSql.toString(), parameters, Integer.class);
+			customTotal = cnt == null ? 0 : cnt;
+		} catch (Exception e) {
+			org.slf4j.LoggerFactory.getLogger(getClass()).error("exchangePagedQuery count failed", e);
+			customTotal = Integer.MAX_VALUE;
+		}
+
 		Page page = this.pagedQueryDao.pagedQuerySQL(pageNo, pageSize, queryString.toString(), parameters);
+		// 覆盖 pagedQuerySQL 可能返回的 Integer.MAX_VALUE
+		if (customTotal != Integer.MAX_VALUE) {
+			page.setTotalElements(customTotal);
+			page.setThisPageNumber(pageNo);
+			page.setPageSize(pageSize);
+		}
 //		page.setElements(format(page.getElements()));
 		compute(page.getElements());
 		return page;
 	}
-	
+
 	public String sortHandle(String column,String type) {
 		//自定义判断处理，防止注入
 		List<String> columns=Arrays.asList(new String[] {"recharge_usdt","gift_money","withdraw","third_recharge_amount"});

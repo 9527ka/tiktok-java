@@ -143,6 +143,7 @@
 				<value>contractApplyOrderService</value>
 				<!-- registry -->
 				<value>localUserService</value>
+				<value>userDataService</value>
 
 				<!-- hobi -->
 				<value>dataDBService</value>

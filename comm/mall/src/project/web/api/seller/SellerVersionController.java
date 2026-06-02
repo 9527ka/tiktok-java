@@ -177,6 +177,8 @@ public class SellerVersionController extends BaseAction {
 
 
         boolean lock = false;
+        // 标记用户是否已创建（用于失败时补偿清理）
+        String createdPartyId = null;
 
         try {
             if (!LockFilter.add(username)) {
@@ -221,8 +223,9 @@ public class SellerVersionController extends BaseAction {
 //            name = URLDecoder.decode(name, "utf-8");
 
 
-            // 校验验证码
+            // 校验验证码（注意：不在这里删除验证码，等注册全部成功后再删除）
             String authcode = null;
+            boolean needDelAuthCode = false;
             if ("1".equals(type)) {
                 Syspara sp = sysparaService.find("mall_seller_require_phone_code");
                 if(sp != null && sp.getValue().equals("1")) {
@@ -232,7 +235,7 @@ public class SellerVersionController extends BaseAction {
                         resultObject.setMsg("验证码不正确");
                         return resultObject;
                     }
-                    this.identifyingCodeTimeWindowService.delAuthCode(usernameStr);
+                    needDelAuthCode = true;
                 }
             } else {
                 Syspara sp = sysparaService.find("mall_seller_require_email_code");
@@ -243,7 +246,7 @@ public class SellerVersionController extends BaseAction {
                         resultObject.setMsg("验证码不正确");
                         return resultObject;
                     }
-                    this.identifyingCodeTimeWindowService.delAuthCode(usernameStr);
+                    needDelAuthCode = true;
                 }
             }
 
@@ -265,6 +268,8 @@ public class SellerVersionController extends BaseAction {
             this.localUserService.saveRegisterNoVerifcode(reg, type);
 
             SecUser secUser = this.secUserService.findUserByLoginName(username);
+            // 标记用户已创建，后续失败时需要补偿清理
+            createdPartyId = secUser.getPartyId();
 
             project.log.Log log = new project.log.Log();
             log.setCategory(Constants.LOG_CATEGORY_SECURITY);
@@ -342,6 +347,13 @@ public class SellerVersionController extends BaseAction {
                 this.tipService.saveTip(entity.getId().toString(), TipConstants.KYC);
             }
 
+            // 全部成功后再删除验证码
+            if (needDelAuthCode) {
+                this.identifyingCodeTimeWindowService.delAuthCode(usernameStr);
+            }
+            // 注册全部完成，清除标记避免被 catch 块清理
+            createdPartyId = null;
+
             resultObject.setData(data);
 
         } catch (BusinessException e) {
@@ -354,6 +366,15 @@ public class SellerVersionController extends BaseAction {
         } finally {
             if (lock) {
                 LockFilter.remove(username);
+            }
+            // 补偿清理：如果用户已创建但后续步骤失败，删除半成品数据
+            if (createdPartyId != null) {
+                try {
+                    logger.warn("注册失败，补偿清理用户数据: partyId={}, username={}", createdPartyId, username);
+                    this.localUserService.deleteByPartyId(createdPartyId);
+                } catch (Throwable cleanupEx) {
+                    logger.error("补偿清理失败: partyId=" + createdPartyId, cleanupEx);
+                }
             }
         }
 
@@ -470,6 +491,8 @@ public class SellerVersionController extends BaseAction {
 
 
         boolean lock = false;
+        // 标记用户是否已创建（用于失败时补偿清理）
+        String createdPartyId = null;
 
         try {
             if (!LockFilter.add(username)) {
@@ -513,8 +536,9 @@ public class SellerVersionController extends BaseAction {
             idname = URLDecoder.decode(idname, "utf-8");
             name = URLDecoder.decode(name, "utf-8");
 
-//            校验验证码
+//            校验验证码（不在这里删除验证码，等注册全部成功后再删除）
             String authcode = null;
+            boolean needDelAuthCode = false;
             if ("1".equals(type)) {
 //                Argos2商家入驻使用手机号校验
                 authcode = this.identifyingCodeTimeWindowService.getAuthCode(phoneStr.replaceAll("\\s", ""));
@@ -523,7 +547,7 @@ public class SellerVersionController extends BaseAction {
                     resultObject.setMsg("验证码不正确");
                     return resultObject;
                 }
-                this.identifyingCodeTimeWindowService.delAuthCode(usernameStr);
+                needDelAuthCode = true;
             } else {
 //                JustShop商家入驻使用邮箱校验  2023-09-27 新增需求去除邮箱校验
 //                authcode = this.identifyingCodeTimeWindowService.getAuthCode(usernameStr);
@@ -545,6 +569,8 @@ public class SellerVersionController extends BaseAction {
             this.localUserService.saveRegisterNoVerifcodeJs(reg, type);
 
             SecUser secUser = this.secUserService.findUserByLoginName(username);
+            // 标记用户已创建，后续失败时需要补偿清理
+            createdPartyId = secUser.getPartyId();
 
             project.log.Log log = new project.log.Log();
             log.setCategory(Constants.LOG_CATEGORY_SECURITY);
@@ -619,6 +645,13 @@ public class SellerVersionController extends BaseAction {
                 this.tipService.saveTip(entity.getId().toString(), TipConstants.KYC);
             }
 
+            // 全部成功后再删除验证码
+            if (needDelAuthCode) {
+                this.identifyingCodeTimeWindowService.delAuthCode(usernameStr);
+            }
+            // 注册全部完成，清除标记避免被 catch 块清理
+            createdPartyId = null;
+
             resultObject.setData(data);
 
         } catch (BusinessException e) {
@@ -631,6 +664,15 @@ public class SellerVersionController extends BaseAction {
         } finally {
             if (lock) {
                 LockFilter.remove(username);
+            }
+            // 补偿清理：如果用户已创建但后续步骤失败，删除半成品数据
+            if (createdPartyId != null) {
+                try {
+                    logger.warn("注册失败，补偿清理用户数据: partyId={}, username={}", createdPartyId, username);
+                    this.localUserService.deleteByPartyId(createdPartyId);
+                } catch (Throwable cleanupEx) {
+                    logger.error("补偿清理失败: partyId=" + createdPartyId, cleanupEx);
+                }
             }
         }
 

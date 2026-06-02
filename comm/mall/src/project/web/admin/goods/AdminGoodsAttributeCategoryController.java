@@ -64,7 +64,7 @@ public class AdminGoodsAttributeCategoryController extends PageActionSupport {
             pageInfo.setElements(resultList);
             pageInfo.setTotalElements(goodsAttributeCategoryService.getCount());
             pageInfo.setThisPageNumber(model.getPageNo());
-            pageInfo.setPageSize(model.getPageSize());
+            pageInfo.setPageSize(20);
             modelAndView.addObject("pageNo", model.getPageNo());
             modelAndView.addObject("message", message);
             modelAndView.addObject("page", pageInfo);

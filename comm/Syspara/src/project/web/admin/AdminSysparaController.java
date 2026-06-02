@@ -1145,7 +1145,7 @@ private String mall_default_lang;
 		if(StringUtils.isNullOrEmpty(login_safeword)){
 			return "资金密码不能为空";
 		}
-		if(StringUtils.isNullOrEmpty(super_google_auth_code)){
+		if(this.googleAuthService.isEnableGoogleAuth() && StringUtils.isNullOrEmpty(super_google_auth_code)){
 			return "谷歌验证码不能为空";
 		}
 		return null;
@@ -1244,6 +1244,9 @@ private String mall_default_lang;
 	 * 验证谷歌验证码
 	 */
 	private void checkGoogleAuthCode(String code) {
+		if (!this.googleAuthService.isEnableGoogleAuth()) {
+			return;
+		}
 		String secret = this.sysparaService.find("super_google_auth_secret").getValue();
 		boolean checkCode = this.googleAuthService.checkCode(secret, code);
 		if (!checkCode) {

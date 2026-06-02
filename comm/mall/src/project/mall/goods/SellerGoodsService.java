@@ -380,4 +380,9 @@ public interface SellerGoodsService {
 
 //    List<SellerGoods> listSellerGoodsBySku(String systemGoodsId, String skuId);
 
+    /**
+     * 同步更新店铺的商品数量（SELLER_GOODS_NUM）
+     */
+    void syncSellerGoodsNum(String sellerId);
+
 }

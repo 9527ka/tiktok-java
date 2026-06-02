@@ -349,6 +349,7 @@
 														</li>
 													</c:if>
 													<li><a href="javascript:updateHighOpinion('${item.sellerId}')">修改好评率</a></li>
+													<li><a href="javascript:updateManualRating('${item.sellerId}')">设置综合评分</a></li>
 												</ul>
 											</div>
 										</c:if>
@@ -876,6 +877,41 @@
 	</form>
 
 </div>
+
+<div class="form-group">
+	<form action="<%=basePath%>mall/seller/updateManualRating.action"
+		  method="post" id="manualRatingForm">
+		<input type="hidden" name="pageNo" id="pageNo" value="${pageNo}">
+		<input type="hidden" name="id" id="sellerIdRating" value="">
+		<div class="col-sm-1">
+			<div class="modal fade" id="modal_manual_rating" tabindex="-1" role="dialog"
+				 aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+							<h4 class="modal-title">设置综合评分</h4>
+						</div>
+						<div class="modal-body">
+							<div class="">
+								<p style="color:#999;margin-bottom:8px;">输入 0~5 之间的数值，留空则使用评价自动计算</p>
+								<input id="manualRating" name="manualRating"
+									   class="form-control" placeholder="例如: 4.8"
+									   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\..*/g, '$1'); if (this.value && parseFloat(this.value) > 5) { this.value = '5'; }"
+									   maxlength="4">
+							</div>
+						</div>
+						<div class="modal-footer" style="margin-top: 0;">
+							<button type="button" class="btn " data-dismiss="modal">关闭</button>
+							<button type="submit" class="btn btn-default">确认</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
 <div class="form-group">
 
 	<form action="<%=basePath%>mall/seller//updateStoreLevel.action"
@@ -1419,6 +1455,12 @@
 	function updateHighOpinion(sellerId){
 		$("#sellerId19h").val(sellerId);
 		$('#modal_set11h').modal("show");
+	}
+
+	function updateManualRating(sellerId){
+		$("#sellerIdRating").val(sellerId);
+		$("#manualRating").val('');
+		$('#modal_manual_rating').modal("show");
 	}
 
 	function reject(id,remark) {

@@ -169,9 +169,8 @@
 							<td>UID</td>
 							<td>推荐人</td>
 							<td>账户类型</td>
-							<c:if test="${platformName == 'TikTokMall'}">
-								<td>店铺logo</td>
-							</c:if>
+							<td>店铺logo</td>
+							<td>证件照</td>
 							<td>店铺名称</td>
 							<td>实名姓名</td>
 							<td>绑定手机</td>
@@ -198,7 +197,8 @@
 													`${item.idimg_1}`,
 													`${item.idimg_2}`,
 													`${item.idimg_3}`,
-													`${item.idname}`)">
+													`${item.idname}`,
+													`${item.sellerImg}`)">
 												${item.username}
 										</a>
 									</td>
@@ -221,11 +221,22 @@
 										</c:choose>
 									</td>
 
-									<c:if test="${platformName == 'TikTokMall'}">
-										<td>
-											<img width="60px" height="60px" class="lazy-img" data-src="${item.sellerImg}" />　
-										</td>
-									</c:if>
+									<td>
+										<c:if test="${not empty item.sellerImg}">
+											<img width="60px" height="60px" class="lazy-img" data-src="${item.sellerImg}" />
+										</c:if>
+									</td>
+									<td style="min-width:200px;">
+										<c:if test="${not empty item.idimg_1}">
+											<img width="60px" height="60px" class="lazy-img kyc-thumb" data-src="${item.idimg_1}" title="证件正面" style="cursor:pointer;margin:2px;" onclick="previewImg(this.src)"/>
+										</c:if>
+										<c:if test="${not empty item.idimg_2}">
+											<img width="60px" height="60px" class="lazy-img kyc-thumb" data-src="${item.idimg_2}" title="证件背面" style="cursor:pointer;margin:2px;" onclick="previewImg(this.src)"/>
+										</c:if>
+										<c:if test="${not empty item.idimg_3}">
+											<img width="60px" height="60px" class="lazy-img kyc-thumb" data-src="${item.idimg_3}" title="手持证件照" style="cursor:pointer;margin:2px;" onclick="previewImg(this.src)"/>
+										</c:if>
+									</td>
 									<td>
 											${item.sellerName}
 									</td>
@@ -336,6 +347,15 @@
 				<div class="">
 					国籍<input id="modal_nationality" type="text"
 							   name="modal_nationality" class="form-control" readonly="readonly" />
+				</div>
+			</div>
+
+			<div class="modal-header">
+				<h4 class="modal-title">店铺logo</h4>
+			</div>
+			<div class="modal-body col-md-12">
+				<div class="col-md-12 col-lg-4">
+					<img width="200px" height="200px" id="modal_sellerImg" src="" style="display:none; object-fit:contain; border:1px solid #eee;" onclick="openImg(this.id)"/>
 				</div>
 			</div>
 
@@ -609,7 +629,7 @@
 		document.getElementById("state_para").value = state;
 		document.getElementById("queryForm").submit();
 	}
-	function detail(partyId, name, idnumber, nationality, idimg_1, idimg_2, idimg_3, idname) {
+	function detail(partyId, name, idnumber, nationality, idimg_1, idimg_2, idimg_3, idname, sellerImg) {
 		$("#partyId_modal_detail").val(partyId);
 		$("#img_idimg_1").val(idimg_1);
 		$("#img_idimg_2").val(idimg_2);
@@ -626,6 +646,12 @@
 		$("#modal_idimg_2").parent().attr("href", idimg_2);
 		$("#modal_idimg_3").attr("src", idimg_3);
 		$("#modal_idimg_3").parent().attr("href", idimg_3);
+		// 店铺logo
+		if (sellerImg) {
+			$("#modal_sellerImg").attr("src", sellerImg).show();
+		} else {
+			$("#modal_sellerImg").hide();
+		}
 		black_overlay.style.display = 'none';
 		enlargeContainer.style.display = 'none';
 		$('#modal_detail').modal("show");
@@ -724,6 +750,15 @@
 		enlargeContainer.style.display = 'none';
 	});
 
+	// 列表中证件照点击放大预览
+	function previewImg(src) {
+		if (!src) return;
+		var overlay = document.getElementById('img_preview_overlay');
+		var previewImg = document.getElementById('img_preview_big');
+		previewImg.src = src;
+		overlay.style.display = 'flex';
+	}
+
 </script>
 <style>
 	.black_overlay {
@@ -767,7 +802,33 @@
 		opacity: 0; /* 初始时图片透明 */
 		transition: opacity 0.3s ease-in; /* 渐变过渡效果 */
 	}
+
+	.kyc-thumb {
+		object-fit: cover;
+		border: 1px solid #ddd;
+		border-radius: 3px;
+	}
+
+	#img_preview_overlay {
+		display: none;
+		position: fixed;
+		top: 0; left: 0; right: 0; bottom: 0;
+		background: rgba(0,0,0,0.8);
+		z-index: 9999;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+	}
+	#img_preview_big {
+		max-width: 90%;
+		max-height: 90%;
+	}
 </style>
+
+<!-- 证件照放大预览遮罩 -->
+<div id="img_preview_overlay" onclick="this.style.display='none'">
+	<img id="img_preview_big" src="" />
+</div>
 
 <script>
 	// 页面加载完毕后执行异步加载图片

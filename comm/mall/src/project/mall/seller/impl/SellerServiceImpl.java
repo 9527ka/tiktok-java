@@ -105,14 +105,8 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
         query.add(Property.forName("black").eq(0));
 //        query.addOrder(Order.desc("createTime"));
         if (isRec != null) {
-            // 推荐店铺 = 店铺下有任意 IS_PROMOTE=1 上架商品的店铺
-            DetachedCriteria sub = DetachedCriteria.forClass(project.mall.goods.model.SellerGoods.class)
-                    .add(Property.forName("isPromote").eq(1))
-                    .add(Property.forName("isShelf").eq(1))
-                    .add(Property.forName("isValid").eq(1))
-                    .setProjection(Projections.distinct(Projections.property("sellerId")));
-            query.add(Subqueries.propertyIn("id", sub));
-            query.addOrder(Order.desc("createTime"));
+            query.add(Property.forName("recTime").gt(0L));
+            query.addOrder(Order.desc("recTime"));
         }
 
         // 查询总条数
@@ -1211,6 +1205,49 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
 
     public void setPagedQueryDao(PagedQueryDao pagedQueryDao) {
         this.pagedQueryDao = pagedQueryDao;
+    }
+
+    @Override
+    public void autoIncreaseFakeSales() {
+        // 过滤规则：只对 T_MALL_SELLER.AUTO_FAKE_SALES = 'Y' 的店铺加销量。
+        //   - 新注册店铺默认 N（不加销量），管理员需手动 UPDATE 才会自增。
+        //   - 真实卖家商品销量、店铺销量只能通过真实买家下单 / 虚拟 POS 下单增加。
+        List<Map<String, Object>> goodsList = jdbcTemplate.queryForList(
+                "SELECT g.UUID, g.SELLER_ID FROM T_MALL_SELLER_GOODS g " +
+                "INNER JOIN T_MALL_SELLER s ON s.UUID = g.SELLER_ID " +
+                "WHERE g.IS_SHELF = 1 AND g.IS_VALID = 1 AND s.AUTO_FAKE_SALES = 'Y'");
+        if (goodsList == null || goodsList.isEmpty()) {
+            logger.info("autoIncreaseFakeSales: 没有标记 AUTO_FAKE_SALES=Y 的店铺商品，跳过");
+            return;
+        }
+        logger.info("autoIncreaseFakeSales: 待自增商品 {} 条 (AUTO_FAKE_SALES=Y 店铺)", goodsList.size());
+
+        java.util.Random rnd = new java.util.Random();
+        List<Object[]> goodsParams = new ArrayList<>(goodsList.size());
+        Map<String, Long> sellerSumMap = new HashMap<>();
+        for (Map<String, Object> g : goodsList) {
+            String goodsUuid = (String) g.get("UUID");
+            String sellerId = (String) g.get("SELLER_ID");
+            int inc = 10 + rnd.nextInt(91); // 10~100
+            goodsParams.add(new Object[]{inc, goodsUuid});
+            if (sellerId != null) {
+                sellerSumMap.merge(sellerId, (long) inc, Long::sum);
+            }
+        }
+
+        int[] goodsResults = jdbcTemplate.batchUpdate(
+                "UPDATE T_MALL_SELLER_GOODS SET SOLD_NUM = IFNULL(SOLD_NUM, 0) + ? WHERE UUID = ?",
+                goodsParams);
+        logger.info("autoIncreaseFakeSales: 已更新商品销量 {} 条", goodsResults.length);
+
+        List<Object[]> sellerParams = new ArrayList<>(sellerSumMap.size());
+        for (Map.Entry<String, Long> e : sellerSumMap.entrySet()) {
+            sellerParams.add(new Object[]{e.getValue(), e.getKey()});
+        }
+        int[] sellerResults = jdbcTemplate.batchUpdate(
+                "UPDATE T_MALL_SELLER SET FAKE_SOLD_NUM = IFNULL(FAKE_SOLD_NUM, 0) + ? WHERE UUID = ?",
+                sellerParams);
+        logger.info("autoIncreaseFakeSales: 已同步店铺虚假销量 {} 家", sellerResults.length);
     }
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

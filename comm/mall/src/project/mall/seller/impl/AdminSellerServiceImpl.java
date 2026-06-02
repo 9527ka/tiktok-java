@@ -557,6 +557,13 @@ public class AdminSellerServiceImpl extends HibernateDaoSupport implements Admin
         this.sellerService.updateSeller(seller);
     }
 
+    @Override
+    public void updateManualRating(String sellerId, Float manualRating) {
+        Seller seller = this.sellerService.getSeller(sellerId);
+        seller.setManualRating(manualRating);
+        this.sellerService.updateSeller(seller);
+    }
+
 
         @Override
     public int getGoodsNumBySellerIds(String sellerId) {

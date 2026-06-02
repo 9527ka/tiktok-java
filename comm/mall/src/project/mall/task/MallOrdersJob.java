@@ -93,6 +93,20 @@ public class MallOrdersJob {
     }
 
     /**
+     * 每日上架商品随机增加 10~100 销量，并同步累加到店铺虚假销量
+     */
+    public void autoFakeSalesJob() {
+        long start = System.currentTimeMillis();
+        logger.info(DateUtils.toMillString(new Date()) + " **********每日商品销量随机增加定时任务开始**********");
+        try {
+            sellerService.autoIncreaseFakeSales();
+        } catch (Throwable t) {
+            logger.error("autoFakeSalesJob error", t);
+        }
+        logger.info(DateUtils.toMillString(new Date()) + " 每日商品销量随机增加定时任务结束 花费时间:" + (System.currentTimeMillis() - start) + "ms");
+    }
+
+    /**
      * 停止直通车商品
      * 1.查询所有直通车购买记录。
      * 2.通过购买记录查询店铺ID，过期时间。

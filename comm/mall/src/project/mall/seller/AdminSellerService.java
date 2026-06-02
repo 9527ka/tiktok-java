@@ -68,4 +68,6 @@ public interface AdminSellerService {
     Page invitePagedQuery(int pageNo, int pageSize, String userName, String userCode, String sellerName, String state, String startTime, String endTime,String lotteryName);
 
     void updateHighOpinion(String partyId, Double highOpinion);
+
+    void updateManualRating(String sellerId, Float manualRating);
 }

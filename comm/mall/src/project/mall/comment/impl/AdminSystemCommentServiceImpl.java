@@ -127,7 +127,7 @@ public class AdminSystemCommentServiceImpl extends HibernateDaoSupport implement
         systemComment.setImgUrl6(model.getImgUrl6());
         systemComment.setImgUrl7(model.getImgUrl7());
         systemComment.setImgUrl8(model.getImgUrl8());
-        systemComment.setImgUrl8(model.getImgUrl9());
+        systemComment.setImgUrl9(model.getImgUrl9());
         systemComment.setContent(model.getContent());
         systemComment.setSystemGoodId(model.getSystemGoodId());
         systemComment.setScore(model.getScore());

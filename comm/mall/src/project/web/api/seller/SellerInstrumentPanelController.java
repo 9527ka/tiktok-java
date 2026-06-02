@@ -98,8 +98,14 @@ public class SellerInstrumentPanelController extends BaseAction {
         // 店铺关注数
         o.put("focusCount", Integer.parseInt(String.valueOf(sellerResult.get("focusCount"))) + Integer.parseInt(String.valueOf(sellerResult.get("focusCountReals"))));
         float avgRating = goodsOrdersService.selectAvgEvaluationBySellerId(sellerId);
-        //评分，暂时没有
-        o.put("rating", avgRating);
+        //评分: 优先取管理员手动设置的值，否则取评价均值
+        // seller 在后面已加载，此处先取
+        Seller sellerForRating = sellerService.getSeller(sellerId);
+        if (sellerForRating != null && sellerForRating.getManualRating() != null) {
+            o.put("rating", sellerForRating.getManualRating());
+        } else {
+            o.put("rating", avgRating);
+        }
         Calendar calendar = Calendar.getInstance();
         Date now = calendar.getTime();
         long visits1Today = sellerGoodsService.getNumberOfVisitorsByDate(sellerId, now, now);

@@ -100,4 +100,9 @@ public interface SellerService {
      * @param soldCount 增加的销量数量
      */
     void increaseSoldNum(String sellerId, int soldCount);
+
+    /**
+     * 每日定时任务：上架商品随机增加 10~100 销量，并同步累加到店铺虚假销量
+     */
+    void autoIncreaseFakeSales();
 }

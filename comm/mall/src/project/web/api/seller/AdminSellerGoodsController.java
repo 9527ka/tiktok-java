@@ -481,6 +481,9 @@ public class AdminSellerGoodsController extends BaseAction {
             wac.publishEvent(new SellerGoodsUpdateEvent(this, info));
         }
 
+        // 同步更新店铺商品数
+        sellerGoodsService.syncSellerGoodsNum(partyId);
+
         resultObject.setMsg("操作成功");
         return resultObject;
     }
@@ -515,6 +518,9 @@ public class AdminSellerGoodsController extends BaseAction {
                 sellerGoodsService.deleteSellerGoods(goodsId, partyId);
             }
         }
+
+        // 同步更新店铺商品数
+        sellerGoodsService.syncSellerGoodsNum(partyId);
 
         resultObject.setMsg("操作成功");
         return resultObject;

@@ -1252,6 +1252,18 @@ public class AdminMallGoodsServiceImpl extends HibernateDaoSupport implements Ad
 
         String sql = "update T_MALL_SELLER_GOODS set IS_SHELF = :isShelf where UUID in (:sellerGoodsIdList)";
         nameJdbc.update(sql, params);
+
+        // 同步更新受影响店铺的商品数
+        String sellerIdsSql = "SELECT DISTINCT SELLER_ID FROM T_MALL_SELLER_GOODS WHERE UUID IN (:sellerGoodsIdList)";
+        List<String> sellerIds = nameJdbc.queryForList(sellerIdsSql, params, String.class);
+        if (!sellerIds.isEmpty()) {
+            Map<String, Object> syncParams = new HashMap<>();
+            syncParams.put("sellerIds", sellerIds);
+            String syncSql = "UPDATE T_MALL_SELLER s SET s.SELLER_GOODS_NUM = " +
+                "(SELECT COUNT(*) FROM T_MALL_SELLER_GOODS g WHERE g.SELLER_ID = s.UUID AND g.IS_SHELF = 1 AND g.IS_VALID = 1) " +
+                "WHERE s.UUID IN (:sellerIds)";
+            nameJdbc.update(syncSql, syncParams);
+        }
     }
 
     @Override

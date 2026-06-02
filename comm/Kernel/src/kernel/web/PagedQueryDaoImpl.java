@@ -64,6 +64,8 @@ public class PagedQueryDaoImpl extends HibernateDaoSupport implements PagedQuery
 			total = cnt == null ? 0 : cnt;
 		} catch (Exception e) {
 			// 兜底: 失败时退回老行为 (Integer.MAX_VALUE), 至少不会让查询挂掉.
+			org.slf4j.LoggerFactory.getLogger(PagedQueryDaoImpl.class)
+				.error("pagedQuerySQL count failed: {}", e.getMessage(), e);
 			total = Integer.MAX_VALUE;
 		}
 		Page page = new Page(pageNo, pageSize, total);

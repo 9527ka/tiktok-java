@@ -104,6 +104,13 @@ public class Seller extends EntityObject<String> {
      */
     private Integer fakeSoldNum;
 
+    /**
+     * 是否允许定时任务自动增加商品 & 店铺虚假销量。Y/N，默认 N。
+     * 新注册店铺默认 N（不加销量），管理员可手动开启。
+     * 真实卖家的销量只能通过真实买家 + 虚拟 POS 下单增加。
+     */
+    private String autoFakeSales;
+
     //    商家首充礼金状态(未充值0,可领取1，已领取2，已充值但是不满足领取条件3)
     private int rechargeBonusStatus;
 
@@ -170,6 +177,11 @@ public class Seller extends EntityObject<String> {
      * 好评率
      */
     private Double highOpinion = 1.00d;
+
+    /**
+     * 管理员手动设置的综合评分（null 表示使用评价均值自动计算）
+     */
+    private Float manualRating;
 
     /**
      * 关注数量

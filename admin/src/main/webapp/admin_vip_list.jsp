@@ -88,7 +88,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach items="${page}" var="item"
+									<c:forEach items="${page.elements}" var="item"
 										varStatus="stat">
 										<tr>
 											<td>${item.level}</td>

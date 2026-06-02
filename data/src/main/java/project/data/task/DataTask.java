@@ -99,6 +99,10 @@ public class DataTask {
 		mallOrdersJob.autoSellerInfoJob();
 	}
 
+	public void autoFakeSales() {
+		mallOrdersJob.autoFakeSalesJob();
+	}
+
 	public void autoProfit() {
 		mallOrdersJob.autoProfitJob();
 	}
