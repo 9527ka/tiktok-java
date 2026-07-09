@@ -250,7 +250,7 @@ public class SellerGoodsController extends BaseAction {
 
 //                goodsVo.setViewsNum(viewNums.getOrDefault(pl.getId(), 0L));
                 goodsVo.setCategoryId(pl.getCategoryId());
-                goodsVo.setSoldNum(pl.getSoldNum());
+                goodsVo.setSoldNum((pl.getSoldNum()==null?0:pl.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(pl.getId().toString()));
                 goodsVo.setName(pLang.getName());
                 goodsVo.setUnit(pLang.getUnit());
                 goodsVo.setDes(pLang.getDes());
@@ -389,9 +389,8 @@ public class SellerGoodsController extends BaseAction {
         logger.info("-----> [SellerGoodsController searchKeyword] 统计当前店铺列表下的销量、流量、好评、商品等数据耗时:{} ms", (searchEndTime - searchBeginTime));
 
         for (SellerVo sellerVo : sellerVoList) {
-            sellerVo.setSoldNum(
-                    (Objects.nonNull(sellerVo.getSoldNum())?sellerVo.getSoldNum():0)+
-                            (Objects.nonNull(sellerVo.getFakeSoldNum())?sellerVo.getFakeSoldNum():0));
+            // 搜索店铺列表的销量只显示真实派单交易成功的销量(SOLD_NUM), 不计入虚假销量(FAKE_SOLD_NUM)
+            sellerVo.setSoldNum(Objects.nonNull(sellerVo.getSoldNum())?sellerVo.getSoldNum():0L);
             sellerVo.setSellerGoodsNum(Objects.nonNull(sellerVo.getSellerGoodsNum())?sellerVo.getSellerGoodsNum():0);
         }
 
@@ -465,7 +464,7 @@ public class SellerGoodsController extends BaseAction {
             goodsVo.setSellingPrice(pl.getSellingPrice());
             goodsVo.setViewsNum(viewNums.getOrDefault(pl.getId().toString(), 0L));
             goodsVo.setCategoryId(pl.getCategoryId());
-            goodsVo.setSoldNum(pl.getSoldNum());
+            goodsVo.setSoldNum((pl.getSoldNum()==null?0:pl.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(pl.getId().toString()));
             //设置折扣信息
             setDiscount(pl, goodsVo);
 
@@ -564,8 +563,8 @@ public class SellerGoodsController extends BaseAction {
 //        sellerVo.setSellerGoodsNum(sellerGoodsService.getGoodsNumBySellerId(seller.getId().toString()));
 //        sellerVo.setFocusNum(focusSellerService.getFocusCount(seller.getId().toString()));
 //        sellerVo.setHighOpinion(evaluationService.getHighOpinionBySellerId(sellerGoods.getSellerId()));
-        // 添加虚假销量
-        sellerVo.setSoldNum(fakeSoldNum + seller.getSoldNum());
+        // 店铺销量只显示真实派单交易成功的销量(SOLD_NUM), 不计入虚假销量(FAKE_SOLD_NUM)
+        sellerVo.setSoldNum(seller.getSoldNum() == null ? 0L : seller.getSoldNum());
         GoodsVo goodsVo = new GoodsVo();
         BeanUtils.copyProperties(sellerGoods.getSystemGoods(), goodsVo);
         goodsVo.setId(sellerGoods.getId());
@@ -581,7 +580,7 @@ public class SellerGoodsController extends BaseAction {
         }
         goodsVo.setViewsNum(sellerGoodsService.getViewNums(sellerGoods.getId().toString()));
         goodsVo.setCategoryId(sellerGoods.getCategoryId());
-        goodsVo.setSoldNum(sellerGoods.getSoldNum());
+        goodsVo.setSoldNum((sellerGoods.getSoldNum()==null?0:sellerGoods.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(sellerGoods.getId().toString()));
         goodsVo.setName(pLang.getName());
         goodsVo.setUnit(pLang.getUnit());
         goodsVo.setDes(pLang.getDes());
@@ -689,7 +688,7 @@ public class SellerGoodsController extends BaseAction {
 
             goodsVo.setViewsNum(viewNums.getOrDefault(pl.getId().toString(), 0L));
             goodsVo.setCategoryId(pl.getCategoryId());
-            goodsVo.setSoldNum(pl.getSoldNum());
+            goodsVo.setSoldNum((pl.getSoldNum()==null?0:pl.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(pl.getId().toString()));
             goodsVo.setName(pLang.getName());
             goodsVo.setUnit(pLang.getUnit());
             goodsVo.setDes(pLang.getDes());
@@ -778,7 +777,7 @@ public class SellerGoodsController extends BaseAction {
 
             goodsVo.setViewsNum(viewNums.getOrDefault(pl.getId().toString(), 0L));
             goodsVo.setCategoryId(pl.getCategoryId());
-            goodsVo.setSoldNum(pl.getSoldNum());
+            goodsVo.setSoldNum((pl.getSoldNum()==null?0:pl.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(pl.getId().toString()));
             goodsVo.setName(pLang.getName());
             goodsVo.setUnit(pLang.getUnit());
             goodsVo.setDes(pLang.getDes());
@@ -900,7 +899,7 @@ public class SellerGoodsController extends BaseAction {
             goodsVo.setSellingPrice(pl.getSellingPrice());
             goodsVo.setViewsNum(viewNums.getOrDefault(pl.getId().toString(), 0L));
             goodsVo.setCategoryId(pl.getCategoryId());
-            goodsVo.setSoldNum(pl.getSoldNum());
+            goodsVo.setSoldNum((pl.getSoldNum()==null?0:pl.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(pl.getId().toString()));
             goodsVo.setName(pLang.getName());
             goodsVo.setUnit(pLang.getUnit());
             goodsVo.setDes(pLang.getDes());

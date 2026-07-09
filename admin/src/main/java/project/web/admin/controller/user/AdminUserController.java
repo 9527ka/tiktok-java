@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.security.providers.encoding.PasswordEncoder;
@@ -42,7 +43,11 @@ import project.blockchain.ChannelBlockchainService;
 import project.blockchain.RechargeBlockchainService;
 import project.blockchain.event.message.RechargeSuccessEvent;
 import project.blockchain.event.model.RechargeInfo;
+import java.text.SimpleDateFormat;
 import project.log.LogService;
+import project.log.MoneyFreeze;
+import project.log.MoneyFreezeService;
+import project.mall.notification.utils.notify.client.NotificationHelperClient;
 import project.mall.activity.ActivityTypeEnum;
 import project.mall.activity.model.ActivityLibrary;
 import project.mall.activity.model.lottery.ActivityUserPoints;
@@ -120,6 +125,17 @@ public class AdminUserController extends PageActionSupport {
 
 	@Autowired
 	protected MallAddressAreaService mallAddressAreaService;
+
+	@Autowired
+	protected MoneyFreezeService moneyFreezeService;
+
+	// 站内信/通知 RPC: 冻结提现金额时提醒商家(可空, null-guard)
+	@Autowired(required = false)
+	private NotificationHelperClient notificationHelperClient;
+
+	// 直接写 T_NOTIFICATION 站内信用
+	@Resource(name = "jdbcTemplate")
+	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private ChannelBlockchainService channelBlockchainService;
@@ -243,6 +259,30 @@ public class AdminUserController extends PageActionSupport {
 					map.put("activityPoints", activityUserPoints.getPoints());
 				}
 			}
+			// 明细合计: 汇总全部符合筛选条件的会员(非仅当前页)的可用余额与冻结金额(按冻结状态拆分, 与列表展示口径一致)
+			kernel.web.Page allUserPage = this.adminUserService.pagedQuery(1, 1000000, name_para, rolename_para,
+					checkedPartyId, online, loginIp_para, phone, agentPartyId);
+			java.math.BigDecimal tAvail = java.math.BigDecimal.ZERO;
+			java.math.BigDecimal tFrozen = java.math.BigDecimal.ZERO;
+			List<Map> allUserList = allUserPage.getElements();
+			for (Map m : allUserList) {
+				java.math.BigDecimal money = m.get("money") == null ? java.math.BigDecimal.ZERO : new java.math.BigDecimal(m.get("money").toString());
+				java.math.BigDecimal afterFrozen = m.get("moneyAfterFrozen") == null ? java.math.BigDecimal.ZERO : new java.math.BigDecimal(m.get("moneyAfterFrozen").toString());
+				boolean fz = m.get("frozen_state") != null && "1".equals(m.get("frozen_state").toString());
+				if (fz) {
+					tAvail = tAvail.add(afterFrozen);
+					tFrozen = tFrozen.add(money);
+				} else {
+					tAvail = tAvail.add(money);
+					tFrozen = tFrozen.add(afterFrozen);
+				}
+			}
+			java.util.HashMap<String, Object> totals = new java.util.HashMap<String, Object>();
+			totals.put("count", allUserList.size());
+			totals.put("available", tAvail.setScale(2, java.math.BigDecimal.ROUND_DOWN));
+			totals.put("frozen", tFrozen.setScale(2, java.math.BigDecimal.ROUND_DOWN));
+			modelAndView.addObject("totals", totals);
+
 			String url = PropertiesUtil.getProperty("admin_url") + "/normal/adminUserAction!list.action";
 			this.result = JsonUtils.getJsonString(this.adminAgentService.findAgentNodes(this.getLoginPartyId(), checkedPartyId, url));
 
@@ -1197,6 +1237,148 @@ public class AdminUserController extends PageActionSupport {
 		return model;
 	}
 
+
+	/**
+	 * 冻结提现金额：冻结用户余额中的一部分, 冻结期内不允许提现, 到期后自动解冻。
+	 */
+	@RequestMapping(value = action + "freezeMoney.action")
+	public ModelAndView freezeMoney(HttpServletRequest request) {
+		ModelAndView model = new ModelAndView();
+		String message = "";
+		String error = "";
+		try {
+			String id = request.getParameter("id");
+			String amountStr = request.getParameter("freeze_amount");
+			String daysStr = request.getParameter("freeze_days");
+			String reason = request.getParameter("freeze_reason");
+			if (StringUtils.isEmptyString(id)) {
+				throw new BusinessException("未指定用户");
+			}
+			if (StringUtils.isEmptyString(amountStr) || StringUtils.isEmptyString(daysStr)) {
+				throw new BusinessException("请填写冻结金额和冻结天数");
+			}
+			double amount;
+			int days;
+			try {
+				amount = Double.parseDouble(amountStr.trim());
+				days = Integer.parseInt(daysStr.trim());
+			} catch (NumberFormatException nfe) {
+				throw new BusinessException("冻结金额或冻结天数格式不正确");
+			}
+
+			MoneyFreeze freeze = this.moneyFreezeService.updateFreezeWithdraw(id, amount, days, reason, this.getUsername_login());
+
+			Party party = partyService.cachePartyBy(freeze.getPartyId(), false);
+			project.log.Log log = new project.log.Log();
+			log.setCategory(Constants.LOG_CATEGORY_OPERATION);
+			log.setUsername(party == null ? id : party.getUsername());
+			log.setOperator(this.getUsername_login());
+			log.setLog("管理员冻结提现金额[" + amount + "]冻结天数[" + days + "]到期时间["
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(freeze.getEndTime()) + "]");
+			logService.saveSync(log);
+
+			// 给商家发系统信息提醒(站内信): 按冻结原因(下拉)生成不同内容, 末尾金额跟随冻结金额。失败不影响冻结结果。
+			try {
+				String notifyTitle;
+				String notifyContent;
+				String amtShow = amountStr.trim();
+				if ("商户保证金".equals(reason)) {
+					notifyTitle = "Merchant Security Deposit";
+					notifyContent = "Your account has paid a merchant security deposit. The amount frozen as a deposit is temporarily unavailable. Amount: " + amtShow;
+				} else {
+					notifyTitle = "Account Frozen";
+					notifyContent = "Part of your wallet balance has been frozen due to your violation of platform rules. Frozen amount: " + amtShow;
+				}
+				jdbcTemplate.update(
+						"INSERT INTO T_NOTIFICATION (UUID,TITLE,TYPE,LANGUAGE,LOCATION,FROM_USER_ID,TARGET_USER_ID,TARGET_TOPIC,BIZ_TYPE,HANDLER,MODULE,REF_TYPE,CONTENT,STATUS,SEND_TIME,RESERVE_SEND_TIME,VAR_INFO) "
+								+ "VALUES (?,?,3,'en_US',?,'0',?,'0','inbox_freeze_seller_money','default',1,0,?,1,NOW(),NOW(),'[]')",
+						java.util.UUID.randomUUID().toString().replace("-", ""), notifyTitle, System.currentTimeMillis(), freeze.getPartyId(), notifyContent);
+			} catch (Throwable nt) {
+				logger.error("冻结提现金额后发送商家站内信失败, 冻结记录:" + freeze.getId(), nt);
+			}
+
+			message = "操作成功";
+		} catch (BusinessException e) {
+			error = e.getMessage();
+		} catch (RuntimeException e) {
+			error = e.getMessage();
+		} catch (Throwable t) {
+			logger.error("freezeMoney error ", t);
+			error = "程序错误";
+		}
+		model.addObject("message", message);
+		model.addObject("error", error);
+		model.setViewName("redirect:/" + "normal/adminUserAction!" + "list.action");
+		return model;
+	}
+
+	/**
+	 * 手动解冻提现金额：提前解除该用户全部生效中的提现冻结。
+	 */
+	@RequestMapping(value = action + "unfreezeMoney.action")
+	public ModelAndView unfreezeMoney(HttpServletRequest request) {
+		ModelAndView model = new ModelAndView();
+		String message = "";
+		String error = "";
+		try {
+			String id = request.getParameter("id");
+			if (StringUtils.isEmptyString(id)) {
+				throw new BusinessException("未指定用户");
+			}
+			int n = this.moneyFreezeService.updateCancelWithdrawFreeze(id, this.getUsername_login());
+
+			Party party = partyService.cachePartyBy(id, false);
+			project.log.Log log = new project.log.Log();
+			log.setCategory(Constants.LOG_CATEGORY_OPERATION);
+			log.setUsername(party == null ? id : party.getUsername());
+			log.setOperator(this.getUsername_login());
+			log.setLog("管理员手动解冻提现金额, 解冻记录数[" + n + "]");
+			logService.saveSync(log);
+
+			message = "操作成功";
+		} catch (BusinessException e) {
+			error = e.getMessage();
+		} catch (Throwable t) {
+			logger.error("unfreezeMoney error ", t);
+			error = "程序错误";
+		}
+		model.addObject("message", message);
+		model.addObject("error", error);
+		model.setViewName("redirect:/" + "normal/adminUserAction!" + "list.action");
+		return model;
+	}
+
+	/**
+	 * 查询用户当前生效中的提现冻结(JSON), 供冻结弹窗展示。
+	 */
+	@RequestMapping(value = action + "freezeInfo.action")
+	public Object freezeInfo(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String id = request.getParameter("id");
+		try {
+			double total = this.moneyFreezeService.sumActiveWithdrawFrozen(id);
+			List<MoneyFreeze> list = this.moneyFreezeService.listActiveWithdrawFreeze(id);
+			List<Map<String, Object>> records = new ArrayList<Map<String, Object>>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			if (list != null) {
+				for (MoneyFreeze mf : list) {
+					Map<String, Object> r = new HashMap<String, Object>();
+					r.put("amount", mf.getAmount());
+					r.put("endTime", mf.getEndTime() == null ? "" : sdf.format(mf.getEndTime()));
+					r.put("reason", mf.getReason() == null ? "" : mf.getReason());
+					records.add(r);
+				}
+			}
+			result.put("msg", "succeed");
+			result.put("total", total);
+			result.put("records", records);
+		} catch (Throwable t) {
+			logger.error("freezeInfo error ", t);
+			result.put("msg", "500");
+			result.put("error", "查询失败");
+		}
+		return result;
+	}
 
 	/**
 	 * 修改账户积分

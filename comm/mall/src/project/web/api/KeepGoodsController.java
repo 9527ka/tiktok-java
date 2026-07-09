@@ -79,7 +79,7 @@ public class KeepGoodsController extends BaseAction {
                 goodsVo.setSellingPrice(sellerGoods.getSellingPrice());
                 goodsVo.setViewsNum(sellerGoodsService.getViewNums(sellerGoods.getId().toString()));
                 goodsVo.setCategoryId(sellerGoods.getCategoryId());
-                goodsVo.setSoldNum(sellerGoods.getSoldNum());
+                goodsVo.setSoldNum((sellerGoods.getSoldNum()==null?0:sellerGoods.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(sellerGoods.getId().toString()));
                 goodsVo.setIsShelf(sellerGoods.getIsShelf());
                 if (null != seller){
                     goodsVo.setBlack(seller.getBlack());

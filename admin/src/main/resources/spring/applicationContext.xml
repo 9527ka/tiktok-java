@@ -281,6 +281,7 @@
 				<value>adminChannelBlockchainService</value>
 				<value>channelBlockchainService</value>
 				<value>adminWithdrawService</value>
+				<value>adminSellerDestroyApplyService</value>
 				<value>assetService</value>
 				<value>contractOrderService</value>
 				<value>rechargeBlockchainService</value>

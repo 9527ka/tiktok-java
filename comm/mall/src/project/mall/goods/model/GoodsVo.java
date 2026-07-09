@@ -58,6 +58,11 @@ public class GoodsVo extends EntityObject<String> {
 
     private Double discountRatio;
 
+    // 多SKU商品的售价区间(=各SKU价 * (1+利润率)); 单SKU或无SKU时为null, 前端回退显示 sellingPrice
+    private Double minSellingPrice;
+
+    private Double maxSellingPrice;
+
     private String discountStartTime;
 
     private String discountEndTime;

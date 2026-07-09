@@ -179,6 +179,9 @@ public class AdminSellerGoodsController extends BaseAction {
         } else {
             List<String> sellerGoodsId = list.stream().map(s -> s.getId()).collect(Collectors.toList());
             Map<String, Long> viewNums = sellerGoodsService.getViewNums(sellerGoodsId);
+            // 多SKU商品售价区间: 按各SKU价 * (1+利润率) 算 min~max, 供商品库列表显示"区间/起价", 避免只显示基准价(最高SKU)与买家实付价不一致
+            Map<String, double[]> skuPriceRange = goodsSkuAtrributionService.getSkuPriceRangeByGoodIds(
+                    list.stream().map(SellerGoods::getGoodsId).collect(Collectors.toList()));
             for (SellerGoods pl : list) {
 
                 CategoryLang secondCategoryLang = this.categoryService.selectLang(lang, pl.getSecondaryCategoryId());
@@ -208,6 +211,12 @@ public class AdminSellerGoodsController extends BaseAction {
                 goodsVo.setSellingPrice(pl.getSellingPrice());
                 goodsVo.setSystemPrice(pl.getSystemPrice());
                 goodsVo.setProfitRatio(pl.getProfitRatio());
+                double[] skuRange = skuPriceRange.get(pl.getGoodsId());
+                if (skuRange != null && pl.getProfitRatio() != null) {
+                    double ratio = pl.getProfitRatio();
+                    goodsVo.setMinSellingPrice(Arith.roundDown(Arith.mul(skuRange[0], Arith.add(1.00D, ratio)), 2));
+                    goodsVo.setMaxSellingPrice(Arith.roundDown(Arith.mul(skuRange[1], Arith.add(1.00D, ratio)), 2));
+                }
                 goodsVo.setDiscountPrice(pl.getDiscountPrice());
                 if (pl.getDiscountStartTime() != null && pl.getDiscountEndTime() != null) {
                     goodsVo.setDiscountStartTime(DateUtils.getLongDate(pl.getDiscountStartTime()));
@@ -223,7 +232,7 @@ public class AdminSellerGoodsController extends BaseAction {
                 goodsVo.setViewsNum(viewNums.getOrDefault(pl.getId(), 0L));
                 goodsVo.setCategoryId(pl.getCategoryId());
                 goodsVo.setSecondaryCategoryId(pl.getSecondaryCategoryId());
-                goodsVo.setSoldNum(pl.getSoldNum());
+                goodsVo.setSoldNum((pl.getSoldNum()==null?0:pl.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(pl.getId().toString()));
                 goodsVo.setName(pLang.getName());
                 goodsVo.setUnit(pLang.getUnit());
                 goodsVo.setDes(pLang.getDes());
@@ -1088,7 +1097,7 @@ public class AdminSellerGoodsController extends BaseAction {
             goodsVo.setSellingPrice(pl.getSellingPrice());
             goodsVo.setViewsNum(viewNums.getOrDefault(pl.getId().toString(), 0L));
             goodsVo.setCategoryId(pl.getCategoryId());
-            goodsVo.setSoldNum(pl.getSoldNum());
+            goodsVo.setSoldNum((pl.getSoldNum()==null?0:pl.getSoldNum()) + sellerGoodsService.getRealDispatchSoldByGoodsId(pl.getId().toString()));
             goodsVo.setName(pLang.getName());
             goodsVo.setUnit(pLang.getUnit());
             goodsVo.setDes(pLang.getDes());

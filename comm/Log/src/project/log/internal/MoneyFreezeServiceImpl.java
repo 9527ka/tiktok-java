@@ -7,7 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.NativeQuery;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +67,10 @@ public class MoneyFreezeServiceImpl extends HibernateDaoSupport implements Money
 	public MoneyFreeze updateFreezeSeller(String sellerId, double freezeAmout, int freezeDays, String freezeReason, String operator) {
 
 		Wallet wallet = this.walletService.saveWalletByPartyId(sellerId);
-		double amount_before = wallet.getMoney();
+		// 可冻结基数 = 账户总额。已冻结(frozenState=1)时 money 是冻结部分, 必须用 冻结部分+可用部分 作总额,
+		// 否则对已冻结账号再次冻结会用冻结部分当基数, 把可用余额算没了(资金损失)。未冻结时总额= money(行为不变)。
+		boolean alreadyFrozen = wallet.getFrozenState() != null && wallet.getFrozenState() == 1;
+		double amount_before = alreadyFrozen ? Arith.add(wallet.getMoney(), wallet.getMoneyAfterFrozen()) : wallet.getMoney();
 		double moneyAfterFrozenBefore = wallet.getMoneyAfterFrozen();
 		if (freezeAmout == 0.0D) {
 			// 提交 0 意味着全部冻结
@@ -149,6 +154,11 @@ public class MoneyFreezeServiceImpl extends HibernateDaoSupport implements Money
 			throw new RuntimeException("不存在的冻结记录");
 		}
 
+		// 只自动解冻店铺冻结(freezeType=1); 提现冻结(freezeType=2)到期由 sumActiveWithdrawFrozen 自然失效, 绝不能走钱包合并解冻
+		if (freezeEntity.getFreezeType() != null && freezeEntity.getFreezeType() != 1) {
+			return 0;
+		}
+
 		if (wallet.getFrozenState() != 1){
 			throw new RuntimeException("用户不处于冻结状态");
 		}
@@ -222,6 +232,11 @@ public class MoneyFreezeServiceImpl extends HibernateDaoSupport implements Money
 
 		if (freezeEntity == null) {
 			throw new RuntimeException("不存在的冻结记录");
+		}
+
+		// 该方法只处理店铺冻结(freezeType=1)的钱包合并解冻; 提现冻结(freezeType=2)由 updateUnFreezeWithdraw 单独释放, 不能走这里(否则会连提现冻结一起放掉并错误合并钱包)
+		if (freezeEntity.getFreezeType() != null && freezeEntity.getFreezeType() != 1) {
+			throw new RuntimeException("该冻结记录非店铺冻结, 不能用店铺解冻流程");
 		}
 
 		if (wallet.getFrozenState() != 1){
@@ -341,7 +356,8 @@ public class MoneyFreezeServiceImpl extends HibernateDaoSupport implements Money
 
     public List<MoneyFreeze> listPendingFreezeRecords(int size) {
         StringBuffer queryString = new StringBuffer("");
-        queryString.append(" FROM MoneyFreeze WHERE status=1 ");
+        // 只挑店铺冻结(freezeType=1)做自动解冻; 提现冻结(freezeType=2)不走钱包合并解冻
+        queryString.append(" FROM MoneyFreeze WHERE status=1 AND freezeType=1 ");
 
         Map parameters = new HashMap();
         Page page = this.pagedDao.pagedQueryHql(1, size, queryString.toString(), parameters);
@@ -377,6 +393,8 @@ public class MoneyFreezeServiceImpl extends HibernateDaoSupport implements Money
 		DetachedCriteria query = DetachedCriteria.forClass(MoneyFreeze.class);
 		query.add(Property.forName("partyId").eq(sellerId));
 		query.add(Property.forName("status").eq(1));
+		// 只取店铺冻结(freezeType=1)记录: 店铺解冻不能误解冻提现冻结(freezeType=2)
+		query.add(Property.forName("freezeType").eq(1));
 		query.addOrder(Order.desc("createTime"));
 
 		List retList = getHibernateTemplate().findByCriteria(query);
@@ -385,6 +403,112 @@ public class MoneyFreezeServiceImpl extends HibernateDaoSupport implements Money
 		}
 
 		return (MoneyFreeze)retList.get(0);
+	}
+
+	/**
+	 * 管理员提现金额冻结(freezeType=2)。仅插入一条冻结记录, 不改动钱包字段。
+	 */
+	@Override
+	@Transactional
+	public MoneyFreeze updateFreezeWithdraw(String partyId, double amount, int freezeDays, String reason, String operator) {
+		if (partyId == null || partyId.trim().isEmpty()) {
+			throw new RuntimeException("未指定用户");
+		}
+		if (amount <= 0) {
+			throw new RuntimeException("冻结金额必须大于0");
+		}
+		if (freezeDays <= 0) {
+			throw new RuntimeException("冻结天数必须大于0");
+		}
+
+		Wallet wallet = this.walletService.saveWalletByPartyId(partyId);
+		// 可提现基数: 与提现校验保持一致(冻结状态下用 moneyAfterFrozen, 否则用 money)
+		double base = (wallet.getFrozenState() != null && wallet.getFrozenState() == 1)
+				? wallet.getMoneyAfterFrozen() : wallet.getMoney();
+		// 已生效的提现冻结额度
+		double existsFrozen = sumActiveWithdrawFrozen(partyId);
+		double available = Arith.sub(base, existsFrozen);
+		if (amount > available) {
+			throw new RuntimeException("冻结金额超过用户可冻结余额(可冻结:" + available + ")");
+		}
+
+		Date now = new Date();
+		Date endTime = new Date(now.getTime() + 24L * freezeDays * 3600L * 1000L);
+		MoneyFreeze freeze = new MoneyFreeze();
+		freeze.setPartyId(partyId);
+		freeze.setReason(reason);
+		freeze.setStatus(1);
+		freeze.setFreezeType(2);
+		freeze.setAmount(amount);
+		freeze.setBeginTime(now);
+		freeze.setEndTime(endTime);
+		freeze.setCreateTime(now);
+		freeze.setOperator(operator);
+		this.save(freeze);
+		return freeze;
+	}
+
+	/**
+	 * 合计某用户当前"冻结中且未到期"的提现冻结额度。endTime<=now 的记录自动不计入 → 到期自动解冻。
+	 */
+	@Override
+	public double sumActiveWithdrawFrozen(String partyId) {
+		if (partyId == null || partyId.trim().isEmpty()) {
+			return 0.0;
+		}
+		DetachedCriteria query = DetachedCriteria.forClass(MoneyFreeze.class);
+		query.add(Property.forName("partyId").eq(partyId));
+		query.add(Property.forName("status").eq(1));
+		query.add(Property.forName("freezeType").eq(2));
+		query.add(Restrictions.gt("endTime", new Date()));
+		query.setProjection(Projections.sum("amount"));
+		List result = getHibernateTemplate().findByCriteria(query);
+		if (result == null || result.isEmpty() || result.get(0) == null) {
+			return 0.0;
+		}
+		return ((Number) result.get(0)).doubleValue();
+	}
+
+	/**
+	 * 管理员手动提前解冻某用户全部生效中的提现冻结。
+	 */
+	@Override
+	@Transactional
+	public int updateCancelWithdrawFreeze(String partyId, String operator) {
+		if (partyId == null || partyId.trim().isEmpty()) {
+			return 0;
+		}
+		if (operator == null || operator.trim().isEmpty()) {
+			operator = "0";
+		}
+		Session currentSession = getHibernateTemplate().getSessionFactory().getCurrentSession();
+		String sql = " update T_MONEY_FREEZE set STATUS=0, OPERATOR= :operator, END_TIME=now() where PARTY_ID= :partyId and STATUS=1 and FREEZE_TYPE=2 ";
+		NativeQuery query = currentSession.createSQLQuery(sql);
+		query.setParameter("operator", operator);
+		query.setParameter("partyId", partyId);
+		return query.executeUpdate();
+	}
+
+	/**
+	 * 列出某用户当前生效中的提现冻结记录(用于后台展示)。
+	 */
+	@Override
+	public List<MoneyFreeze> listActiveWithdrawFreeze(String partyId) {
+		List<MoneyFreeze> list = new ArrayList();
+		if (partyId == null || partyId.trim().isEmpty()) {
+			return list;
+		}
+		DetachedCriteria query = DetachedCriteria.forClass(MoneyFreeze.class);
+		query.add(Property.forName("partyId").eq(partyId));
+		query.add(Property.forName("status").eq(1));
+		query.add(Property.forName("freezeType").eq(2));
+		query.add(Restrictions.gt("endTime", new Date()));
+		query.addOrder(Order.desc("createTime"));
+		List retList = getHibernateTemplate().findByCriteria(query);
+		if (retList != null && !retList.isEmpty()) {
+			list.addAll(retList);
+		}
+		return list;
 	}
 
 	public void setPagedDao(PagedQueryDao pagedDao) {

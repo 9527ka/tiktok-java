@@ -19,6 +19,7 @@ import kernel.util.DateUtils;
 import kernel.util.StringUtils;
 import project.Constants;
 import project.hobi.HobiDataService;
+import project.log.MoneyFreezeService;
 import project.log.MoneyLog;
 import project.log.MoneyLogService;
 import project.party.PartyService;
@@ -73,6 +74,12 @@ public class WithdrawServiceImpl extends HibernateDaoSupport implements Withdraw
 
 	protected HobiDataService hobiDataService;
 
+	protected MoneyFreezeService moneyFreezeService;
+
+	public void setMoneyFreezeService(MoneyFreezeService moneyFreezeService) {
+		this.moneyFreezeService = moneyFreezeService;
+	}
+
 	@Override
 	public void saveApply(Withdraw withdraw, String channel, String method_id) {
 		withdraw.setMethod(channel);
@@ -109,6 +116,14 @@ public class WithdrawServiceImpl extends HibernateDaoSupport implements Withdraw
 
 		if (wallet.getFrozenState() == 1){
 			money = wallet.getMoneyAfterFrozen();
+		}
+
+		// 管理员设置的、仍在冻结期内的提现冻结额度不可提现(到期 endTime 后自动失效)
+		if (moneyFreezeService != null) {
+			double withdrawFrozen = moneyFreezeService.sumActiveWithdrawFrozen(withdraw.getPartyId());
+			if (withdrawFrozen > 0) {
+				money = Arith.sub(money, withdrawFrozen);
+			}
 		}
 
 		if (money < withdraw.getVolume()) {
@@ -361,7 +376,15 @@ public class WithdrawServiceImpl extends HibernateDaoSupport implements Withdraw
 
 		// 2023-8-3 caster 使用本方式判断余额
 		Wallet wallet = walletService.saveWalletByPartyId(withdraw.getPartyId());
-		if (wallet.getMoney() < usdtAmount) {
+		double availableMoney = wallet.getMoney();
+		// 管理员设置的、仍在冻结期内的提现冻结额度不可提现(到期 endTime 后自动失效)
+		if (moneyFreezeService != null) {
+			double withdrawFrozen = moneyFreezeService.sumActiveWithdrawFrozen(withdraw.getPartyId());
+			if (withdrawFrozen > 0) {
+				availableMoney = Arith.sub(availableMoney, withdrawFrozen);
+			}
+		}
+		if (availableMoney < usdtAmount) {
 			throw new BusinessException(1, "余额不足");
 		}
 

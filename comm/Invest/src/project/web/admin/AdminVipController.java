@@ -81,7 +81,7 @@ public class AdminVipController extends PageActionSupport {
         List<MallLevel> list = page.getElements();
         for (MallLevel mallLevel : list) {
             MallLevelCondExpr mallLevelCondExpr = JsonUtils.json2Object(mallLevel.getCondExpr(), MallLevelCondExpr.class);
-            List<MallLevelCondExpr.Param> params = mallLevelCondExpr.getParams();
+            List<MallLevelCondExpr.Param> params = (mallLevelCondExpr == null) ? null : mallLevelCondExpr.getParams();
 
             QueryMallLevelDTO oneDto = new QueryMallLevelDTO();
             BeanUtil.copyProperties(mallLevel, oneDto);
@@ -89,14 +89,16 @@ public class AdminVipController extends PageActionSupport {
             oneDto.setProfitRationMin(Arith.mul(mallLevel.getProfitRationMin(),100));
             oneDto.setProfitRationMax(Arith.mul(mallLevel.getProfitRationMax(),100));
             oneDto.setSellerDiscount(Arith.mul(mallLevel.getSellerDiscount(),100));
-            params.forEach(e ->{
-                if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.RECHARGE_AMOUNT.getCode())){
-                    oneDto.setRechargeAmount(Long.parseLong(e.getValue()));
-                }
-                if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.POPULARIZE_UNDERLING_NUMBER.getCode())){
-                    oneDto.setPopularizeUserCount(Long.parseLong(e.getValue()));
-                }
-            });
+            if (params != null) {
+                params.forEach(e ->{
+                    if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.RECHARGE_AMOUNT.getCode())){
+                        oneDto.setRechargeAmount(parseLongSafe(e.getValue()));
+                    }
+                    if (e.getCode().equals(UpgradeMallLevelCondParamTypeEnum.POPULARIZE_UNDERLING_NUMBER.getCode())){
+                        oneDto.setPopularizeUserCount(parseLongSafe(e.getValue()));
+                    }
+                });
+            }
             levelInfoList.add(oneDto);
         }
         Page resultPage = new Page();
@@ -109,6 +111,31 @@ public class AdminVipController extends PageActionSupport {
         model.addObject("error", error);
         model.setViewName("admin_vip_list");
         return model;
+    }
+
+    /** 保存时规整等级条件值: 空/非数字一律返回 "0", 防止 COND_EXPR 写入空串 */
+    private static String sanitizeIntStr(String v) {
+        if (v == null || v.trim().isEmpty()) {
+            return "0";
+        }
+        try {
+            Integer.parseInt(v.trim());
+            return v.trim();
+        } catch (Exception e) {
+            return "0";
+        }
+    }
+
+    /** 等级条件参数值可能为空/非数字, 容错解析, 避免列表页因脏数据崩溃 */
+    private static long parseLongSafe(String v) {
+        if (v == null || v.trim().isEmpty()) {
+            return 0L;
+        }
+        try {
+            return Long.parseLong(v.trim());
+        } catch (Exception e) {
+            return 0L;
+        }
     }
 
     /**
@@ -186,8 +213,10 @@ public class AdminVipController extends PageActionSupport {
                 throw new BusinessException("此会员等级不存在，请刷新页面");
             }
 
-            rechargeAmount = rechargeAmount == null ? "1" : rechargeAmount;
-            popularizeUserCount = popularizeUserCount == null ? "1" : popularizeUserCount;
+            // 空/非数字一律规整为 "0", 防止 COND_EXPR 存入空串导致前后端解析 NumberFormatException
+            rechargeAmount = sanitizeIntStr(rechargeAmount);
+            popularizeUserCount = sanitizeIntStr(popularizeUserCount);
+            teamNum = sanitizeIntStr(teamNum);
 
             MallLevelCondExpr mallLevelCondExpr = new MallLevelCondExpr();
             List<MallLevelCondExpr.Param> paramList = new ArrayList<>();

@@ -35,5 +35,8 @@
 		<property name="reason" type="java.lang.String">
 			<column name="REASON" />
 		</property>
+		<property name="freezeType" type="java.lang.Integer">
+			<column name="FREEZE_TYPE" />
+		</property>
 	</class>
 </hibernate-mapping>

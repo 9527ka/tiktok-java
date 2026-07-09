@@ -97,6 +97,8 @@ public class SellerOrdersController extends BaseAction {
             o.put("purchStatus", address.getPurchStatus());
             o.put("payStatus", payStatus != null && Integer.parseInt(payStatus) == -1 ? address.getStatus() : address.getPayStatus());
             o.put("status", address.getStatus());
+            o.put("returnStatus", address.getReturnStatus()); // 退款/退单状态(2=退款成功), 供卖家端显示已退款标记
+            o.put("returnReason", address.getReturnReason() == null ? "" : address.getReturnReason()); // 退货原因(后台退单时填), 卖家端物流状态展示
             o.put("createTime", DateUtils.getLongDate(address.getCreateTime()));
             o.put("purchTime",Objects.isNull(address.getPurchTime())?"":DateUtils.getLongDate(address.getPurchTime()));
             Party party = this.partyService.cachePartyBy(address.getPartyId(), false);
@@ -348,6 +350,14 @@ public class SellerOrdersController extends BaseAction {
                         continue;
                     }
                     orderIdList.add(oneOrderId);
+                }
+            }
+
+            // 预校验: 采购任何一单之前先检查, 任一已退单则整批拒绝(避免批量采购时部分已处理后才抛异常)
+            for (String oneOrderId : orderIdList) {
+                MallOrdersPrize checkOrder = goodsOrdersService.getMallOrdersPrize(oneOrderId);
+                if (checkOrder != null && checkOrder.getReturnStatus() == 2) {
+                    throw new BusinessException(1, "订单[" + oneOrderId + "]已退单，不能采购");
                 }
             }
 

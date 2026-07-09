@@ -218,6 +218,10 @@ public class SellerVersionController extends BaseAction {
             if (StringUtils.isEmptyString(usercode)) {
                 throw new BusinessException("邀请码不能为空");
             }
+            // 商家注册必须填写有效邀请码，禁止使用 000000 占位符绕过推荐人校验
+            if ("000000".equals(usercode.trim())) {
+                throw new BusinessException("邀请码无效");
+            }
 
 //            idname = URLDecoder.decode(idname, "utf-8");
 //            name = URLDecoder.decode(name, "utf-8");
@@ -422,6 +426,10 @@ public class SellerVersionController extends BaseAction {
             if (StringUtils.isEmptyString(usercode)) {
                 throw new BusinessException("邀请码不能为空");
             }
+            // 商家注册必须填写有效邀请码，禁止使用 000000 占位符绕过推荐人校验
+            if ("000000".equals(usercode.trim())) {
+                throw new BusinessException("邀请码无效");
+            }
 
             // 校验验证码
             String authcode = null;
@@ -531,6 +539,10 @@ public class SellerVersionController extends BaseAction {
 
             if (StringUtils.isEmptyString(usercode)) {
                 throw new BusinessException("邀请码不能为空");
+            }
+            // 商家注册必须填写有效邀请码，禁止使用 000000 占位符绕过推荐人校验
+            if ("000000".equals(usercode.trim())) {
+                throw new BusinessException("邀请码无效");
             }
 
             idname = URLDecoder.decode(idname, "utf-8");

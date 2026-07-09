@@ -466,8 +466,8 @@ public class NotificationController extends BaseAction {
 
                 BeanUtil.copyProperties(oneEntity, dto);
                 dto.setId(oneEntity.getId().toString());
-                dto.setSendTime(DateUtils.formatOfDateTime(oneEntity.getSendTime()));
-                dto.setReserveSendTime(DateUtils.formatOfDateTime(oneEntity.getReserveSendTime()));
+                dto.setSendTime(oneEntity.getSendTime() == null ? null : DateUtils.formatOfDateTime(oneEntity.getSendTime()));
+                dto.setReserveSendTime(oneEntity.getReserveSendTime() == null ? null : DateUtils.formatOfDateTime(oneEntity.getReserveSendTime()));
             }
 
             retData.setElements(pageList);
@@ -530,8 +530,8 @@ public class NotificationController extends BaseAction {
 
                 BeanUtil.copyProperties(oneEntity, dto);
                 dto.setId(oneEntity.getId().toString());
-                dto.setSendTime(DateUtils.formatOfDateTime(oneEntity.getSendTime()));
-                dto.setReserveSendTime(DateUtils.formatOfDateTime(oneEntity.getReserveSendTime()));
+                dto.setSendTime(oneEntity.getSendTime() == null ? null : DateUtils.formatOfDateTime(oneEntity.getSendTime()));
+                dto.setReserveSendTime(oneEntity.getReserveSendTime() == null ? null : DateUtils.formatOfDateTime(oneEntity.getReserveSendTime()));
             }
 
             resultObject.setData(pageList);

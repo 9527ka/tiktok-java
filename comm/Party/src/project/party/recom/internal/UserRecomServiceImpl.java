@@ -84,7 +84,17 @@ public class UserRecomServiceImpl extends HibernateDaoSupport implements UserRec
 			return null;
 		}
 
-		return (UserRecom) redisHandler.get(PartyRedisKeys.USER_RECOM_PARTYID + partyId);
+		UserRecom userRecom = (UserRecom) redisHandler.get(PartyRedisKeys.USER_RECOM_PARTYID + partyId);
+		if (userRecom == null) {
+			// Redis 未命中(被 LRU 淘汰/未加载) → 回查 DB 并回填, 使上级链/推荐关系自愈
+			List<UserRecom> dbList = (List<UserRecom>) getHibernateTemplate().find(
+					" FROM UserRecom WHERE partyId=?0 ", new Object[] { partyId.toString() });
+			if (dbList != null && !dbList.isEmpty()) {
+				userRecom = dbList.get(0);
+				redisHandler.setSync(PartyRedisKeys.USER_RECOM_PARTYID + partyId, userRecom);
+			}
+		}
+		return userRecom;
 	}
 
 	public List<UserRecom> getParents(Serializable partyId) {
@@ -128,7 +138,13 @@ public class UserRecomServiceImpl extends HibernateDaoSupport implements UserRec
 	public List<UserRecom> findRecoms(Serializable partyId) {
 		List list = (List) redisHandler.get(PartyRedisKeys.USER_RECOM_RECO_ID + partyId.toString());
 		if (list == null) {
-			list = new ArrayList();
+			// Redis 未命中(被 LRU 淘汰/未加载) → 回查 DB 并回填, 使下级关系自愈, 避免代理下级列表"消失"
+			list = (List) getHibernateTemplate().find(" FROM UserRecom WHERE reco_id=?0 ",
+					new Object[] { partyId.toString() });
+			if (list == null) {
+				list = new ArrayList();
+			}
+			redisHandler.setSync(PartyRedisKeys.USER_RECOM_RECO_ID + partyId.toString(), list);
 		}
 		return list;
 	}

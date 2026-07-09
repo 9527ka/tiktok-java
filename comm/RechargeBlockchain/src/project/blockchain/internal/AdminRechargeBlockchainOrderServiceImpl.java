@@ -169,25 +169,11 @@ public class AdminRechargeBlockchainOrderServiceImpl extends HibernateDaoSupport
             //当前充值的时间到账金额
             double amount = Double.valueOf(transfer_usdt);
             UserMetrics userMetrics = getByPartyId(rechargeBlockchain.getPartyId());
-            if (userMetrics == null) {
-                userMetrics = new UserMetrics();
-                userMetrics.setAccountBalance(0.0D);
-                userMetrics.setMoneyRechargeAcc(0.0D);
-                userMetrics.setMoneyWithdrawAcc(0.0D);
-                userMetrics.setPartyId(seller.getId().toString());
-                userMetrics.setStatus(1);
-                userMetrics.setTotleIncome(0.0D);
-                userMetrics.setCreateTime(new Date());
-                userMetrics.setUpdateTime(new Date());
-                userMetrics.setStoreMoneyRechargeAcc(amount);
-                this.getHibernateTemplate().save(userMetrics);
-            }else {
-                double storeMoneyRechargeAccAdd = userMetrics.getStoreMoneyRechargeAcc()==null?0:userMetrics.getStoreMoneyRechargeAcc();
-                userMetrics.setStoreMoneyRechargeAcc(Arith.add(storeMoneyRechargeAccAdd, amount));
-                this.getHibernateTemplate().update(userMetrics);
-            }
-            // userMetrics.storeMoneyRechargeAcc 已经在上面更新过（包含本次充值amount），无需再次累加
-            double totalAddMoney = userMetrics.getStoreMoneyRechargeAcc() == null ? 0d : userMetrics.getStoreMoneyRechargeAcc();
+            // 修复"店铺累计充值翻倍": store累计统一由 RechargeSuccessEventListener 累加一次(按kyc==2门控)。
+            // 此处不再写库,否则与监听器对同一笔到账金额重复累加,导致 STORE_MONEY_RECHARGE_ACC = 实际充值×2。
+            // 升级判定改用 "当前已存累计 + 本次到账金额" 预判,与监听器最终写入的值一致(kyc==2时)。
+            double currentStoreAcc = (userMetrics == null || userMetrics.getStoreMoneyRechargeAcc() == null) ? 0d : userMetrics.getStoreMoneyRechargeAcc();
+            double totalAddMoney = Arith.add(currentStoreAcc, amount);
 
             //店铺等级配置信息
             Criteria criteria = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createCriteria(MallLevel.class);

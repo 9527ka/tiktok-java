@@ -85,6 +85,7 @@
 		  class="project.mall.goods.internal.GoodsSkuAtrributionServiceImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
 	</bean>
 	<bean id="adminSellerService"
 		  class="project.mall.seller.impl.AdminSellerServiceImpl">

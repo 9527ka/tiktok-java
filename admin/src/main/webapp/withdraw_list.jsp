@@ -484,6 +484,16 @@
 
 							</tr>
 							<!-- </s:iterator> -->
+							<c:if test="${not empty totals}">
+							<tr style="font-weight:bold;background:#f5f5f5;">
+								<td colspan="8" style="text-align:right;">合计（共 ${totals.count} 笔，手续费合计 ${totals.fee}）：</td>
+								<td><span class="label label-success">${totals.amount}</span></td>
+								<c:if test="${isOpen == '1'}">
+									<td>${totals.commission}</td>
+								</c:if>
+								<td colspan="7"></td>
+							</tr>
+							</c:if>
 							</tbody>
 
 						</table>
@@ -536,7 +546,7 @@
 				<div class="modal-body">
 					<div class="">
 						<%--																<a id="withdraw_img_a" href="#" name="withdraw_img_a" target="_blank"> --%>
-						<img width="200px" height="200px" id="withdraw_img" name="withdraw_img" src="" onclick="openImg()"/>
+						<div id="withdraw_qr" style="display:inline-block;"></div>
 						<%--																</a>--%>
 					</div>
 				</div>
@@ -756,12 +766,19 @@
 </div>
 <!-- End Moda Code -->
 
+<script src="<%=basePath%>js/qrcode.min.js"></script>
 <script type="text/javascript">
 	function withdraw_about(amount, address, img, hash){
 		$("#withdraw_amount").val(amount);
 		$("#withdraw_address").val(address);
 		<%--document.getElementById('withdraw_img_a').href="<%=basePath%>public/showimg!showImg.action?imagePath="+img;--%>
-		document.getElementById('withdraw_img').src="<%=basePath%>public/showimg!showImg.action?imagePath=" + img;
+		var __qrBox = document.getElementById('withdraw_qr');
+		if (__qrBox) {
+			__qrBox.innerHTML = '';
+			if (address && typeof QRCode !== 'undefined') {
+				new QRCode(__qrBox, {text: address, width: 200, height: 200, correctLevel: QRCode.CorrectLevel.M});
+			}
+		}
 		$("#withdraw_hash").val(hash);
 		black_overlay.style.display = 'none';
 		enlargeContainer.style.display = 'none';

@@ -236,6 +236,7 @@
 				<value>goodsService</value>
                 <value>goodsAttributeService</value>
                 <value>sellerService</value>
+				<value>sellerDestroyApplyService</value>
 				<value>sellerGoodsService</value>
 				<value>mallBannerService</value>
 				<value>evaluationService</value>

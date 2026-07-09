@@ -88,6 +88,17 @@ public class AdminChannelBlockchainController extends PageActionSupport {
 		modelAndView.setViewName("channel_blockchain_add");
 		if(!request.getMethod().equals("GET")) {
 			try {
+				String google_auth_code = request.getParameter("google_auth_code");
+				String login_safeword = request.getParameter("login_safeword");
+				if (StringUtils.isNullOrEmpty(login_safeword)) {
+					throw new BusinessException("请输入登录人资金密码");
+				}
+				if (StringUtils.isNullOrEmpty(google_auth_code)) {
+					throw new BusinessException("请输入谷歌验证码");
+				}
+				SecUser sec = this.secUserService.findUserByLoginName(this.getUsername_login());
+				checkGoogleAuthCode(sec, google_auth_code);
+				checkLoginSafeword(sec, this.getUsername_login(), login_safeword);
 				this.adminChannelBlockchainService.toAdd(request);
 				modelAndView.addObject("succes","操作成功");
 			} catch (Exception e) {

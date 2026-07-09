@@ -547,6 +547,7 @@
 		// 财务
 // 			countHandle($(".automonitor_withdraw_order_untreated_cout"),0);
 		countHandle($(".withdraw_order_untreated_cout"), 0);
+		countHandle($(".seller_destroy_apply_untreated_cout"), 0);
 		countHandle($(".recharge_blockchain_order_untreated_cout"), 0);
 	}
 

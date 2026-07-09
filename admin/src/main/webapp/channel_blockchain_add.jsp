@@ -108,6 +108,22 @@
 									</div>
 								</div>
 
+								<div class="form-group" >
+									<label for="input002" class="col-sm-2 control-label form-label">登录人资金密码</label>
+									<div class="col-sm-4">
+										<input id="login_safeword" type="password" name="login_safeword"
+											   class="login_safeword" placeholder="请输入登录人资金密码" >
+									</div>
+								</div>
+
+								<div class="form-group" >
+									<label for="input002" class="col-sm-2 control-label form-label">谷歌验证码</label>
+									<div class="col-sm-4">
+										<input id="google_auth_code"  name="google_auth_code"
+											   placeholder="请输入谷歌验证码" >
+									</div>
+								</div>
+
 								<div class="form-group">
 									<div class="col-sm-offset-2 col-sm-10">
 										<a href="javascript:goUrl(-1)"

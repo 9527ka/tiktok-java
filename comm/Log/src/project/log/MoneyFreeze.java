@@ -20,4 +20,6 @@ public class MoneyFreeze extends EntityObject<String> {
 	// 资金状态：0-已解冻，1-冻结中
 	private Integer status;
 	private String reason;
+	// 冻结类型：1-商家资金冻结(旧, 默认)，2-管理员提现金额冻结(到期自动解冻)
+	private Integer freezeType = 1;
 }

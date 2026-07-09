@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public class ItemReq {
     private static final long serialVersionUID = -4900213401019956641L;
     private String itemId;
+    private String skuId;
     private Integer count;
     private BigDecimal price;
 }

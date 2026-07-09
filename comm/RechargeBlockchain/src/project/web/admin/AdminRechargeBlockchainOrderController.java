@@ -138,6 +138,34 @@ public class AdminRechargeBlockchainOrderController extends PageActionSupport {
 					map.put("roleNameDesc", Constants.ROLE_MAP.containsKey(roleName) ? Constants.ROLE_MAP.get(roleName) : roleName);
 				}
 			}
+			// 合计: 汇总全部符合筛选条件的充值订单(非仅当前页), 供页面底部"合计"行显示
+			kernel.web.Page allPage = this.adminRechargeBlockchainOrderService.pagedQuery(1, 1000000, name_para,
+					state_para_int, loginPartyId, order_no_para, rolename_para, start_time, end_time, reviewStartTime, reviewEndTime);
+			BigDecimal tAmount = BigDecimal.ZERO;
+			BigDecimal tCommission = BigDecimal.ZERO;
+			int succeededCount = 0;
+			List<Map> allList = allPage.getElements();
+			for (Map m : allList) {
+				// 只统计"支付成功"(succeeded==1)的订单金额, 失败/待审核不计入合计
+				boolean isSucceeded = m.get("succeeded") != null
+						&& "1".equals(m.get("succeeded").toString().trim());
+				if (!isSucceeded) {
+					continue;
+				}
+				succeededCount++;
+				if (m.get("amount") != null) {
+					tAmount = tAmount.add(new BigDecimal(m.get("amount").toString()));
+				}
+				if (m.get("rechargeCommission") != null) {
+					tCommission = tCommission.add(new BigDecimal(m.get("rechargeCommission").toString()));
+				}
+			}
+			java.util.HashMap<String, Object> totals = new java.util.HashMap<String, Object>();
+			totals.put("count", succeededCount);
+			totals.put("amount", tAmount.setScale(2, BigDecimal.ROUND_DOWN));
+			totals.put("commission", tCommission.setScale(2, BigDecimal.ROUND_DOWN));
+			modelAndView.addObject("totals", totals);
+
 			String clerkOpen = this.sysparaService.find(SysParaCode.CLERK_IS_OPEN.getCode()).getValue();
 			String rechargeIsOpen = this.sysparaService.find(SysParaCode.RECHARGE_IS_OPEN.getCode()).getValue();
 			modelAndView.addObject("session_token", session_token);

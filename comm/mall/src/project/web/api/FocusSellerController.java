@@ -85,9 +85,8 @@ public class FocusSellerController extends BaseAction {
 //            sellerVo.setHighOpinion(evaluationService.getHighOpinionBySellerId(pl.getSellerId()));
             sellerVo.setHighOpinion(Objects.nonNull(sellerFavorableRates.get(sellerId))?sellerFavorableRates.get(sellerId):1D);
 //            sellerVo.setSoldNum(seller.getSoldNum() + sellerGoodsService.getSoldNumBySellerId(pl.getSellerId()));
-            sellerVo.setSoldNum(
-                    (Objects.nonNull(sellerVo.getSoldNum())?sellerVo.getSoldNum():0)+
-                            (Objects.nonNull(sellerVo.getFakeSoldNum())?sellerVo.getFakeSoldNum():0));
+            // 店铺销量只显示真实派单交易成功的销量, 不计入虚假销量(FAKE_SOLD_NUM)
+            sellerVo.setSoldNum(Objects.nonNull(sellerVo.getSoldNum())?sellerVo.getSoldNum():0L);
 //            sellerVo.setViewsNum(sellerGoodsService.getViewsNumBySellerId(pl.getSellerId()));
             focusSellerVo.setSellerVo(sellerVo);
             jsonArray.add(focusSellerVo);

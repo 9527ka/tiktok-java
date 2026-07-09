@@ -124,6 +124,10 @@
                     <div class="panel-title">查询结果</div>
                     <div class="panel-body">
 
+                        <div style="margin-bottom:10px;">
+                            <button type="button" class="btn btn-warning" onclick="batchRefundTimeout()">批量退货(超48小时未采购)</button>
+                        </div>
+
                         <table class="table table-bordered table-striped">
 
                             <thead>
@@ -175,7 +179,14 @@
                                               <!--  <button type="button" class="btn btn-light"><a href="javascript:showOrder('${item.id}')">查看</a></button>
 
 -->
-                                                <button type="button" class="btn btn-light" onclick="delete_to('${item.id}')">删除</button>
+                                                <c:choose>
+                                                    <c:when test="${item.refundStatus == 1}">
+                                                        <span class="right label label-default">已退单</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <button type="button" class="btn btn-light" onclick="delete_to('${item.id}')">退单</button>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
 
 
@@ -224,9 +235,22 @@
                                 <button type="button" class="close" data-dismiss="modal"
                                         aria-hidden="true">&times;
                                 </button>
-                                <h4 class="modal-title" id="myModalLabel">删除POS任务</h4>
+                                <h4 class="modal-title" id="myModalLabel">退单</h4>
                             </div>
 
+                            <div class="modal-body">
+                                <p>退单将<strong>退还买家货款、扣减卖家销量</strong>，并给关联真实订单打退款标记。确认退单？</p>
+                                <div class="form-group" style="margin-top:10px;">
+                                    <label for="refund_reason">退货原因</label>
+                                    <select class="form-control" name="reason" id="refund_reason">
+                                        <option value="Bought by mistake">Bought by mistake</option>
+                                        <option value="Don't like it">Don't like it</option>
+                                        <option value="Don't want it">Don't want it</option>
+                                        <option value="Found a better product">Found a better product</option>
+                                        <option value="Not purchased within 48 hours">Not purchased within 48 hours</option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="modal-footer" style="margin-top: 0;">
                                 <button type="button" class="btn " data-dismiss="modal">关闭</button>
@@ -241,6 +265,11 @@
             </div>
         </form>
 
+        <!-- 批量退货(超48小时未采购) 提交表单 -->
+        <form action="<%=basePath%>mall/pos/history!batchRefundTimeout.action" method="post" id="batchRefundForm">
+            <input type="hidden" name="session_token" value="${session_token}">
+        </form>
+
     </div>
 
 
@@ -253,6 +282,49 @@
             $("#session_token_delete").val(session_token);
             $("#id_delete").val(id);
             $('#modal_delete').modal("show");
+        }
+        function batchRefundTimeout() {
+            // 先拉取将被退货的【超48小时未采购】订单, 在确认弹窗中列出, 核对后再执行
+            $.ajax({
+                url: '<%=basePath%>mall/pos/history!previewTimeoutRefund.action',
+                type: 'GET',
+                dataType: 'json',
+                success: function(list){
+                    if (!list || list.length === 0) {
+                        swal({ title: "批量退货", text: "当前没有【超过48小时仍未采购】的POS订单", type: "info" });
+                        return;
+                    }
+                    var rows = '';
+                    list.forEach(function(o){
+                        rows += '<tr>' +
+                            '<td>' + (o.taskId != null ? o.taskId : '') + '</td>' +
+                            '<td>' + (o.sellerName != null ? o.sellerName : '') + '</td>' +
+                            '<td>' + (o.amount != null ? o.amount : '') + '</td>' +
+                            '<td>' + (o.cnt != null ? o.cnt : '') + '</td>' +
+                            '<td>' + (o.orderTime != null ? o.orderTime : '') + '</td>' +
+                            '<td>' + (o.hours != null ? o.hours + 'h' : '') + '</td>' +
+                            '</tr>';
+                    });
+                    var html = '<div style="max-height:320px;overflow:auto;text-align:left;">' +
+                        '<p>将对以下 <b>' + list.length + '</b> 单【超48小时未采购】退还买家货款、扣减卖家销量并通知卖家：</p>' +
+                        '<table border="1" cellspacing="0" cellpadding="4" style="width:100%;font-size:12px;border-collapse:collapse;">' +
+                        '<tr><th>任务号</th><th>店铺</th><th>金额</th><th>数量</th><th>下单时间</th><th>已超</th></tr>' +
+                        rows + '</table></div>';
+                    swal({
+                        title: "批量退货 (共 " + list.length + " 单)",
+                        text: html,
+                        html: true,
+                        showCancelButton: true,
+                        confirmButtonText: "确认退货",
+                        cancelButtonText: "取消"
+                    }, function(ok){
+                        if (ok) { $("#batchRefundForm").submit(); }
+                    });
+                },
+                error: function(){
+                    swal({ title: "查询失败", text: "无法获取超48小时未采购订单，请重试", type: "error" });
+                }
+            });
         }
     </script>
 

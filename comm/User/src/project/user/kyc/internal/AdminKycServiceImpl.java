@@ -12,6 +12,7 @@ import kernel.exception.BusinessException;
 import kernel.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.query.NativeQuery;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 import kernel.util.StringUtils;
@@ -40,11 +41,12 @@ public class AdminKycServiceImpl extends HibernateDaoSupport implements AdminKyc
     protected TipService tipService;
     protected WalletService walletService;
     protected SysparaService sysparaService;
+    protected JdbcTemplate jdbcTemplate;
     private NotificationHelperClient notificationHelperClient;
 
     @Override
     public Page pagedQuery(int pageNo, int pageSize, String name_para, String status_para, String rolename_para,
-                           String checkedPartyId, String idnumber_para, String email_para, String startTime, String endTime, String sellerName, String username_parent) {
+                           String checkedPartyId, String idnumber_para, String email_para, String startTime, String endTime, String sellerName, String username_parent, String roleType_para) {
         StringBuffer queryString = new StringBuffer();
         queryString.append("SELECT");
         queryString.append(
@@ -92,6 +94,11 @@ public class AdminKycServiceImpl extends HibernateDaoSupport implements AdminKyc
         if (!StringUtils.isNullOrEmpty(rolename_para)) {
             queryString.append(" and party.ROLENAME =:rolename");
             parameters.put("rolename", rolename_para);
+        }
+        // 商家/普通用户筛选: party.ROLE_TYPE 1=商家 0=普通用户(ROLENAME 区分不了, 两类都可为 MEMBER/GUEST)
+        if (!StringUtils.isNullOrEmpty(roleType_para) && ("0".equals(roleType_para.trim()) || "1".equals(roleType_para.trim()))) {
+            queryString.append(" and party.ROLE_TYPE = :roleType ");
+            parameters.put("roleType", Integer.valueOf(roleType_para.trim()));
         }
         if (!StringUtils.isNullOrEmpty(name_para)) {
             queryString.append("AND (party.USERNAME like:username OR party.USERCODE like:username ) ");
@@ -250,6 +257,51 @@ public class AdminKycServiceImpl extends HibernateDaoSupport implements AdminKyc
 //		getHibernateTemplate().flush();
     }
 
+    /**
+     * 删除入驻申请：物理清理注册/实名/店铺残留数据，使其可用相同信息重新申请。
+     * 仅允许删除“未通过审核”的申请(待审核/已驳回)；已通过启用的店铺禁止从此入口删除。
+     * 删除表清单与 LocalUserServiceImpl.deleteByPartyId 保持一致(按子→主顺序)。
+     */
+    @Override
+    public void deleteApply(String partyId) {
+        if (StringUtils.isNullOrEmpty(partyId)) {
+            throw new BusinessException("参数错误");
+        }
+        Kyc kyc = find(partyId);
+        if (kyc == null) {
+            throw new BusinessException("申请信息不存在，可能已被删除");
+        }
+        // 已通过审核(status=2)的不允许从此入口删除，避免误删活跃商家账号
+        if (kyc.getStatus() == 2) {
+            throw new BusinessException("该申请已审核通过，不能从此处删除");
+        }
+        Seller seller = getSeller(partyId);
+        if (seller != null && seller.getStatus() != null && seller.getStatus() == 1) {
+            throw new BusinessException("该店铺已审核通过并启用，不能删除");
+        }
+        // 先清审核红点(t_tip)
+        if (kyc.getId() != null) {
+            tipService.deleteTip(kyc.getId().toString());
+        }
+        // 与事务在同一连接内执行的 JDBC 删除(adminKycService 已配置为写事务，delete* 前缀)
+        jdbcTemplate.update("DELETE FROM t_wallet_extend WHERE PARTY_ID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM t_wallet WHERE PARTY_ID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM t_userdata WHERE PARTY_ID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM t_userdatasum WHERE PARTY_ID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM t_token WHERE PARTY_ID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM t_kyc WHERE PARTY_ID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM t_mall_seller WHERE UUID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM pat_user_recom WHERE UUID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM pat_user_map WHERE UUID = ?", partyId);
+        List<String> secUserIds = jdbcTemplate.queryForList(
+                "SELECT UUID FROM sct_user WHERE PARTY_UUID = ?", String.class, partyId);
+        for (String secUserId : secUserIds) {
+            jdbcTemplate.update("DELETE FROM sct_user_role WHERE USER_UUID = ?", secUserId);
+        }
+        jdbcTemplate.update("DELETE FROM sct_user WHERE PARTY_UUID = ?", partyId);
+        jdbcTemplate.update("DELETE FROM pat_party WHERE UUID = ?", partyId);
+    }
+
     @Override
     public void saveKycPic(String partyId, String imgId, String img) {
         Kyc kyc = find(partyId);
@@ -353,5 +405,9 @@ public class AdminKycServiceImpl extends HibernateDaoSupport implements AdminKyc
 
     public void setSysparaService(SysparaService sysparaService) {
         this.sysparaService = sysparaService;
+    }
+
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 }

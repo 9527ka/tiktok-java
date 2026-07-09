@@ -202,7 +202,12 @@ public class WalletServiceImpl extends HibernateDaoSupport implements WalletServ
     @Override
     public void updateMoeny(String partyId, double amount) {
         Wallet wallet = saveWalletByPartyId(partyId);
-        wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), amount),2));
+        // 冻结期间金额进可用余额 moneyAfterFrozen, 不累加进冻结部分 money(与 update(partyId,amount) 等已冻结感知的方法对称)
+        if (wallet.getFrozenState() != null && wallet.getFrozenState() == 1) {
+            wallet.setMoneyAfterFrozen(Arith.roundDown(Arith.add(wallet.getMoneyAfterFrozen(), amount),2));
+        } else {
+            wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), amount),2));
+        }
 
         // 此处不要执行持久化处理，因为 WalletConsumeServer 方法会以异步方式从 redis 中读取 WALLET_QUEUE_UPDATE 资金变更队列中的
         // 数据来单线程模式执行每笔变更记录，刷新钱包余额。
@@ -217,7 +222,12 @@ public class WalletServiceImpl extends HibernateDaoSupport implements WalletServ
     @Override
     public void update(String partyId, double amount, double rebate) {
         Wallet wallet = saveWalletByPartyId(partyId);
-        wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), amount),2));
+        // 冻结期间金额进可用余额 moneyAfterFrozen(如冻结商户充值), 不累加进冻结部分 money(与 update(partyId,amount,rebate,rechargeCommission) 对称)
+        if (wallet.getFrozenState() != null && wallet.getFrozenState() == 1) {
+            wallet.setMoneyAfterFrozen(Arith.roundDown(Arith.add(wallet.getMoneyAfterFrozen(), amount),2));
+        } else {
+            wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), amount),2));
+        }
         wallet.setRebate(Arith.add(wallet.getRebate(), rebate));
         getHibernateTemplate().merge(wallet);
         redisHandler.setSync(WalletRedisKeys.WALLET_PARTY_ID + wallet.getPartyId().toString(), wallet);

@@ -385,4 +385,10 @@ public interface SellerGoodsService {
      */
     void syncSellerGoodsNum(String sellerId);
 
+    /**
+     * 某商品「真实派单交易成功」的销量(按订单明细 t_mall_orders_goods, 订单 STATUS IN(4,5) 求和)。
+     * 用于展示时叠加: 商品显示销量 = 商品 SOLD_NUM(每日自动增加的虚拟销量) + 本方法返回的真实派单销量。
+     */
+    int getRealDispatchSoldByGoodsId(String goodsId);
+
 }

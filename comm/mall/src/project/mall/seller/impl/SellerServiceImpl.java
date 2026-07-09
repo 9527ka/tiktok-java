@@ -26,6 +26,7 @@ import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import project.Constants;
 import project.log.Log;
 import project.log.LogService;
+import project.log.MoneyFreezeService;
 import project.log.MoneyLog;
 import project.log.MoneyLogService;
 import project.mall.MallRedisKeys;
@@ -54,6 +55,7 @@ import project.wallet.Wallet;
 import project.wallet.WalletService;
 
 import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -75,6 +77,10 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
 
     @Resource
     private WalletService walletService;
+
+    // 提现冻结服务(可空, null-guard): 冻结中的提现金额不可用于购买商家等级支付
+    @Autowired(required = false)
+    private MoneyFreezeService moneyFreezeService;
 
     @Resource
     private MoneyLogService moneyLogService;
@@ -257,7 +263,7 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
                 "cast(t1.CREATE_TIME as date) as dayString ," +
                 " count(t1.UUID) AS countSales from T_MALL_ORDERS_PRIZE t1 where 1= 1  ");
 
-        countSalesSql.append(" AND t1.STATUS IN(1,2,3,4,5) ");
+        countSalesSql.append(" AND t1.STATUS IN(1,2,3,4,5) AND IFNULL(t1.RETURN_STATUS,0) <> 2 ");
 
         if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
             countSalesSql.append(" AND t1.CREATE_TIME BETWEEN ? AND ? ");
@@ -344,7 +350,7 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
                 "SUBSTRING(t1.CREATE_TIME, 1, 13) as dayString ," +
                 " count(t1.UUID) AS countSales from T_MALL_ORDERS_PRIZE t1 where 1= 1  ");
 
-        countSalesSql.append(" AND t1.STATUS IN(1,2,3,4,5) ");
+        countSalesSql.append(" AND t1.STATUS IN(1,2,3,4,5) AND IFNULL(t1.RETURN_STATUS,0) <> 2 ");
 
         if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)) {
             countSalesSql.append(" AND t1.CREATE_TIME BETWEEN ? AND ? ");
@@ -1029,7 +1035,12 @@ public class SellerServiceImpl extends HibernateDaoSupport implements SellerServ
                 amount_before = wallet.getMoneyAfterFrozen();
             }
 
-            if (amount_before < price) {
+            // 冻结中的提现金额不可用于支付: 可用额 = 余额 - 当前生效的提现冻结额(FREEZE_TYPE=2,END_TIME>now)
+            double withdrawFrozen = 0D;
+            if (moneyFreezeService != null) {
+                withdrawFrozen = moneyFreezeService.sumActiveWithdrawFrozen(seller.getId().toString());
+            }
+            if (amount_before - withdrawFrozen < price) {
                 throw new BusinessException("余额不足");
             }
 

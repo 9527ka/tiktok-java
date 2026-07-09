@@ -64,17 +64,19 @@ public class AdminKycController extends PageActionSupport {
 		String endTime = request.getParameter("endTime");
 		String sellerName = request.getParameter("sellerName");
 		String username_parent = request.getParameter("username_parent");
+		// 商家/普通用户筛选: 1=商家 0=普通用户 空=全部
+		String roletype_para = request.getParameter("roletype_para");
 
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("kyc_list");
 
 		try {
-			
+
 			this.checkAndSetPageNo(pageNo);
 
 			this.pageSize = 15;
 			this.page = this.adminKycService.pagedQuery(this.pageNo, this.pageSize, name_para, state_para,
-					rolename_para, getLoginPartyId(), idnumber_para, null,startTime,endTime,sellerName, username_parent);
+					rolename_para, getLoginPartyId(), idnumber_para, null,startTime,endTime,sellerName, username_parent, roletype_para);
 
 			for (Map<String, Object> map : (List<Map<String, Object>>) this.page.getElements()) {
 				map.put("name_encode", map.get("name").toString().replace("\'", "\\\'").replace("\"", "\\\""));
@@ -122,6 +124,7 @@ public class AdminKycController extends PageActionSupport {
 		modelAndView.addObject("name_para", name_para);
 		modelAndView.addObject("state_para", state_para);
 		modelAndView.addObject("rolename_para", rolename_para);
+		modelAndView.addObject("roletype_para", roletype_para);
 		modelAndView.addObject("sellerName", sellerName);
 		modelAndView.addObject("idnumber_para", idnumber_para);
 		modelAndView.addObject("username_parent", username_parent);
@@ -220,6 +223,36 @@ public class AdminKycController extends PageActionSupport {
 //		modelAndView.addObject("message", "操作成功");
 //		return modelAndView;
 //	}
+
+	/**
+	 * 删除入驻申请(清理未通过审核的注册/实名/店铺残留数据，使其可用相同信息重新申请)
+	 */
+	@RequestMapping(action + "deleteApply.action")
+	public ModelAndView deleteApply(HttpServletRequest request) {
+		String partyId = request.getParameter("partyId");
+
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("redirect:/" + action + "list.action");
+
+		try {
+			String lockKey = MallRedisKeys.USER_KYC_LOCK + partyId;
+			if (!redisHandler.lock(lockKey, 5)) {
+				throw new BusinessException("操作频繁，请稍后再试");
+			}
+			this.adminKycService.deleteApply(partyId);
+
+		} catch (BusinessException e) {
+			modelAndView.addObject("error", e.getMessage());
+			return modelAndView;
+		} catch (Throwable t) {
+			logger.error("deleteApply error ", t);
+			modelAndView.addObject("error", "程序错误");
+			return modelAndView;
+		}
+
+		modelAndView.addObject("message", "删除成功");
+		return modelAndView;
+	}
 
 	/**
 	 * 修改认证图片

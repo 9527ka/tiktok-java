@@ -275,6 +275,7 @@ public class AdminSellerController extends BaseAction {
 //        店铺详情解码处理
 //        sellerVo.setShopRemark(MyEmojiUtil.decodeUnicode(sellerVo.getShopRemark()));
         sellerVo.setHighOpinion(evaluationService.getHighOpinionBySellerId(sellerId));
+        // 店铺销量只显示真实派单交易成功的销量, 不计入虚假销量(FAKE_SOLD_NUM)
         sellerVo.setSoldNum((seller.getSoldNum() == null ? 0L : seller.getSoldNum() )+ (sellerGoodsService.getSoldNumBySellerId(sellerId) == null ? 0L : sellerGoodsService.getSoldNumBySellerId(sellerId)));
         sellerVo.setViewsNum(sellerGoodsService.getViewsNumBySellerId(sellerId));
         sellerVo.setSellerGoodsNum(goodsNum);

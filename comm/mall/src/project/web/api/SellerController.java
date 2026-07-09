@@ -89,7 +89,8 @@ public class SellerController extends BaseAction {
             sellerVo.setSellerGoodsNum(Objects.nonNull(pl.getSellerGoodsNum())?pl.getSellerGoodsNum():0L);
             sellerVo.setFocusNum(Objects.nonNull(pl.getFocusNum())?pl.getFocusNum():0);
             sellerVo.setFake(sellerVo.getFake() == null ? 0 : sellerVo.getFake());
-            sellerVo.setSoldNum(sellerVo.getSoldNum() + (Objects.nonNull(pl.getFakeSoldNum())?pl.getFakeSoldNum():0));
+            // 店铺销量只显示真实派单交易成功的销量, 不计入虚假销量(FAKE_SOLD_NUM)
+            sellerVo.setSoldNum(sellerVo.getSoldNum() == null ? 0L : sellerVo.getSoldNum());
             jsonArray.add(sellerVo);
         }
         JSONObject object = new JSONObject();

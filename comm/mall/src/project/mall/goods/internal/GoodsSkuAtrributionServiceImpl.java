@@ -311,6 +311,30 @@ public class GoodsSkuAtrributionServiceImpl extends HibernateDaoSupport implemen
     }
 
     @Override
+    public Map<String, double[]> getSkuPriceRangeByGoodIds(List<String> goodIds) {
+        Map<String, double[]> result = new HashMap<>();
+        if (goodIds == null || goodIds.isEmpty()) {
+            return result;
+        }
+        StringBuilder in = new StringBuilder();
+        for (int i = 0; i < goodIds.size(); i++) {
+            in.append(i == 0 ? "?" : ",?");
+        }
+        String sql = "SELECT GOOD_ID, MIN(PRICE) mn, MAX(PRICE) mx FROM T_MALL_GOODS_SKU " +
+                "WHERE DELETED=0 AND PRICE IS NOT NULL AND GOOD_ID IN (" + in + ") GROUP BY GOOD_ID";
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, goodIds.toArray());
+        for (Map<String, Object> row : rows) {
+            Object mn = row.get("mn");
+            Object mx = row.get("mx");
+            if (mn != null && mx != null) {
+                result.put((String) row.get("GOOD_ID"),
+                        new double[]{((Number) mn).doubleValue(), ((Number) mx).doubleValue()});
+            }
+        }
+        return result;
+    }
+
+    @Override
     public String selectSkuCoverImg(String skuId) {
         String sql = "SELECT COVER_IMG FROM T_MALL_GOODS_SKU WHERE ID = '"+ skuId + "'";
         List<String> coverImg = this.jdbcTemplate.queryForList(sql, String.class);

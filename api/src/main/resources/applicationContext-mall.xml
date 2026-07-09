@@ -23,6 +23,7 @@
 		<property name="notificationHelperClient" ref="notificationHelperClient"/>
 		<property name="mallLevelService" ref="mallLevelService"/>
 		<property name="pagedQueryDao" ref="pagedDao"/>
+		<property name="moneyFreezeService" ref="moneyFreezeService"/>
  	</bean>
 	<bean id="goodsAttrSkuService" class="project.mall.goods.internal.GoodsSkuAtrributionServiceImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />

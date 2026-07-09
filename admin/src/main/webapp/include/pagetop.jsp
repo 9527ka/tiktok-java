@@ -18,8 +18,20 @@ String bases = "https://"+request.getServerName()+path+"/";
 //    String username = SecurityAppUserHolder.gettUsername();
 
 
-	String adminUrl = AutoConfig.getAdminUrl();
-	String dmUrl =  AutoConfig.getBaseUrl();
+	// 商品库/营销链接(dmUrl/adminUrl)跟随当前请求协议, 与其它相对路径菜单一致.
+	// 不再用 AutoConfig 硬编码的 https —— admin 隔离端口 1188 是 http-only, 硬编码 https 会握手失败打不开.
+	String _scheme = request.getHeader("X-Forwarded-Proto");
+	if (_scheme == null || _scheme.trim().length() == 0) { _scheme = request.getScheme(); }
+	String _host = request.getHeader("HOST");
+	String adminUrl;
+	String dmUrl;
+	if (_host == null || _host.length() == 0 || _host.contains("localhost") || _host.contains("127.0.0.1")) {
+		adminUrl = AutoConfig.getAdminUrl();
+		dmUrl = AutoConfig.getBaseUrl();
+	} else {
+		dmUrl = _scheme + "://" + _host;
+		adminUrl = dmUrl + "/admin";
+	}
 
 
 %>

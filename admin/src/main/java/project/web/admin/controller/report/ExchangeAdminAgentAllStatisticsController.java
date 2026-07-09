@@ -21,6 +21,7 @@ import kernel.exception.BusinessException;
 import kernel.util.DateUtils;
 import kernel.util.JsonUtils;
 import kernel.util.StringUtils;
+import kernel.web.Page;
 import kernel.web.PageActionSupport;
 import project.Constants;
 import project.mall.utils.PlatformNameEnum;
@@ -139,6 +140,35 @@ public class ExchangeAdminAgentAllStatisticsController extends PageActionSupport
 			sumData.put("totalBtc",totalBtc);
 			modelAndView.addObject("isOpen", clerkOpen);
 			modelAndView.addObject("sumData", sumData);
+
+			// === 合计行: 汇总全部代理(非当前页), 供页面底部合计显示 ===
+			Page allAgentPage = this.adminAgentAllStatisticsService.pagedQuery(1, 1000000, start_time, end_time,
+					this.getLoginPartyId(), para_username, Constants.SECURITY_ROLE_AGENT, para_party_id, all_party_id, platformName);
+			long t_reco_member = 0L, t_all_member = 0L, t_all_agent = 0L, t_reco_agent = 0L;
+			double t_recharge_usdt = 0d, t_withdraw = 0d, t_gift_money = 0d, t_commission = 0d;
+			List<Map> allList = allAgentPage.getElements();
+			for (int i = 0; i < allList.size(); i++) {
+				Map m = allList.get(i);
+				t_reco_member += toLong(m.get("reco_member"));
+				t_all_member  += toLong(m.get("all_member"));
+				t_all_agent   += toLong(m.get("all_agent"));
+				t_reco_agent  += toLong(m.get("reco_agent"));
+				t_recharge_usdt = Arith.add(toDouble(m.get("recharge_usdt")), t_recharge_usdt);
+				t_withdraw      = Arith.add(toDouble(m.get("withdraw")), t_withdraw);
+				t_gift_money    = Arith.add(toDouble(m.get("gift_money")), t_gift_money);
+				t_commission    = Arith.add(Arith.sub(toDouble(m.get("rechargeCommission")), toDouble(m.get("withdrawCommission"))), t_commission);
+			}
+			HashMap<Object, Object> totals = Maps.newHashMap();
+			totals.put("reco_member", t_reco_member);
+			totals.put("all_member", t_all_member);
+			totals.put("all_agent", t_all_agent);
+			totals.put("reco_agent", t_reco_agent);
+			totals.put("recharge_usdt", t_recharge_usdt);
+			totals.put("withdraw", t_withdraw);
+			totals.put("difference", Arith.sub(t_recharge_usdt, t_withdraw));
+			totals.put("gift_money", t_gift_money);
+			totals.put("commission", t_commission);
+			modelAndView.addObject("totals", totals);
 		} catch (BusinessException e) {
 			modelAndView.addObject("error", e.getMessage());
 			return modelAndView;
@@ -157,6 +187,18 @@ public class ExchangeAdminAgentAllStatisticsController extends PageActionSupport
 		modelAndView.addObject("para_username", para_username);
 
 		return modelAndView;
+	}
+
+	private long toLong(Object o) {
+		if (o == null) return 0L;
+		if (o instanceof Number) return ((Number) o).longValue();
+		try { return Long.parseLong(o.toString().trim()); } catch (Exception e) { return 0L; }
+	}
+
+	private double toDouble(Object o) {
+		if (o == null) return 0d;
+		if (o instanceof Number) return ((Number) o).doubleValue();
+		try { return Double.parseDouble(o.toString().trim()); } catch (Exception e) { return 0d; }
 	}
 
 	/**

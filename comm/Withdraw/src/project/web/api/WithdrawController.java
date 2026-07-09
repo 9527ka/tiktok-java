@@ -34,6 +34,7 @@ import project.Constants;
 import project.invest.vip.VipService;
 import project.log.MoneyFreeze;
 import project.log.MoneyFreezeService;
+import project.mall.orders.GoodsOrdersService;
 import project.mall.utils.PlatformNameEnum;
 import project.party.PartyService;
 import project.party.model.Party;
@@ -73,6 +74,9 @@ public class WithdrawController extends BaseAction {
 
 	@Autowired
 	private ExchangeRateService exchangeRateService;
+
+	@Autowired
+	private GoodsOrdersService goodsOrdersService;
 
 	private final String action = "/api/withdraw!";
 
@@ -240,6 +244,16 @@ public class WithdrawController extends BaseAction {
 			}
 
 			Party party = partyService.cachePartyBy(partyId, false);
+
+			// 商家提现拦截: 店铺有已派单未采购的订单(STATUS=1且未删除未退单)时禁止提现, 须先完成采购
+			if (party != null && party.getRoleType() == 1) {
+				Map<String, Object> noPush = goodsOrdersService.selectNoPushNum(partyId);
+				long noPushNum = (noPush != null && noPush.get("noPushNum") != null)
+						? Long.parseLong(noPush.get("noPushNum").toString()) : 0L;
+				if (noPushNum > 0) {
+					throw new BusinessException("There are pending orders in your store. Please complete the purchase of all orders before applying for withdrawal.");
+				}
+			}
 
 			String partySafeword = party.getSafeword();
 			if(StringUtils.isEmptyString(partySafeword)){

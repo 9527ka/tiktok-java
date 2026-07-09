@@ -2,7 +2,7 @@
 
 <%
 String path = request.getContextPath();
-String basePath = "https://"+request.getServerName()+":443"+path+"/";
+String basePath = path+"/";
     String base = "http://" + request.getServerName() + ":"+request.getServerPort()+"/";
 //    String username = SecurityAppUserHolder.gettUsername();
 %>

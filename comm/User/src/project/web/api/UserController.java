@@ -51,6 +51,8 @@ import project.log.LogService;
 import project.mall.MallRedisKeys;
 import project.mall.goods.AdminMallGoodsService;
 import project.mall.seller.SellerService;
+import project.mall.seller.SellerDestroyApplyService;
+import project.mall.seller.model.SellerDestroyApply;
 import project.party.PartyRedisKeys;
 import project.party.PartyService;
 import project.party.model.Party;
@@ -115,6 +117,8 @@ public class UserController extends BaseAction {
     private RedisHandler redisHandler;
     @Autowired
     private SellerService sellerService;
+    @Autowired
+    private SellerDestroyApplyService sellerDestroyApplyService;
     @Autowired
     private WithdrawService withdrawService;
     @Autowired
@@ -1382,10 +1386,7 @@ public class UserController extends BaseAction {
         String lang = this.getLanguage(request);
         String partyId = this.getLoginPartyId();
 
-        String errMsg = "注销成功";
-        if (lang.equals("en")) {
-            errMsg = "Logoff Account fail";
-        }
+        String errMsg = lang.equals("en") ? "Your account cancellation request has been submitted and is pending review" : "注销申请已提交，请等待审核";
         resultObject.setMsg(errMsg);
         if (StrUtil.isBlank(partyId)) {
             if (lang.equals("en")) {
@@ -1445,7 +1446,9 @@ public class UserController extends BaseAction {
                 this.tokenService.removePlatFromToken(token);
             }
 
-            this.userService.updateLogoffAccount(partyId, reason);
+            // 不再立即注销，改为提交注销申请，由后台审核通过后再真正注销(复用 updateLogoffAccount)
+            this.sellerDestroyApplyService.saveApply(partyId, account, reason);
+            resultObject.setMsg(errMsg);
             // 优化：放进一个被数据库事务包围的方法里，防止异常情况下数据不一致
 //			String logoffSufix = ":off:" + (System.currentTimeMillis() / 1000L);
 //			String oriAccount = userEntity.getUsername();
@@ -1516,6 +1519,40 @@ public class UserController extends BaseAction {
         return resultObject;
     }
 
+
+    /**
+     * 查询当前账号最新一条注销申请的审核状态
+     * status: -1 无申请, 0 待审核, 1 已通过, 2 已拒绝
+     */
+    @PostMapping(action + "logoffStatus.action")
+    public Object logoffStatus(HttpServletRequest request) {
+        ResultObject resultObject = new ResultObject();
+        String partyId = this.getLoginPartyId();
+        if (StrUtil.isBlank(partyId)) {
+            resultObject.setCode("1");
+            resultObject.setMsg("请先登录");
+            return resultObject;
+        }
+        try {
+            SellerDestroyApply apply = this.sellerDestroyApplyService.findLatestBySellerId(partyId);
+            Map<String, Object> data = new HashMap<String, Object>();
+            if (apply == null) {
+                data.put("status", -1);
+            } else {
+                data.put("status", apply.getStatus());
+                data.put("reason", apply.getApplyReason());
+                data.put("reviewRemark", apply.getReviewRemark());
+                data.put("applyTime", apply.getApplyTime() == null ? "" : DateUtils.format(apply.getApplyTime(), DateUtils.DF_yyyyMMddHHmmss));
+                data.put("reviewTime", apply.getReviewTime() == null ? "" : DateUtils.format(apply.getReviewTime(), DateUtils.DF_yyyyMMddHHmmss));
+            }
+            resultObject.setData(data);
+        } catch (Throwable t) {
+            resultObject.setCode("1");
+            resultObject.setMsg("程序错误");
+            logger.error("error:", t);
+        }
+        return resultObject;
+    }
 
     /**
      *

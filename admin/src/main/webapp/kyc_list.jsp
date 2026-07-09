@@ -109,6 +109,20 @@
 							</div>
 
 							<div class="col-md-12 col-lg-3" style="margin-top: 15px;">
+								<fieldset>
+									<div class="control-group">
+										<div class="controls">
+											<select id="roletype_para" name="roletype_para" class="form-control " >
+												<option value="">商家/普通用户</option>
+												<option value="1" <c:if test="${roletype_para == '1'}">selected="true"</c:if> >商家</option>
+												<option value="0" <c:if test="${roletype_para == '0'}">selected="true"</c:if> >普通用户</option>
+											</select>
+										</div>
+									</div>
+								</fieldset>
+							</div>
+
+							<div class="col-md-12 col-lg-3" style="margin-top: 15px;">
 								<input id="username_parent" name="username_parent" class="form-control "
 									   placeholder="推荐人" value="${username_parent}" />
 							</div>
@@ -277,6 +291,9 @@
 														<li><a href="javascript:savePassed('${item.partyId}')">审核通过</a></li>
 														<li><a href="javascript:saveFailed('${item.partyId}')">驳回</a></li>
 													</c:if>
+													<c:if test="${item.status==3}">
+														<li><a href="javascript:deleteApply('${item.partyId}')">删除申请</a></li>
+													</c:if>
 														<%--													<c:if test="${item.status==2}">--%>
 														<%--														<li><a href="javascript:saveFaileds('${item.partyId}')">审核失败</a></li>--%>
 														<%--													</c:if>--%>
@@ -434,6 +451,29 @@
 	<input type="hidden" name="state_para" id="state_para"/>
 	<input type="hidden" name="partyId" id="partyId_savePassed"/>
 </form>
+
+<form action="<%=basePath%>normal/adminKycAction!deleteApply.action"
+	  method="post" id="deleteApplyForm">
+	<input type="hidden" name="session_token" value="${session_token}"/>
+	<input type="hidden" name="partyId" id="partyId_deleteApply"/>
+</form>
+
+<script type="text/javascript">
+	function deleteApply(partyId) {
+		$("#partyId_deleteApply").val(partyId);
+		swal({
+			title : "确认删除该申请?",
+			text : "将彻底删除该用户账号及实名/店铺申请数据，删除后可用相同信息重新申请，且不可恢复！",
+			type : "warning",
+			showCancelButton : true,
+			confirmButtonColor : "#DD6B55",
+			confirmButtonText : "确认删除",
+			closeOnConfirm : false
+		}, function() {
+			document.getElementById("deleteApplyForm").submit();
+		});
+	}
+</script>
 
 <script type="text/javascript">
 	function savePassed(partyId) {

@@ -571,10 +571,11 @@
 
 	//提交订单
 	$('#submitOrder').on('click', function () {
+		window.__posCartError = '';
 		var ShopingCart = getShopingCart();
 		console.log(ShopingCart)
 		if (!ShopingCart){
-			errorMsg("商品数量有误");
+			errorMsg(window.__posCartError || "商品数量有误");
 			return;
 		}
 		var username = $('#username').val();
@@ -721,7 +722,14 @@
 				isValid = false;
 				return false;
 			}
-			const goods = { itemId: dataId, count: quantity,price:price };
+			var skuId = $(this).find('.skuIdInput').val() || '';
+			var hasAttrs = $(this).find('.skuAttrsBox').children().length > 0;
+			if (hasAttrs && !skuId){
+				window.__posCartError = '请选择商品的规格/颜色';
+				isValid = false;
+				return false;
+			}
+			const goods = { itemId: dataId, skuId: skuId, count: quantity,price:price };
 			isValid.push(goods);
 		});
 		return isValid;
@@ -748,6 +756,8 @@
 					'</div>' +
 					'<div class="productRight">' +
 					'<div class="productName">' + item.productName + '</div>' +
+					'<div class="skuAttrsBox" style="display:none;margin:6px 0;"></div>' +
+					'<input type="hidden" class="skuIdInput" value="">' +
 					'<div class="productBox">' +
 					'<div class="dialogPrice">$ <span id="sellingPrice">' + item.price + '</span> </div>' +
 					'<div class="productNumberBox" >' +
@@ -759,6 +769,97 @@
 		});
 		$('#myModalProduct .productDialogBodyBox').html(modalContent)
 		$('#myModalProduct').modal('show')
+		// 为每个商品异步加载规格/颜色(SKU): 仿用户端按属性分开选择(颜色用缩略图, 尺码等用下拉)
+		$('#myModalProduct .productDialogBody').each(function(){
+			var $body = $(this);
+			var goodsId = $body.data('id');
+			$.ajax({
+				url: '<%=basePath%>mall/pos/sku_list.action',
+				type: 'GET',
+				data: { goodsId: goodsId },
+				dataType: 'json',
+				success: function(dto){
+					if (!dto || !dto.goodAttrs || dto.goodAttrs.length === 0) { return; }
+					$body.data('skuData', dto);
+					$body.data('skuSel', {});
+					renderSkuSelectors($body, dto);
+					$body.find('.skuAttrsBox').show();
+				}
+			});
+		});
+	}
+
+	// 渲染每个属性一个选择器: 有图(颜色)→缩略图格子, 无图(尺码等)→下拉
+	function renderSkuSelectors($body, dto){
+		var $box = $body.find('.skuAttrsBox');
+		var html = '';
+		dto.goodAttrs.forEach(function(attr){
+			// 注: 后端用 Hutool 序列化, boolean 字段 isIcon 的 JSON key 是 "isIcon"(不是 "icon")
+			var hasIcon = attr.attrValues && attr.attrValues.length && attr.attrValues[0].isIcon;
+			html += '<div class="skuAttrRow" data-attrid="'+attr.attrId+'" style="margin:6px 0;">';
+			html += '<span style="display:inline-block;min-width:64px;color:#666;vertical-align:middle;">'+(attr.attrName||'')+': </span>';
+			if (hasIcon){
+				html += '<span class="skuIconGroup">';
+				attr.attrValues.forEach(function(v){
+					html += '<img class="skuIconItem" data-attrid="'+attr.attrId+'" data-valueid="'+v.attrValueId+'" src="'+(v.iconImg||'')+'" title="'+(v.attrValueName||'')+'" '+
+						'style="width:40px;height:40px;object-fit:cover;border:2px solid transparent;border-radius:4px;margin-right:6px;cursor:pointer;vertical-align:middle;">';
+				});
+				html += '</span>';
+			} else {
+				html += '<select class="skuAttrSelect" data-attrid="'+attr.attrId+'" style="max-width:200px;vertical-align:middle;">';
+				html += '<option value="">请选择</option>';
+				attr.attrValues.forEach(function(v){
+					html += '<option value="'+v.attrValueId+'">'+(v.attrValueName||'')+'</option>';
+				});
+				html += '</select>';
+			}
+			html += '</div>';
+		});
+		$box.html(html);
+
+		$box.find('.skuAttrSelect').on('change', function(){
+			updateSkuSelection($body, $(this).data('attrid'), $(this).val());
+		});
+		$box.find('.skuIconItem').on('click', function(){
+			var attrId = $(this).data('attrid');
+			var valueId = String($(this).data('valueid'));
+			$box.find('.skuIconItem[data-attrid="'+attrId+'"]').css('border-color', 'transparent');
+			$(this).css('border-color', '#409eff');
+			updateSkuSelection($body, attrId, valueId);
+		});
+	}
+
+	// 某属性选中后: 更新选择状态 → 匹配 sku → 回填 skuId 与价格
+	function updateSkuSelection($body, attrId, valueId){
+		var sel = $body.data('skuSel') || {};
+		if (valueId) { sel[attrId] = String(valueId); } else { delete sel[attrId]; }
+		$body.data('skuSel', sel);
+		var dto = $body.data('skuData');
+		var sku = matchSku(dto, sel);
+		if (sku){
+			$body.find('.skuIdInput').val(sku.skuId);
+			var p = (sku.sellingPrice != null) ? sku.sellingPrice : sku.price;
+			if (p != null) { $body.find('#sellingPrice').text(p); }
+		} else {
+			$body.find('.skuIdInput').val('');
+		}
+	}
+
+	// 用选中的属性值组合在 skus 里匹配出唯一 sku (全部属性都选中且都匹配)
+	function matchSku(dto, sel){
+		var totalAttr = dto.goodAttrs.length;
+		var chosen = Object.keys(sel).filter(function(k){ return sel[k]; });
+		if (chosen.length < totalAttr) { return null; }
+		var found = null;
+		(dto.skus || []).forEach(function(sku){
+			if (!sku.attrs || sku.attrs.length === 0) { return; }
+			var m = 0;
+			sku.attrs.forEach(function(a){
+				if (String(sel[a.attrId]) === String(a.attrValueId)) { m++; }
+			});
+			if (m === sku.attrs.length && m === totalAttr) { found = sku; }
+		});
+		return found;
 	}
 
 

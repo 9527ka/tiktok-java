@@ -44,6 +44,7 @@
 <!-- 		<property name="kycHighLevelService" ref="kycHighLevelService" /> -->
 		<property name="tipService" ref="tipService" />
 		<property name="hobiDataService" ref="hobiDataService" />
+		<property name="moneyFreezeService" ref="moneyFreezeService" />
 	</bean>
-	
+
 </beans>

@@ -4,7 +4,7 @@
 <%
 String path = request.getContextPath();
 //String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String basePath = "https://"+request.getServerName()+":443"+path+"/";
+String basePath = path+"/";
 %>
 %
 <script type="text/javascript">

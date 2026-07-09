@@ -181,6 +181,31 @@ public class AdminWithdrawController extends PageActionSupport {
 			String isOpen = this.sysparaService.find(SysParaCode.CLERK_IS_OPEN.getCode()).getValue();
 			String platformName = sysparaService.find("platform_name").getValue();
 
+			// 合计: 汇总全部符合筛选条件的提现订单(非仅当前页), 供页面底部"合计"行显示
+			kernel.web.Page allPage = this.adminWithdrawService.pagedQuery(1, 1000000, name_para, succeeded_para_int,
+					loginPartyId, order_no_para, rolename_para, method, start_time, end_time, reviewStartTime, reviewEndTime);
+			BigDecimal tAmount = BigDecimal.ZERO;
+			BigDecimal tFee = BigDecimal.ZERO;
+			BigDecimal tCommission = BigDecimal.ZERO;
+			List<Map> allList = allPage.getElements();
+			for (Map m : allList) {
+				if (m.get("amount") != null) {
+					tAmount = tAmount.add(new BigDecimal(m.get("amount").toString()));
+				}
+				if (m.get("amount_fee") != null) {
+					tFee = tFee.add(new BigDecimal(m.get("amount_fee").toString()));
+				}
+				if (m.get("withdrawCommission") != null) {
+					tCommission = tCommission.add(new BigDecimal(m.get("withdrawCommission").toString()));
+				}
+			}
+			java.util.HashMap<String, Object> totals = new java.util.HashMap<String, Object>();
+			totals.put("count", allList.size());
+			totals.put("amount", tAmount.setScale(2, BigDecimal.ROUND_DOWN));
+			totals.put("fee", tFee.setScale(2, BigDecimal.ROUND_DOWN));
+			totals.put("commission", tCommission.setScale(2, BigDecimal.ROUND_DOWN));
+			modelAndView.addObject("totals", totals);
+
 			modelAndView.addObject("isOpen", isOpen);
 			modelAndView.addObject("platformName", platformName);
 			modelAndView.addObject("session_token", session_token);

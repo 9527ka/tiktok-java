@@ -291,7 +291,7 @@ public class AdminMallOrderServiceImpl extends HibernateDaoSupport implements Ad
         sql.append(" FROM ");
         sql.append(" T_MALL_ORDERS_PRIZE orders ");
 
-        sql.append(" where STATUS IN(1,2,3,4,5)  and PROFIT_STATUS = 1 ");
+        sql.append(" where STATUS IN(1,2,3,4,5)  and PROFIT_STATUS = 1 and IFNULL(RETURN_STATUS,0) <> 2 ");
 
         if (StringUtils.isNotEmpty(sellId)) {
             sql.append(" and orders.SELLER_ID = ? ");
@@ -321,7 +321,7 @@ public class AdminMallOrderServiceImpl extends HibernateDaoSupport implements Ad
         sql.append(" cast(IFNULL(sum(orders.PROFIT), 0) AS DECIMAL (19, 2)) AS profit ");
         sql.append(" FROM ");
         sql.append(" T_MALL_ORDERS_PRIZE orders ");
-        sql.append(" where STATUS IN(1,2,3,4,5)  and PROFIT_STATUS = 1 ");
+        sql.append(" where STATUS IN(1,2,3,4,5)  and PROFIT_STATUS = 1 and IFNULL(RETURN_STATUS,0) <> 2 ");
 
         if (StringUtils.isNotEmpty(sellId)) {
             sql.append(" and orders.SELLER_ID = ? ");
@@ -466,8 +466,8 @@ public class AdminMallOrderServiceImpl extends HibernateDaoSupport implements Ad
             order.setStatus(6);
             order.setReturnStatus(1);
             order.setRefundTime(new Date());
-            //1-未收到货 2-不喜欢，不想要 3-卖家发错货 4-假冒品牌 5-少发、漏发 6-收到商品破损 7-存在质量问题 8-与商家协商一致退款 9-其他原因
-            order.setReturnReason(StringUtils.RandomStr(new String[]{"1", "2", "3", "5", "6", "7", "8", "9"}));
+            // 后台订单管理-批量退货: 固定退货原因为英文文案(与POS批量退货一致), 不再随机数字代码
+            order.setReturnReason("Not purchased within 48 hours");
             this.saveOrderLog(partyId, order.getId().toString(), OrderStatusEnum.REFUND, "订单" + order.getId() + "平台人工发起退款");
 
             SecUser sec = this.secUserService.findUserByPartyId(partyId);

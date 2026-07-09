@@ -558,15 +558,14 @@ public class OrdersController extends BaseAction {
         for(MallOrdersGoods ordersGoods: mallOrdersGoods){
             JSONObject o = new JSONObject();
             String skuId = ordersGoods.getSkuId();
-//            String coverImg = this.goodsSkuAtrributionService.selectSkuCoverImg(skuId);
+            String skuCoverImg = StringUtils.isNotEmpty(skuId) ? this.goodsSkuAtrributionService.selectSkuCoverImg(skuId) : null;
             o.put("attributes", skuIdAttributes.get(skuId));
             o.put("skuId", skuId);
             o.put("goodsId", ordersGoods.getGoodsId());
             o.put("goodsName", "");
             o.put("goodsNum", ordersGoods.getGoodsNum());
             o.put("goodsReal", ordersGoods.getGoodsReal());
-//            o.put("goodsIcon", coverImg);
-            o.put("goodsIcon", "");
+            o.put("goodsIcon", StringUtils.isNotEmpty(skuCoverImg) ? skuCoverImg : "");
             o.put("fees", ordersGoods.getFees());
             o.put("tax", ordersGoods.getTax());
             o.put("systemPrice",Objects.nonNull(ordersGoods.getSystemPrice())?BigDecimal.valueOf(ordersGoods.getSystemPrice()).setScale(2,BigDecimal.ROUND_DOWN).doubleValue():0);
@@ -585,7 +584,9 @@ public class OrdersController extends BaseAction {
             o.put("isValid",sellerGoods.getIsValid());//是否删除(有效1  无效0)
             SystemGoods systemGoods = sellerGoods.getSystemGoods();
             if(systemGoods!=null){
-                o.put("goodsIcon", systemGoods.getImgUrl1());
+                if (StringUtils.isEmpty(skuCoverImg)) {
+                    o.put("goodsIcon", systemGoods.getImgUrl1());
+                }
                 String js = redisHandler.getString(MallRedisKeys.MALL_GOODS_LANG + lang + ":" + systemGoods.getId().toString());
                 if (StringUtils.isNotEmpty(js)) {
                     SystemGoodsLang pLang = JSONArray.parseObject(js, SystemGoodsLang.class);

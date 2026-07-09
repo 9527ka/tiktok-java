@@ -1443,6 +1443,18 @@ public class SellerGoodsServiceImpl extends HibernateDaoSupport implements Selle
     }
 
     @Override
+    public int getRealDispatchSoldByGoodsId(String goodsId) {
+        if (goodsId == null || goodsId.trim().isEmpty()) {
+            return 0;
+        }
+        String sql = " SELECT IFNULL(SUM(og.GOODS_NUM),0) FROM t_mall_orders_goods og "
+                + " JOIN T_MALL_ORDERS_PRIZE o ON o.UUID = og.ORDER_ID "
+                + " WHERE og.GOODS_ID = ? AND o.STATUS IN (4,5) ";
+        Long v = this.jdbcTemplate.queryForObject(sql, Long.class, goodsId);
+        return v == null ? 0 : v.intValue();
+    }
+
+    @Override
     public Long getSoldNumBySellerId(String sellerId) {
         StringBuffer sqlStr = new StringBuffer();
         sqlStr.append(" SELECT IFNULL( SUM( GOODS__COUNT ), 0 ) ")

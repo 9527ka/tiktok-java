@@ -249,6 +249,7 @@
 													<li><a href="<%=basePath%>normal/adminUserAction!toUpdate.action?id=${item.id}&name_para=${item.name_para}&rolename_para=${item.rolename_para}">修改</a></li>
 													<li><a href="<%=basePath%>normal/adminUserAction!toUpdateUserAddress.action?id=${item.id}">编辑收货地址</a></li>
 													<li><a href="javascript:reset('${item.id}')">修改账户余额</a></li>
+													<li><a href="javascript:freezeMoney('${item.id}')">冻结提现金额</a></li>
 													<li><a href="javascript:integral('${item.id}','${item.usercode}','${item.username_hide}','${item.activityPoints}')">修改积分</a></li>
 													<li><a href="javascript:updatePhone('${item.id}')">修改手机账号</a></li>
 													<li><a href="javascript:updateEmail('${item.id}','${item.email}')">修改邮箱账号</a></li>
@@ -266,6 +267,17 @@
 
 								</tr>
 							</c:forEach>
+							<c:if test="${not empty totals}">
+							<tr style="font-weight:bold;background:#f5f5f5;">
+								<td colspan="5" style="text-align:right;">合计（共 ${totals.count} 人）：</td>
+								<td><span class="label label-success">${totals.available}</span></td>
+								<td><span class="label label-danger">${totals.frozen}</span></td>
+								<td colspan="7"></td>
+								<c:if test="${platformName == 'SM' || platformName == 'FamilyShop'}">
+									<td></td>
+								</c:if>
+							</tr>
+							</c:if>
 							</tbody>
 
 						</table>
@@ -357,6 +369,67 @@
 			</div>
 		</form>
 	</div>
+	<div class="form-group">
+		<form action="<%=basePath%>normal/adminUserAction!freezeMoney.action"
+			  method="post" id="freezeForm">
+			<input type="hidden" name="id" id="id_freeze" value="">
+			<div class="col-sm-1">
+				<div class="modal fade" id="modal_freeze" tabindex="-1"
+					 role="dialog" aria-labelledby="freezeModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+										aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="freezeModalLabel">冻结提现金额</h4>
+							</div>
+
+							<div class="modal-body">
+								<div class="alert alert-info" style="margin-bottom:10px;">
+									当前已冻结(提现)金额：<span id="freeze_current_total">0</span>
+									<div id="freeze_current_list" style="margin-top:6px;font-size:12px;color:#666;"></div>
+								</div>
+								<div class="">
+									<span class="help-block">冻结金额(大于0, 不能超过用户可冻结余额)</span>
+									<input id="freeze_amount" name="freeze_amount" class="form-control" placeholder="如: 50"/>
+								</div>
+							</div>
+
+							<div class="modal-body">
+								<div class="">
+									<span class="help-block">冻结天数(到期后自动解冻)</span>
+									<input id="freeze_days" name="freeze_days" class="form-control" placeholder="如: 3"/>
+								</div>
+							</div>
+
+							<div class="modal-body">
+								<div class="">
+									<span class="help-block">冻结原因</span>
+									<select id="freeze_reason" name="freeze_reason" class="form-control">
+										<option value="商户保证金">商户保证金</option>
+										<option value="因违规冻结商家">因违规冻结商家</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="modal-footer" style="margin-top: 0;">
+								<button type="button" class="btn" data-dismiss="modal">关闭</button>
+								<button type="button" class="btn btn-warning" onclick="doUnfreeze()">手动解冻全部</button>
+								<button id="freeze_sub" type="submit" class="btn btn-default">确认冻结</button>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		<form action="<%=basePath%>normal/adminUserAction!unfreezeMoney.action"
+			  method="post" id="unfreezeForm">
+			<input type="hidden" name="id" id="id_unfreeze" value="">
+		</form>
+	</div>
+
 	<div class="form-group">
 		<form action="<%=basePath%>normal/adminUserAction!addActivityPoint.action"
 			  method="post" id="resetForm">
@@ -1207,6 +1280,51 @@
 		$("#session_token_reset").val(session_token);
 		$("#id_reset").val(id);
 		$('#modal_reset').modal("show");
+	}
+	function freezeMoney(id) {
+		$("#id_freeze").val(id);
+		$("#id_unfreeze").val(id);
+		$("#freeze_amount").val("");
+		$("#freeze_days").val("");
+		$("#freeze_reason").val("商户保证金");
+		$("#freeze_current_total").text("0");
+		$("#freeze_current_list").html("");
+		$.ajax({
+			type: "get",
+			url: "<%=basePath%>normal/adminUserAction!freezeInfo.action",
+			data: {"id": id},
+			dataType: "json",
+			success: function(data) {
+				if (data && data.msg === "succeed") {
+					$("#freeze_current_total").text(data.total);
+					var html = "";
+					if (data.records && data.records.length > 0) {
+						for (var i = 0; i < data.records.length; i++) {
+							var r = data.records[i];
+							html += "冻结 " + r.amount + " , 到期 " + r.endTime + (r.reason ? (" , " + r.reason) : "") + "<br/>";
+						}
+					}
+					$("#freeze_current_list").html(html);
+				}
+			},
+			error: function() {
+				console.log("查询冻结信息失败");
+			}
+		});
+		$('#modal_freeze').modal("show");
+	}
+	function doUnfreeze() {
+		swal({
+			title: "确认手动解冻该用户全部提现冻结金额?",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonText: "确认解冻",
+			cancelButtonText: "取消"
+		}, function(isConfirm) {
+			if (isConfirm) {
+				$("#unfreezeForm").submit();
+			}
+		});
 	}
 	function integral(id,userCode,userNameiIntegral,activityPoints) {
 		var session_token = $("#session_token").val();

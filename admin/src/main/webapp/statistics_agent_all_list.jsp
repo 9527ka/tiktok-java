@@ -203,6 +203,23 @@
 <%--											</td>--%>
 										</tr>
 									</c:forEach>
+									<c:if test="${not empty totals}">
+										<tr style="font-weight:bold;background:#f5f5f5;text-align:center;">
+											<td>合计</td>
+											<td>—</td>
+											<td>${totals.reco_member}</td>
+											<td>${totals.all_member}</td>
+											<td>${totals.all_agent}</td>
+											<td>${totals.reco_agent}</td>
+											<td><fmt:formatNumber value="${totals.recharge_usdt}" pattern="#0.0000" /></td>
+											<td><fmt:formatNumber value="${totals.withdraw}" pattern="#0.0000" /></td>
+											<td><fmt:formatNumber value="${totals.difference}" pattern="#0.0000" /></td>
+											<td><fmt:formatNumber value="${totals.gift_money}" pattern="#0.0000" /></td>
+											<c:if test="${isOpen == '1'}">
+											<td><fmt:formatNumber value="${totals.commission}" pattern="#0.0000" /></td>
+											</c:if>
+										</tr>
+									</c:if>
 								</tbody>
 								
 							</table>

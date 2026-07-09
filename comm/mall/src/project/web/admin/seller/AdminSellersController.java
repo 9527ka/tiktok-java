@@ -836,6 +836,23 @@ public class AdminSellersController extends PageActionSupport {
 
 
     /**
+     * 用当前访问的协议+域名拼接基础URL(不写死https/固定域名)。
+     * 协议优先取反向代理头 X-Forwarded-Proto,回退 request.getScheme();
+     * 域名优先取 HOST 头,回退 getServerName()。这样卖家登录链接跟随当前后台访问域名。
+     */
+    private String currentBaseUrl(HttpServletRequest request) {
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        if (scheme == null || scheme.trim().isEmpty()) {
+            scheme = request.getScheme();
+        }
+        String host = request.getHeader("HOST");
+        if (host == null || host.trim().isEmpty()) {
+            host = request.getServerName();
+        }
+        return scheme + "://" + host;
+    }
+
+    /**
      * 平台登录商家
      * @param request
      * @return
@@ -846,7 +863,7 @@ public class AdminSellersController extends PageActionSupport {
         String id = request.getParameter("id");
         try {
             String token = adminSellerService.getLoginFree(id, this.getUsername_login());
-            String loginUrl = AutoConfig.getBaseUrl() + "/seller/#/login?token=" + token;
+            String loginUrl = currentBaseUrl(request) + "/seller/#/login?token=" + token;
 //            String loginUrl = "localhost:8085/wap/api/user!LoginFree.action?token=" + token;
 
             resultMap.put("loginUrl",loginUrl);
@@ -885,7 +902,7 @@ public class AdminSellersController extends PageActionSupport {
             } else {
                 token = tokenRedis.getToken();
             }
-            String tokenLink = AutoConfig.getBaseUrl() + "/seller-h5/#/shop?from=shop&token=" + token;
+            String tokenLink = currentBaseUrl(request) + "/seller-h5/#/shop?from=shop&token=" + token;
             resultMap.put("url", tokenLink);
             resultMap.put("code", 200);
             return resultMap;

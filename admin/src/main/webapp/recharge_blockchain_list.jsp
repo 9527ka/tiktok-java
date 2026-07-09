@@ -342,7 +342,16 @@
 								</c:forEach>
 							</tr>
 							<!-- </s:iterator> -->
-
+							<c:if test="${not empty totals}">
+							<tr style="font-weight:bold;background:#f5f5f5;">
+								<td colspan="7" style="text-align:right;">合计（支付成功 ${totals.count} 笔）：</td>
+								<td><span class="label label-success">${totals.amount}</span></td>
+								<c:if test="${isOpen == '1'}">
+									<td>${totals.commission}</td>
+								</c:if>
+								<td colspan="7"></td>
+							</tr>
+							</c:if>
 							</tbody>
 
 						</table>

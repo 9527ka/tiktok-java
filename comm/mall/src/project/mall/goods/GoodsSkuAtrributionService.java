@@ -43,4 +43,7 @@ public interface GoodsSkuAtrributionService {
 
     String selectSkuCoverImg(String skuId);
 
+    /** 批量取多个系统商品的 SKU 价格区间(原始 PRICE, 未含利润率); 返回 goodId -> [min, max], 无SKU的不在map中 */
+    Map<String, double[]> getSkuPriceRangeByGoodIds(List<String> goodIds);
+
 }

@@ -5,7 +5,8 @@
 <%
 String path = request.getContextPath();
 //String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String basePath = "https://"+request.getServerName()+":443"+path+"/";
+// 用相对路径, 跟随当前请求协议/端口(admin 隔离端口 1188 是 http-only, 硬编码 https://...:443 会落到被 403 拦的域名上, 资源全 404)
+String basePath = path+"/";
     String base = "http://" + request.getServerName() + ":"+request.getServerPort()+"/";
 //    String username = SecurityAppUserHolder.gettUsername();
 %>

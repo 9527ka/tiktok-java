@@ -780,6 +780,8 @@ public class NotificationHelper implements NotificationHelperClient {
 
             // 根据站内信模板中的占位符设置值
             notifyRequest.setValue("amount", freezeRecord.getAmount());
+            // 备注内容(原因); 不显示冻结天数
+            notifyRequest.setValue("reason", freezeRecord.getReason() == null ? "" : freezeRecord.getReason());
 //            notifyRequest.setValue("days", (freezeRecord.getEndTime().getTime() - freezeRecord.getBeginTime().getTime()) / (24L * 3600L * 1000L));
 
             logger.info("---> notifyFreezeSellerMoneyByInbox 站内信提醒商家资金被冻结，冻结记录:" + freezeRecord.getId());

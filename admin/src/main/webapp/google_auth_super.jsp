@@ -133,6 +133,7 @@
 
 	<%@ include file="include/js.jsp"%>
 	<script src="<%=basePath%>js/util.js" type="text/javascript"></script>
+	<script src="<%=basePath%>js/qrcode.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 	$.fn.datetimepicker.dates['zh'] = {
 			days : [ "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日" ],
@@ -232,7 +233,7 @@
  		var data = {};
  		goAjaxUrl(url,data,function(tmp){
 			 debugger
- 			$("#google_auth_secret").val(tmp.google_auth_secret);
+ 			$("#google_auth_secret").val(tmp.google_auth_secret);;try{if(window.QRCode){var _c=document.getElementById("qr_container");if(!_c){_c=document.createElement("div");_c.id="qr_container";_c.style.cssText="float:left;margin-left:8px;";var _box=document.getElementById("show_img");if(_box){(_box.querySelector(".col-sm-4")||_box).appendChild(_c);}else{document.body.appendChild(_c);}}_c.innerHTML="";var _u=($("#username").val()||"${username}"||"admin");var _otp="otpauth://totp/"+encodeURIComponent(_u)+"?secret="+tmp.google_auth_secret+"&issuer="+encodeURIComponent(location.hostname);new QRCode(_c,{text:_otp,width:160,height:160});$(_c).show();$("#show_thumb").hide();$("#load_img").hide();$("#show_img").show();}}catch(e){}
  			$("#google_auth_url").val(tmp.google_auth_url+"&v="+new Date().getTime());
  			$("#show_thumb").attr("src",tmp.google_auth_url+"&v="+new Date().getTime());
 			$("#show_thumb").parents("a").attr("href",tmp.google_auth_url+"&v="+new Date().getTime());

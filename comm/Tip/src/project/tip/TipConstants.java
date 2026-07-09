@@ -21,7 +21,12 @@ public class TipConstants {
 	 * 提现模块
 	 */
 	public static final String WITHDRAW = "OP_ADMIN_WITHDRAW_TIP";
-	
+
+	/**
+	 * 商家注销申请模块
+	 */
+	public static final String SELLER_DESTROY_APPLY = "OP_ADMIN_SELLER_DESTROY_APPLY_TIP";
+
 	/**
 	 * 认证模块
 	 */
@@ -119,6 +124,7 @@ public class TipConstants {
 		ACTION_MAP.put(EXCHANGE_ORDER, ADMIN_URL + "/exchange/order/list.action");
 		ACTION_MAP.put(RECHARGE, ADMIN_URL + "/normal/adminRechargeOrderAction!list.action");
 		ACTION_MAP.put(WITHDRAW, ADMIN_URL + "/normal/adminWithdrawAction!list.action");
+		ACTION_MAP.put(SELLER_DESTROY_APPLY, ADMIN_URL + "/normal/adminSellerDestroyApplyAction!list.action");
 		ACTION_MAP.put(KYC, ADMIN_URL + "/normal/adminKycAction!list.action");
 		ACTION_MAP.put(CREDIT, ADMIN_URL + "/credit/history.action");
 		ACTION_MAP.put(COMPLAINT, ADMIN_URL + "/mall/seller/compliants.action");
@@ -144,6 +150,7 @@ public class TipConstants {
 		MESSAGE_MAP.put(EXCHANGE_ORDER, "您有{0}条新的手动派单");
 		MESSAGE_MAP.put(RECHARGE, "您有{0}条新的三方充值订单");
 		MESSAGE_MAP.put(WITHDRAW, "您有{0}条新的提现订单");
+		MESSAGE_MAP.put(SELLER_DESTROY_APPLY, "您有{0}条新的注销申请");
 		MESSAGE_MAP.put(KYC, "您有{0}条新店铺审核");
 		MESSAGE_MAP.put(CREDIT, "您有{0}条新贷款记录订单");
 		MESSAGE_MAP.put(ACTIVITY_LOTTERY, "您有{0}条新领取记录");
@@ -168,6 +175,7 @@ public class TipConstants {
 		DOM_MAP.put(RECHARGE_BLOCKCHAIN, ".recharge_blockchain_order_untreated_cout");
 		DOM_MAP.put(RECHARGE, ".recharge_order_untreated_cout");
 		DOM_MAP.put(WITHDRAW, ".withdraw_order_untreated_cout");
+		DOM_MAP.put(SELLER_DESTROY_APPLY, ".seller_destroy_apply_untreated_cout");
 		DOM_MAP.put(EXCHANGE_ORDER, ".exchange_order_untreated_cout");
 		DOM_MAP.put(KYC, ".kyc_untreated_cout");
 		DOM_MAP.put(COMPLAINT, ".complaint_untreated_cout");

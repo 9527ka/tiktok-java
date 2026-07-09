@@ -241,17 +241,23 @@ public class AdminSellerServiceImpl extends HibernateDaoSupport implements Admin
 
         BigDecimal rechargeBonus = lotteryReceive.getPrizeAmount();
         Wallet wallet = walletService.saveWalletByPartyId(partyId);
-        double amount_before = wallet.getMoney();
+        // 冻结期间奖励进可用余额 moneyAfterFrozen, 不累加进冻结部分 money
+        boolean walletFrozen = wallet.getFrozenState() != null && wallet.getFrozenState() == 1;
+        double amount_before = walletFrozen ? wallet.getMoneyAfterFrozen() : wallet.getMoney();
 
         //更新钱包余额
-        wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), rechargeBonus.doubleValue()), 2));
+        if (walletFrozen) {
+            wallet.setMoneyAfterFrozen(Arith.roundDown(Arith.add(wallet.getMoneyAfterFrozen(), rechargeBonus.doubleValue()), 2));
+        } else {
+            wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), rechargeBonus.doubleValue()), 2));
+        }
         walletService.update(wallet);
 
         MoneyLog moneyLog = new MoneyLog();
         moneyLog.setCategory(Constants.MONEYLOG_CATEGORY_COIN);
         moneyLog.setAmount_before(amount_before);
         moneyLog.setAmount(Arith.add(0, rechargeBonus.doubleValue()));
-        moneyLog.setAmount_after(wallet.getMoney());
+        moneyLog.setAmount_after(walletFrozen ? wallet.getMoneyAfterFrozen() : wallet.getMoney());
         moneyLog.setFreeze(0);
 
 

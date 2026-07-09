@@ -28,6 +28,10 @@
 		<property name="secUserService" ref="secUserService" />
 		<!-- 		<property name="onlineUserService"
                     ref="onlineUserService" /> -->
+		<!-- 注销账号(updateLogoffAccount)所需依赖, 后台审核通过时调用 -->
+		<property name="sellerService" ref="sellerService" />
+		<property name="focusSellerService" ref="focusSellerService" />
+		<property name="sellerGoodsService" ref="sellerGoodsService" />
 	</bean>
 	
  	<bean id="onlineUserService"
@@ -50,6 +54,7 @@
 		<property name="walletService" ref="walletService" />
 		<property name="sysparaService" ref="sysparaService" />
 		<property name="notificationHelperClient" ref="notificationHelperClient" />
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
 
 	<!--<bean id="onlineChatUserMessageService"

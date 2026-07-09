@@ -129,14 +129,14 @@ public class MallLevelController extends BaseAction {
             String cndJson = oneLevelEntity.getCondExpr();
             if (StrUtil.isNotBlank(cndJson)) {
                 MallLevelCondExpr cndObj = JsonUtils.json2Object(cndJson, MallLevelCondExpr.class);
-                List<MallLevelCondExpr.Param> params = cndObj.getParams();
+                List<MallLevelCondExpr.Param> params = (cndObj == null) ? null : cndObj.getParams();
                 if (CollectionUtil.isNotEmpty(params)) {
                     for (MallLevelCondExpr.Param oneCndParam : params) {
                         UpgradeMallLevelCondParamTypeEnum cndType = UpgradeMallLevelCondParamTypeEnum.codeOf(oneCndParam.getCode().trim());
                         if (cndType == UpgradeMallLevelCondParamTypeEnum.RECHARGE_AMOUNT) {
-                            oneDto.setRechargeAmountCnd(Integer.parseInt(oneCndParam.getValue().trim()));
+                            oneDto.setRechargeAmountCnd(parseIntSafe(oneCndParam.getValue()));
                         } else if (cndType == UpgradeMallLevelCondParamTypeEnum.POPULARIZE_UNDERLING_NUMBER) {
-                            oneDto.setPopularizeUserCountCnd(Integer.parseInt(oneCndParam.getValue().trim()));
+                            oneDto.setPopularizeUserCountCnd(parseIntSafe(oneCndParam.getValue()));
                         }
                     }
                 }
@@ -148,6 +148,18 @@ public class MallLevelController extends BaseAction {
         resultObject.setData(object);
 
         return resultObject;
+    }
+
+    /** 等级条件值可能为空/非数字, 容错解析, 避免接口因脏数据 NumberFormatException */
+    private static int parseIntSafe(String v) {
+        if (v == null || v.trim().isEmpty()) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(v.trim());
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
 

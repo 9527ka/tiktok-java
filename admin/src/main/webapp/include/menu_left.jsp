@@ -117,6 +117,20 @@
 
 		</c:if>
 
+		<c:if test="${security.isRolesAccessible('ROLE_ROOT,ROLE_ADMIN','normal/adminSellerDestroyApplyAction!list.action')
+                     || security.isResourceAccessible('OP_SELLER_DESTROY_APPLY_CHECK')
+                     || security.isResourceAccessible('OP_SELLER_DESTROY_APPLY_OPERATE')}">
+
+			<li>
+				<a href="<%=basePath%>normal/adminSellerDestroyApplyAction!list.action">
+				    <span class="icon color6 icon-trash"><i data-feather="trash-2"></i></span>
+					<span class="sp-title">注销申请审核</span>
+					<span class="seller_destroy_apply_untreated_cout badge label-danger" style="display: none">0</span>
+				</a>
+			</li>
+
+		</c:if>
+
 
 		<c:if test="${security.isRolesAccessible('ROLE_ROOT,ROLE_ADMIN','normal/adminKycAction!list.action')
                                  || security.isResourceAccessible('OP_USER_KYC_CHECK')

@@ -79,7 +79,9 @@ public class RechargeSuccessEventListener implements ApplicationListener<Recharg
 
             if (null != kyc && kyc.getStatus() == 2){
                 //店铺审核未通过，不计算店铺升级级累计有效充值金额
-                userMetrics.setStoreMoneyRechargeAcc(userMetrics.getStoreMoneyRechargeAcc()+changeInfo.getAmount());
+                //此处为店铺累计充值的唯一累加点(防新建userMetrics时store为null的NPE)
+                Double curStoreAcc = userMetrics.getStoreMoneyRechargeAcc();
+                userMetrics.setStoreMoneyRechargeAcc((curStoreAcc == null ? 0d : curStoreAcc) + changeInfo.getAmount());
             }
 
             userMetrics.setMoneyRechargeAcc(rechargeAcc);

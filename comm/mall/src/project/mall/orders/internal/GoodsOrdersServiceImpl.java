@@ -31,6 +31,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import project.Constants;
 import project.RedisKeys;
 import project.log.LogService;
+import project.log.MoneyFreezeService;
 import project.log.MoneyLog;
 import project.log.MoneyLogService;
 import project.mall.MallRedisKeys;
@@ -105,6 +106,9 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
     private static final String DESENSITIZATION_STR = "*****";
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private WalletService walletService;
+
+    // 提现冻结服务(可空, null-guard): 用于"冻结中的提现金额不可用于采购支付"
+    private MoneyFreezeService moneyFreezeService;
 
     private MoneyLogService moneyLogService;
 
@@ -264,7 +268,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
         String startTime = DateUtil.formatDate(DateUtil.minDate(now), DateUtil.DATE_FORMAT_FULL);
         String endTime = DateUtil.formatDate(DateUtil.maxDate(now), DateUtil.DATE_FORMAT_FULL);
         List list = jdbcTemplate.queryForList("SELECT SUM(PRIZE_REAL)  as 'todaySales' ,COUNT(*) as 'todayOrder',(SUM(PROFIT))  as 'todayProfit'  FROM T_MALL_ORDERS_PRIZE WHERE SELLER_ID='" +
-                sellerId + "'  AND  STATUS IN(1,2,3,4,5) AND CREATE_TIME BETWEEN '" + startTime + "' AND '" + endTime + "'");
+                sellerId + "'  AND  STATUS IN(1,2,3,4,5) AND IFNULL(RETURN_STATUS,0) <> 2 AND CREATE_TIME BETWEEN '" + startTime + "' AND '" + endTime + "'");
         Iterator iterable = list.iterator();
 
         IntegratedScoreDto integratedScoreDto = new IntegratedScoreDto();
@@ -1205,9 +1209,9 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
             if (wallet.getFrozenState() == 0) {
                 moneyLog.setAmount_after(wallet.getMoney());
                 moneyLog.setFreeze(0);
-            } else {//处于冻结状态时
+            } else {//处于冻结状态时: 扣的是可用余额(moneyAfterFrozen), 属正常资金变动, 归"正常资金"(FREEZE=0), 与冻结期间订单收入一致, 保证账变记录连续不缺采购/支付
                 moneyLog.setAmount_after(wallet.getMoneyAfterFrozen());
-                moneyLog.setFreeze(1);
+                moneyLog.setFreeze(0);
             }
             moneyLog.setLog("支付[" + list.size() + "]个订单");
             moneyLog.setPartyId(partyId);
@@ -1447,9 +1451,15 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                 //商家退款
                 if (order.getPurchStatus() == 1) {
                     Wallet walletSeller = walletService.saveWalletByPartyId(order.getSellerId());
-                    amount_before = walletSeller.getMoney();
                     double pushAmount = order.getPushAmount();
-                    walletSeller.setMoney(Arith.roundDown(Arith.add(walletSeller.getMoney(), pushAmount), 2));
+                    // 冻结期间退款回款进可用余额 moneyAfterFrozen, 不累加进冻结部分 money
+                    boolean sellerFrozen = walletSeller.getFrozenState() != null && walletSeller.getFrozenState() == 1;
+                    amount_before = sellerFrozen ? walletSeller.getMoneyAfterFrozen() : walletSeller.getMoney();
+                    if (sellerFrozen) {
+                        walletSeller.setMoneyAfterFrozen(Arith.roundDown(Arith.add(walletSeller.getMoneyAfterFrozen(), pushAmount), 2));
+                    } else {
+                        walletSeller.setMoney(Arith.roundDown(Arith.add(walletSeller.getMoney(), pushAmount), 2));
+                    }
 //                    walletService.updateMoeny(walletSeller.getPartyId().toString(), pushAmount);
                     walletService.update(walletSeller);
 
@@ -1457,7 +1467,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                     moneyLog.setCategory(Constants.MONEYLOG_CATEGORY_COIN);
                     moneyLog.setAmount_before(amount_before);
                     moneyLog.setAmount(Arith.add(0, pushAmount));
-                    moneyLog.setAmount_after(walletSeller.getMoney());
+                    moneyLog.setAmount_after(sellerFrozen ? walletSeller.getMoneyAfterFrozen() : walletSeller.getMoney());
 
                     moneyLog.setLog("商家退货[" + order.getId().toString() + "]");
                     moneyLog.setPartyId(order.getSellerId());
@@ -1469,13 +1479,18 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                 //会员退款
                 Wallet wallet = walletService.saveWalletByPartyId(order.getPartyId());
 
-                amount_before = wallet.getMoney();
-
                 double prize = order.getPrizeReal();
                 prize = Arith.add(prize, order.getFees());
                 prize = Arith.add(prize, order.getTax());
 
-                wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), prize), 2));
+                // 冻结期间退款进可用余额 moneyAfterFrozen, 不累加进冻结部分 money
+                boolean buyerFrozen = wallet.getFrozenState() != null && wallet.getFrozenState() == 1;
+                amount_before = buyerFrozen ? wallet.getMoneyAfterFrozen() : wallet.getMoney();
+                if (buyerFrozen) {
+                    wallet.setMoneyAfterFrozen(Arith.roundDown(Arith.add(wallet.getMoneyAfterFrozen(), prize), 2));
+                } else {
+                    wallet.setMoney(Arith.roundDown(Arith.add(wallet.getMoney(), prize), 2));
+                }
 //                walletService.update(wallet.getPartyId().toString(), prize);
                 walletService.update(wallet);
 
@@ -1483,7 +1498,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                 moneyLog2.setCategory(Constants.MONEYLOG_CATEGORY_COIN);
                 moneyLog2.setAmount_before(amount_before);
                 moneyLog2.setAmount(Arith.add(0, prize));
-                moneyLog2.setAmount_after(wallet.getMoney());
+                moneyLog2.setAmount_after(buyerFrozen ? wallet.getMoneyAfterFrozen() : wallet.getMoney());
 
                 moneyLog2.setLog("会员退货[" + order.getId().toString() + "]");
                 moneyLog2.setPartyId(order.getPartyId());
@@ -1779,7 +1794,12 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
                 amount_before = wallet.getMoneyAfterFrozen();
             }
 
-            if (amount_before < prize) {
+            // 冻结中的提现金额不可用于采购支付: 可用额 = 余额 - 当前生效的提现冻结额(FREEZE_TYPE=2,END_TIME>now)
+            double withdrawFrozen = 0D;
+            if (moneyFreezeService != null) {
+                withdrawFrozen = moneyFreezeService.sumActiveWithdrawFrozen(partyId);
+            }
+            if (amount_before - withdrawFrozen < prize) {
                 throw new BusinessException("余额不足");
             }
 
@@ -1799,9 +1819,9 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
             if (wallet.getFrozenState() == 0) {
                 moneyLog.setAmount_after(wallet.getMoney());
                 moneyLog.setFreeze(0);
-            } else {//处于冻结状态时
+            } else {//处于冻结状态时: 扣的是可用余额(moneyAfterFrozen), 属正常资金变动, 归"正常资金"(FREEZE=0), 与冻结期间订单收入一致, 保证账变记录连续不缺采购/支付
                 moneyLog.setAmount_after(wallet.getMoneyAfterFrozen());
-                moneyLog.setFreeze(1);
+                moneyLog.setFreeze(0);
             }
 
             moneyLog.setLog("采购订单[" + orderId + "]");
@@ -2072,6 +2092,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
     public List<MallOrdersPrize> listAutoComment() {
         DetachedCriteria query = DetachedCriteria.forClass(MallOrdersPrize.class);
         query.add(Property.forName("status").eq(4));
+        query.add(Property.forName("returnStatus").ne(2)); // 已退单(退款标记)订单不参与自动评价
         query.add(Restrictions.or(Property.forName("hasComment").eq(0),
                 Property.forName("hasComment").isNull()));
 
@@ -2088,6 +2109,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
         DetachedCriteria query = DetachedCriteria.forClass(MallOrdersPrize.class);
         query.add(Property.forName("status").eq(1));
         query.add(Property.forName("purchStatus").eq(0));
+        query.add(Property.forName("returnStatus").ne(2)); // 已退单(退款标记)订单不参与采购超时处理
         query.add(Property.forName("purchTimeOutStatus").eq(0));
         query.add(Property.forName("payTime").lt(DateUtils.addMilliSecond(new Date(), (int) (-sysparaService.find("mall_order_purch_time_out").getDouble() * 3600000))));//1h *60*60*1000
         query.addOrder(Order.desc("createTime"));
@@ -2101,6 +2123,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
         DetachedCriteria query = DetachedCriteria.forClass(MallOrdersPrize.class);
         query.add(Property.forName("status").eq(1));
         query.add(Property.forName("payStatus").eq(1));
+        query.add(Property.forName("returnStatus").ne(2)); // 已退单(退款标记)订单不再自动确认推进
         query.add(Property.forName("payTime").lt(DateUtils.addSecond(new Date(), (int) (-sysparaService.find("mall_order_virtual_auto_confirm").getDouble() * 3600))));
         query.addOrder(Order.desc("createTime"));
         List<MallOrdersPrize> results = (List<MallOrdersPrize>) getHibernateTemplate().findByCriteria(query, 0, 500);
@@ -2113,6 +2136,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
         query.add(Property.forName("status").eq(2));
         query.add(Property.forName("purchStatus").eq(1));
         query.add(Property.forName("orderStatus").eq(1));
+        query.add(Property.forName("returnStatus").ne(2)); // 已退单(退款标记)订单不再自动发货
         query.add(Property.forName("manualShipStatus").eq(0));
         query.add(Property.forName("purchTime").lt(DateUtils.addSecond(new Date(), (int) (-sysparaService.find("mall_order_virtual_auto_delivery").getDouble() * 3600))));
         List<MallOrdersPrize> results = (List<MallOrdersPrize>) getHibernateTemplate().findByCriteria(query, 0, 50);
@@ -2670,7 +2694,7 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
         Map<String, Object> sumData = new HashMap<>();
 
-        StringBuffer countSql = new StringBuffer("SELECT count(1) as noPushNum  from T_MALL_ORDERS_PRIZE  where `STATUS` = 1 AND IS_DELETE = 0");
+        StringBuffer countSql = new StringBuffer("SELECT count(1) as noPushNum  from T_MALL_ORDERS_PRIZE  where `STATUS` = 1 AND IS_DELETE = 0 AND IFNULL(RETURN_STATUS,0) <> 2");
 
         countSql.append(" AND  SELLER_ID = ? ");
         NativeQuery<Object[]> nativeQuery = this.getHibernateTemplate().getSessionFactory().getCurrentSession()
@@ -2898,6 +2922,10 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
 
     public void setWalletService(WalletService walletService) {
         this.walletService = walletService;
+    }
+
+    public void setMoneyFreezeService(MoneyFreezeService moneyFreezeService) {
+        this.moneyFreezeService = moneyFreezeService;
     }
 
     public void setMoneyLogService(MoneyLogService moneyLogService) {
@@ -3174,9 +3202,15 @@ public class GoodsOrdersServiceImpl extends HibernateDaoSupport implements Goods
             totalAmount = amount.add(principal).setScale(2, BigDecimal.ROUND_DOWN);
         }
 
-        BigDecimal currentAmount = new BigDecimal(Double.toString(wallet.getMoney())).setScale(2, BigDecimal.ROUND_DOWN);
+        // 冻结期间(frozenState=1)收入进入可用余额 moneyAfterFrozen, 不再累加进冻结部分 money; 未冻结则加 money。与扣钱逻辑对称, 避免冻结额被订单收入越冻越多。
+        boolean frozen = wallet.getFrozenState() != null && wallet.getFrozenState() == 1;
+        BigDecimal currentAmount = new BigDecimal(Double.toString(frozen ? wallet.getMoneyAfterFrozen() : wallet.getMoney())).setScale(2, BigDecimal.ROUND_DOWN);
         BigDecimal afterAmount = currentAmount.add(totalAmount).setScale(2, BigDecimal.ROUND_DOWN);
-        wallet.setMoney(Arith.roundDown(afterAmount.doubleValue(), 2));
+        if (frozen) {
+            wallet.setMoneyAfterFrozen(Arith.roundDown(afterAmount.doubleValue(), 2));
+        } else {
+            wallet.setMoney(Arith.roundDown(afterAmount.doubleValue(), 2));
+        }
 
         wallet.setRebate(new BigDecimal(Double.toString(wallet.getRebate())).setScale(2,BigDecimal.ROUND_DOWN).add(amount).setScale(2, BigDecimal.ROUND_DOWN).doubleValue());
         logger.info("释放佣金钱包：{}", JSONObject.toJSONString(wallet));
